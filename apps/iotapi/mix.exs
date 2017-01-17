@@ -23,7 +23,7 @@ defmodule Iotapi.Mixfile do
   def application do
     [mod: {Iotapi, []},
      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext,
-                    :phoenix_ecto, :postgrex, :comeonin]]
+                    :phoenix_ecto, :postgrex, :comeonin, :timex_ecto, :timex]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,6 +37,8 @@ defmodule Iotapi.Mixfile do
     [{:phoenix, "~> 1.2.1"},
      {:phoenix_pubsub, "~> 1.0"},
      {:phoenix_ecto, "~> 3.0"},
+     {:timex, "~> 3.0"},
+     {:timex_ecto, "~> 3.0"},
      {:guardian, "~> 0.14.0"},
      {:comeonin, "~> 2.5.3"},
      {:postgrex, ">= 0.0.0"},

@@ -4,7 +4,9 @@ defmodule Iotapi.EventController do
   alias Iotapi.Event
 
   def index(conn, _params) do
-    events = Repo.all(Event)
+    query = from(e in Event, order_by: [desc: e.id])
+    events = Repo.all(query)
+
     render(conn, "index.json", events: events)
   end
 
@@ -13,6 +15,9 @@ defmodule Iotapi.EventController do
 
     case Repo.insert(changeset) do
       {:ok, event} ->
+
+        Iotapi.EventChannel.broadcast_change(event)
+
         conn
         |> put_status(:created)
         |> put_resp_header("location", event_path(conn, :show, event))

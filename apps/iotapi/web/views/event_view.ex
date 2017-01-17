@@ -11,6 +11,7 @@ defmodule Iotapi.EventView do
 
   def render("event.json", %{event: event}) do
     %{id: event.id,
+      date: event.date,
       message: event.message,
       entity: event.entity,
       type: event.type,

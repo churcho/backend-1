@@ -4,7 +4,7 @@ defmodule Iotapi.UserSocket do
   alias Iotapi.{GuardianSerializer}
 
   # Channels
-  channel "boards:*", Iotapi.BoardChannel
+  channel "events:*", Iotapi.EventChannel
   channel "users:*", Iotapi.UserChannel
 
   # Transports
