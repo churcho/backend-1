@@ -4,8 +4,8 @@ defmodule Iotapi.ServiceController do
   alias Iotapi.Service
 
   def index(conn, _params) do
-    services = Repo.all(Service)
-    render(conn, "index.json", services: services)
+    owned_services = Repo.all(Service)
+    render(conn, "index.json", owned_services: owned_services)
   end
 
   def create(conn, %{"service" => service_params}) do

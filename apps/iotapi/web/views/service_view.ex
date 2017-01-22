@@ -1,15 +1,16 @@
+
 defmodule Iotapi.ServiceView do
   use Iotapi.Web, :view
 
-  def render("index.json", %{services: services}) do
-    %{data: render_many(services, Iotapi.ServiceView, "service.json")}
+  def render("index.json", %{owned_services: owned_services}) do
+    %{owned_services: render_many(owned_services, Iotapi.ServiceView, "show.json")}
   end
+
+  # def render("show.json", %{service: service}) do
+  #   %{data: render_one(service, Iotapi.ServiceView, "service.json")}
+  # end
 
   def render("show.json", %{service: service}) do
-    %{data: render_one(service, Iotapi.ServiceView, "service.json")}
-  end
-
-  def render("service.json", %{service: service}) do
     %{id: service.id,
       name: service.name,
       client_id: service.client_id,
