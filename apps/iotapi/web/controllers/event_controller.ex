@@ -10,8 +10,12 @@ defmodule Iotapi.EventController do
     render(conn, "index.json", events: events)
   end
 
-  def create(conn, %{"event" => event_params}) do
-    changeset = Event.changeset(%Event{}, event_params)
+  def create(conn, params) do
+
+    payload = Iotapi.EventManager.handle_events(params)
+    changeset = Event.changeset(%Event{}, payload)
+
+
 
     case Repo.insert(changeset) do
       {:ok, event} ->

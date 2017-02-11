@@ -14,6 +14,7 @@ defmodule Iotapi.Service do
     field :search_path, :string
     field :service_state, :map
 
+    belongs_to :provider, Iotapi.Provider
     timestamps()
   end
 
@@ -22,7 +23,7 @@ defmodule Iotapi.Service do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :client_id, :client_secret, :access_token, :url, :oauth, :bridge, :enabled, :type, :search_path, :service_state])
-    |> validate_required([:name])
+    |> cast(params, [:name, :client_id, :client_secret, :access_token, :url, :oauth, :bridge, :enabled, :type, :search_path, :service_state, :provider_id])
+    |> validate_required([:name, :provider_id])
   end
 end

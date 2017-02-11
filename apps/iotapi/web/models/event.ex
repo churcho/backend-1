@@ -7,6 +7,7 @@ defmodule Iotapi.Event do
     field :type, :string
     field :payload, :map
     field :date, :utc_datetime
+    field :source, :string
 
     timestamps()
   end
@@ -16,7 +17,7 @@ defmodule Iotapi.Event do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:message, :entity, :type, :payload, :date])
-    |> validate_required([:message, :entity, :type])
+    |> cast(params, [:message, :entity, :type, :payload, :date, :source])
+    |> validate_required([])
   end
 end

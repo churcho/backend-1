@@ -14,7 +14,8 @@ defmodule Iotapi.EventChannel do
       "message" => event.message,
       "payload" => event.payload,
       "entity" => event.entity,
-      "type" => event.type
+      "type" => event.type,
+      "source" => event.source
     }
 
     Iotapi.Endpoint.broadcast("events:all", "change", payload)

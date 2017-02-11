@@ -2,19 +2,37 @@ defmodule Iotapi.EventView do
   use Iotapi.Web, :view
 
   def render("index.json", %{events: events}) do
-    %{data: render_many(events, Iotapi.EventView, "event.json")}
+    %{
+      links: %{
+        self: "/api/v1/events"
+      },
+      data: render_many(events, Iotapi.EventView, "event.json")
+    }
+
+
   end
 
   def render("show.json", %{event: event}) do
-    %{data: render_one(event, Iotapi.EventView, "event.json")}
+    %{
+      links: %{
+        self: "/api/v1/events/#{event.id}"
+      },
+      data: render_one(event, Iotapi.EventView, "event.json")
+    }
   end
 
   def render("event.json", %{event: event}) do
-    %{id: event.id,
-      date: event.date,
-      message: event.message,
-      entity: event.entity,
-      type: event.type,
-      payload: event.payload}
+
+      %{
+        id: event.id,
+        date: event.date,
+        type: event.type,
+        message: event.message,
+        entity: event.entity,
+        payload: event.payload,
+        source: event.source
+      }
+
+
   end
 end

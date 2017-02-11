@@ -12,9 +12,13 @@ defmodule Iotapi.Router do
     scope "/v1" do
 
       # Resources
+      resources "/settings", SettingController, except: [:new, :edit]
+      resources "/locations", LocationController, except: [:new, :edit]
       resources "/events", EventController, except: [:new, :edit]
+      # Route to services
       resources "/services", ServiceController, except: [:new, :edit]
-
+      # Route to providers
+      resources "/providers", ProviderController, except: [:new, :edit]
       # Route to register a new user
       post "/registrations", RegistrationController, :create
 
