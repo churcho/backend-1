@@ -5,6 +5,7 @@ defmodule Iotapi.LocationController do
 
   def index(conn, _params) do
     locations = Repo.all(Location)
+    |> Repo.preload([:zones])
     render(conn, "index.json", locations: locations)
   end
 
@@ -26,6 +27,7 @@ defmodule Iotapi.LocationController do
 
   def show(conn, %{"id" => id}) do
     location = Repo.get!(Location, id)
+    |> Repo.preload([:zones])
     render(conn, "show.json", location: location)
   end
 

@@ -14,6 +14,7 @@ defmodule Iotapi.Router do
       # Resources
       resources "/settings", SettingController, except: [:new, :edit]
       resources "/locations", LocationController, except: [:new, :edit]
+      resources "/zones", ZoneController, except: [:new, :edit]
       resources "/events", EventController, except: [:new, :edit]
       # Route to services
       resources "/services", ServiceController, except: [:new, :edit]

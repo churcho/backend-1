@@ -12,6 +12,8 @@ defmodule Iotapi.Location do
     field :latitude, :string
     field :longitude, :string
 
+    has_many :zones, Iotapi.Zone
+
     timestamps()
   end
 
