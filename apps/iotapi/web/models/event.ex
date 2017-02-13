@@ -4,10 +4,15 @@ defmodule Iotapi.Event do
   schema "events" do
     field :message, :string
     field :entity, :string
-    field :type, :string
-    field :payload, :map
+    field :value, :string
+    field :units, :string
     field :date, :utc_datetime
     field :source, :string
+    field :type, :string
+    field :state_changed, :boolean
+    field :payload, :map
+
+
 
     timestamps()
   end
@@ -17,7 +22,7 @@ defmodule Iotapi.Event do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:message, :entity, :type, :payload, :date, :source])
+    |> cast(params, [:message, :entity, :value, :units, :date, :source, :type, :state_changed, :payload])
     |> validate_required([])
   end
 end

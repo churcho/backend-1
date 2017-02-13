@@ -3,8 +3,10 @@ defmodule Iotapi.Provider do
 
   schema "providers" do
     field :name, :string
+    field :description, :string
     field :uri, :string
-    field :callback_uri, :string
+    field :enabled, :boolean
+
 
     has_many :services, Iotapi.Service
     timestamps()
@@ -15,7 +17,7 @@ defmodule Iotapi.Provider do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :uri, :callback_uri])
-    |> validate_required([:name, :uri, :callback_uri])
+    |> cast(params, [:name, :uri, :description, :enabled])
+    |> validate_required([:name, :uri])
   end
 end

@@ -25,12 +25,16 @@ defmodule Iotapi.EventView do
 
       %{
         id: event.id,
-        date: event.date,
-        type: event.type,
         message: event.message,
         entity: event.entity,
-        payload: event.payload,
-        source: event.source
+        value: event.value,
+        units: event.units,
+        date: event.date,
+        source: event.source,
+        type: event.type,
+        state_changed: event.state_changed,
+        payload: event.payload
+
       }
 
 

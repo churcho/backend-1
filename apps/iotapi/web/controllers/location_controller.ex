@@ -17,7 +17,7 @@ defmodule Iotapi.LocationController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", location_path(conn, :show, location))
-        |> render("show.json", location: location)
+        |> render("created.json", location: location)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

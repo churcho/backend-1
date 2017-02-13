@@ -3,12 +3,12 @@ defmodule Iotapi.Location do
 
   schema "locations" do
     field :name, :string
-    field :location_state, :map
+    field :state, :map
     field :address_one, :string
     field :address_two, :string
-    field :city, :string
-    field :state, :string
-    field :zip, :string
+    field :address_city, :string
+    field :address_state, :string
+    field :address_zip, :string
     field :latitude, :string
     field :longitude, :string
 
@@ -22,7 +22,7 @@ defmodule Iotapi.Location do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :state, :address_one, :address_two, :city, :location_state, :zip, :latitude, :longitude])
+    |> cast(params, [:name, :state, :address_state, :address_one, :address_two, :address_city, :address_zip, :latitude, :longitude])
     |> validate_required([:name])
   end
 end

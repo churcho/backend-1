@@ -14,9 +14,9 @@ defmodule Iotapi.Repo.Migrations.CreateService do
       add :type, :string
       add :search_path, :string
       add :service_state, :map
-
+      add :provider_id, references(:providers, on_delete: :delete_all)
       timestamps()
     end
-
+    create index(:services, [:provider_id])
   end
 end

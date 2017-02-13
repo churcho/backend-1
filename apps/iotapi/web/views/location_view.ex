@@ -8,29 +8,46 @@ defmodule Iotapi.LocationView do
     }
   end
 
-   def render("show.json", %{location: location}) do
-     %{
-       type: "locations",
-       id: location.id,
-       included: render_many(location.zones, Iotapi.ZoneView, "show.json"),
-       attributes: render_one(location, Iotapi.LocationView, "location.json"),
-       links: %{
-         self: "/api/v1/locations/#{location.id}"
-       },
+  def render("show.json", %{location: location}) do
+    zones = location.zones
+
+    %{
+     type: "locations",
+     id: location.id,
+     included: render_many(zones, Iotapi.ZoneView, "show.json"),
+     attributes: render_one(location, Iotapi.LocationView, "location.json"),
+     links: %{
+       self: "/api/v1/locations/#{location.id}"
+     },
 
 
-     }
-   end
+   }
+  end
+
+  def render("created.json", %{location: location}) do
+    zones = location.zones
+
+    %{
+     type: "locations",
+     id: location.id,
+     attributes: render_one(location, Iotapi.LocationView, "location.json"),
+     links: %{
+       self: "/api/v1/locations/#{location.id}"
+     },
+
+
+   }
+  end
 
   def render("location.json", %{location: location}) do
       %{
         name: location.name,
-        location_state: location.state,
+        state: location.state,
         address_one: location.address_one,
         address_two: location.address_two,
-        city: location.city,
-        state: location.state,
-        zip: location.zip,
+        address_city: location.address_city,
+        address_state: location.address_state,
+        address_zip: location.address_zip,
         latitude: location.latitude,
         longitude: location.longitude
       }
