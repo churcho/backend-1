@@ -4,8 +4,9 @@ defmodule Iotapi.ServiceController do
   alias Iotapi.Service
 
   def index(conn, _params) do
-    owned_services = Repo.all(Service)
-    render(conn, "index.json", owned_services: owned_services)
+    services = Repo.all(Service)
+    |> Repo.preload([:provider])
+    render(conn, "index.json", services: services)
   end
 
   def create(conn, %{"service" => service_params}) do
@@ -16,7 +17,7 @@ defmodule Iotapi.ServiceController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", service_path(conn, :show, service))
-        |> render("show.json", service: service)
+        |> render("created.json", service: service)
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -26,6 +27,7 @@ defmodule Iotapi.ServiceController do
 
   def show(conn, %{"id" => id}) do
     service = Repo.get!(Service, id)
+    |> Repo.preload([:provider])
     render(conn, "show.json", service: service)
   end
 

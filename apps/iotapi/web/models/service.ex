@@ -23,7 +23,18 @@ defmodule Iotapi.Service do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :client_id, :client_secret, :access_token, :url, :oauth, :bridge, :enabled, :type, :search_path, :service_state, :provider_id])
+    |> cast(params, [:name,
+                     :client_id,
+                     :client_secret,
+                     :access_token,
+                     :url,
+                     :oauth,
+                     :bridge,
+                     :enabled,
+                     :type,
+                     :search_path,
+                     :service_state,
+                     :provider_id])
     |> validate_required([:name, :provider_id])
   end
 end

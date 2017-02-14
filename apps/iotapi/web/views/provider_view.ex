@@ -6,19 +6,25 @@ defmodule Iotapi.ProviderView do
       links: %{
         self: "/api/v1/providers"
       },
-      data: render_many(providers, Iotapi.ProviderView, "provider.json")
+      data: render_many(providers, Iotapi.ProviderView, "show.json")
     }
   end
 
   def render("show.json", %{provider: provider}) do
-    %{data: render_one(provider, Iotapi.ProviderView, "provider.json")}
+    %{
+      links: %{
+        self: "/api/v1/providers/#{provider.id}"
+      },
+      id: provider.id,
+      attributes: render_one(provider, Iotapi.ProviderView, "provider.json")
+    }
   end
 
   def render("provider.json", %{provider: provider}) do
     %{
-      id: provider.id,
+
       name: provider.name,
-      uri: provider.uri
+      uri: provider.uri,
 
     }
   end
