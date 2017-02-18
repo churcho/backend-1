@@ -12,7 +12,7 @@ defmodule Iotapi.EventManager.CouchPotato do
         type: "CouchPotatoEvent",
         entity: "Couch Potato Server",
         payload: params,
-        source: "Couch Potato"
+        source: "couchpotato"
       }
   end
 

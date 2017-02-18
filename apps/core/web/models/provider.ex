@@ -4,14 +4,14 @@ defmodule Iotapi.Provider do
   schema "providers" do
     field :name, :string
     field :description, :string
-    field :uri, :string
+    field :url, :string
     field :enabled, :boolean
     field :lorp_name, :string
     field :registered_at, :utc_datetime
     field :last_seen, :utc_datetime
     field :provides, :map
     field :configuration, :map
-    field :keywords, :string
+    field :keywords, {:array, :string}
     field :version, :string
 
 
@@ -27,7 +27,7 @@ defmodule Iotapi.Provider do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name,
-                     :uri,
+                     :url,
                      :description,
                      :enabled,
                      :lorp_name,
@@ -37,6 +37,6 @@ defmodule Iotapi.Provider do
                      :configuration,
                      :keywords,
                      :version])
-    |> validate_required([:name, :uri])
+    |> validate_required([:name, :url])
   end
 end

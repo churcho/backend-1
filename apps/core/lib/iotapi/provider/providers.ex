@@ -11,9 +11,6 @@ defmodule Iotapi.Providers do
 
   end
 
-  def update(provider) do
-
-  end
 
 
 end

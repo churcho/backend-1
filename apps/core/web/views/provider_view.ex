@@ -24,8 +24,16 @@ defmodule Iotapi.ProviderView do
     %{
 
       name: provider.name,
-      uri: provider.uri,
-
+      url: provider.url,
+      description: provider.description,
+      enabled: provider.enabled,
+      lorp_name: provider.lorp_name,
+      registered_at:  provider.registered_at,
+      last_seen: provider.last_seen,
+      provides: provider.provides,
+      configuration: provider.configuration,
+      keywords: provider.keywords,
+      version: provider.version
     }
   end
 end
