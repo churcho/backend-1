@@ -1,7 +1,7 @@
-defmodule Iotapi.EventTest do
-  use Iotapi.ModelCase
+defmodule Core.EventTest do
+  use Core.ModelCase
 
-  alias Iotapi.Event
+  alias Core.Event
 
   @valid_attrs %{entity: "some content", message: "some content", payload: %{}, type: "some content"}
   @invalid_attrs %{}

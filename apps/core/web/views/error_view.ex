@@ -1,5 +1,5 @@
-defmodule Iotapi.ErrorView do
-  use Iotapi.Web, :view
+defmodule Core.ErrorView do
+  use Core.Web, :view
 
   def render("404.json", _assigns) do
     %{errors: %{detail: "Page not found"}}

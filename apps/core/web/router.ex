@@ -1,5 +1,5 @@
-defmodule Iotapi.Router do
-  use Iotapi.Web, :router
+defmodule Core.Router do
+  use Core.Web, :router
 
   pipeline :api do
     plug :accepts, ["json"]
@@ -7,15 +7,19 @@ defmodule Iotapi.Router do
     plug Guardian.Plug.LoadResource
   end
 
-  scope "/api", Iotapi do
+  scope "/api", Core do
     pipe_through :api
     scope "/v1" do
 
       # Resources
       resources "/settings", SettingController, except: [:new, :edit]
       resources "/locations", LocationController, except: [:new, :edit]
+      resources "/entities", EntityController, except: [:new, :edit]
       resources "/zones", ZoneController, except: [:new, :edit]
+      resources "/rooms", RoomController, except: [:new, :edit]
       resources "/events", EventController, except: [:new, :edit]
+      resources "/users", UserController, except: [:new, :edit]
+      resources "/roles", RoleController, except: [:new, :edit]
       # Route to services
       resources "/services", ServiceController, except: [:new, :edit]
       # Route to providers

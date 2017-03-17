@@ -1,8 +1,8 @@
-defmodule Iotapi.Mixfile do
+defmodule Core.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :iotapi,
+    [app: :core,
      version: "0.0.1",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
@@ -21,7 +21,7 @@ defmodule Iotapi.Mixfile do
   #
   # Type `mix help compile.app` for more information.
   def application do
-    [mod: {Iotapi, []},
+    [mod: {Core, []},
      applications: [:phoenix, :phoenix_pubsub, :cowboy, :logger, :gettext,
                     :phoenix_ecto, :postgrex, :comeonin, :timex_ecto, :timex]]
   end

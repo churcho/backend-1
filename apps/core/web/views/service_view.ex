@@ -1,9 +1,9 @@
 
-defmodule Iotapi.ServiceView do
-  use Iotapi.Web, :view
+defmodule Core.ServiceView do
+  use Core.Web, :view
 
   def render("index.json", %{services: services}) do
-    %{data: render_many(services, Iotapi.ServiceView, "show.json")}
+    %{data: render_many(services, Core.ServiceView, "show.json")}
   end
 
   def render("show.json", %{service: service}) do
@@ -12,8 +12,8 @@ defmodule Iotapi.ServiceView do
       links: %{
         self: "/api/v1/services/#{service.id}"
       },
-      attributes: render_one(service, Iotapi.ServiceView, "service.json"),
-      included: render_one(service.provider, Iotapi.ProviderView, "show.json"),
+      attributes: render_one(service, Core.ServiceView, "service.json"),
+      included: render_one(service.provider, Core.ProviderView, "show.json"),
     }
   end
 
@@ -23,7 +23,7 @@ defmodule Iotapi.ServiceView do
     %{
      type: "services",
      id: service.id,
-     attributes: render_one(service, Iotapi.ServiceView, "service.json"),
+     attributes: render_one(service, Core.ServiceView, "service.json"),
      links: %{
        self: "/api/v1/services/#{service.id}"
      },

@@ -1,12 +1,12 @@
-defmodule Iotapi.EventView do
-  use Iotapi.Web, :view
+defmodule Core.EventView do
+  use Core.Web, :view
 
   def render("index.json", %{events: events}) do
     %{
       links: %{
         self: "/api/v1/events"
       },
-      data: render_many(events, Iotapi.EventView, "show.json")
+      data: render_many(events, Core.EventView, "show.json")
     }
 
 
@@ -16,18 +16,18 @@ defmodule Iotapi.EventView do
     %{
       links: %{
         self: "/api/v1/events/#{event.id}",
-        logo: logo_url(event),
-        icon: icon_url(event)
+        logo: Core.Event.logo_url(event),
+        icon: Core.Event.icon_url(event)
       },
       id: event.id,
-      attributes: render_one(event, Iotapi.EventView, "event.json")
+      attributes: render_one(event, Core.EventView, "event.json")
     }
   end
 
   def render("event.json", %{event: event}) do
 
       %{
-        subject: trimmed_title(event.message),
+        subject: Core.Event.trimmed_title(event.message),
         message: event.message,
         entity: event.entity,
         value: event.value,
@@ -36,38 +36,12 @@ defmodule Iotapi.EventView do
         source: event.source,
         type: event.type,
         state_changed: event.state_changed,
-        payload: event.payload
+        payload: event.payload,
+        inserted_at: event.inserted_at
 
       }
 
 
   end
 
-  @doc """
-  We will assemble the logo url using the event source field.
-  """
-  def logo_url(event) do
-    if event.source do
-      "http://localhost:4000/images/"<>event.source<>".png"
-    else
-      "http://localhost:4000/images/generic.png"
-    end
-  end
-
-  def icon_url(event) do
-    if event.source do
-      "http://localhost:4000/images/"<>event.source<>"_icon.png"
-    else
-      "http://localhost:4000/images/generic_icon.png"
-    end
-  end
-
-  @doc """
-  Let's trim the message string down to a more manageable size.
-  """
-  def trimmed_title(title) do
-    title
-    |> String.slice(0..18)
-    |> String.replace(~r{-[^-]*$}, "")
-  end
 end

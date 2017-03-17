@@ -1,7 +1,7 @@
-defmodule Iotapi.EventControllerTest do
-  use Iotapi.ConnCase
+defmodule Core.EventControllerTest do
+  use Core.ConnCase
 
-  alias Iotapi.Event
+  alias Core.Event
   @valid_attrs %{entity: "some content", message: "some content", payload: %{}, type: "some content"}
   @invalid_attrs %{}
 

@@ -1,7 +1,7 @@
-defmodule Iotapi.UserTest do
-  use Iotapi.ModelCase
+defmodule Core.UserTest do
+  use Core.ModelCase
 
-  alias Iotapi.User
+  alias Core.User
 
   @valid_attrs %{email: "some content", encrypted_password: "some content", first_name: "some content", last_name: "some content"}
   @invalid_attrs %{}

@@ -1,11 +1,11 @@
-defmodule Iotapi.ChangesetView do
-  use Iotapi.Web, :view
+defmodule Core.ChangesetView do
+  use Core.Web, :view
 
   @doc """
   Traverses and translates changeset errors.
 
   See `Ecto.Changeset.traverse_errors/2` and
-  `Iotapi.ErrorHelpers.translate_error/1` for more details.
+  `Core.ErrorHelpers.translate_error/1` for more details.
   """
   def translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, &translate_error/1)

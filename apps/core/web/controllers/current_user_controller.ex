@@ -1,7 +1,7 @@
-defmodule Iotapi.CurrentUserController do
-  use Iotapi.Web, :controller
+defmodule Core.CurrentUserController do
+  use Core.Web, :controller
 
-  plug Guardian.Plug.EnsureAuthenticated, handler: Iotapi.SessionController
+  plug Guardian.Plug.EnsureAuthenticated, handler: Core.SessionController
 
   def show(conn, _) do
     user = Guardian.Plug.current_resource(conn)

@@ -1,7 +1,7 @@
-defmodule Iotapi.ProviderTest do
-  use Iotapi.ModelCase
+defmodule Core.ProviderTest do
+  use Core.ModelCase
 
-  alias Iotapi.Provider
+  alias Core.Provider
 
   @valid_attrs %{callback_uri: "some content", name: "some content", uri: "some content"}
   @invalid_attrs %{}

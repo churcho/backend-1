@@ -1,7 +1,7 @@
-defmodule Iotapi.ZoneController do
-  use Iotapi.Web, :controller
+defmodule Core.ZoneController do
+  use Core.Web, :controller
 
-  alias Iotapi.Zone
+  alias Core.Zone
 
   def index(conn, _params) do
     zones = Repo.all(Zone)
@@ -20,7 +20,7 @@ defmodule Iotapi.ZoneController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -39,7 +39,7 @@ defmodule Iotapi.ZoneController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

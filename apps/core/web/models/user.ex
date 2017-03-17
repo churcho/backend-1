@@ -1,5 +1,5 @@
-defmodule Iotapi.User do
-  use Iotapi.Web, :model
+defmodule Core.User do
+  use Core.Web, :model
 
 
   @derive {Poison.Encoder, only: [:id, :first_name, :last_name, :email]}

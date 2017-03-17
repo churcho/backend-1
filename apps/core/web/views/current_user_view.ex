@@ -1,5 +1,5 @@
-defmodule Iotapi.CurrentUserView do
-  use Iotapi.Web, :view
+defmodule Core.CurrentUserView do
+  use Core.Web, :view
 
   def render("show.json", %{user: user}) do
     user

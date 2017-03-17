@@ -1,12 +1,12 @@
-defmodule Iotapi.Zone do
-  use Iotapi.Web, :model
+defmodule Core.Zone do
+  use Core.Web, :model
 
   schema "zones" do
     field :name, :string
     field :description, :string
     field :state, :map
-    belongs_to :location, Iotapi.Location
-
+    belongs_to :location, Core.Location
+    has_many :rooms, Core.Room
     timestamps()
   end
 

@@ -1,4 +1,4 @@
-defmodule Iotapi.Repo.Migrations.CreateLocation do
+defmodule Core.Repo.Migrations.CreateLocation do
   use Ecto.Migration
 
   def change do
@@ -10,11 +10,11 @@ defmodule Iotapi.Repo.Migrations.CreateLocation do
       add :address_city, :string
       add :address_state, :string
       add :address_zip, :string
-      add :latitude, :string
-      add :longitude, :string
-
+      add :latitude, :float
+      add :longitude, :float
+      add :slug, :string
       timestamps()
     end
-
+     create unique_index(:locations, [:slug])
   end
 end

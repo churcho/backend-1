@@ -1,11 +1,11 @@
-defmodule Iotapi.UserSocket do
+defmodule Core.UserSocket do
   use Phoenix.Socket
 
-  alias Iotapi.{GuardianSerializer}
+  alias Core.{GuardianSerializer}
 
   # Channels
-  channel "events:*", Iotapi.EventChannel
-  channel "users:*", Iotapi.UserChannel
+  channel "events:*", Core.EventChannel
+  channel "users:*", Core.UserChannel
 
   # Transports
   transport :websocket, Phoenix.Transports.WebSocket

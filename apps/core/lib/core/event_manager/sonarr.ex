@@ -1,4 +1,4 @@
-defmodule Iotapi.EventManager.CouchPotato do
+defmodule Core.EventManager.Sonarr do
   @moduledoc """
   Decodes the payload to JSON and creates a new map that will be used to create a new event.
   """
@@ -9,10 +9,10 @@ defmodule Iotapi.EventManager.CouchPotato do
   def handler(params) do
       %{
         message: params["message"],
-        type: "CouchPotatoEvent",
-        entity: "Couch Potato Server",
+        type: params["EventType"],
+        entity: "Sonarr Server",
         payload: params,
-        source: "couchpotato"
+        source: "sonarr"
       }
   end
 

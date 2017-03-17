@@ -1,4 +1,4 @@
-defmodule Iotapi.ModelCase do
+defmodule Core.ModelCase do
   @moduledoc """
   This module defines the test case to be used by
   model tests.
@@ -16,20 +16,20 @@ defmodule Iotapi.ModelCase do
 
   using do
     quote do
-      alias Iotapi.Repo
+      alias Core.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Iotapi.ModelCase
+      import Core.ModelCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Iotapi.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Core.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Iotapi.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Core.Repo, {:shared, self()})
     end
 
     :ok
@@ -59,7 +59,7 @@ defmodule Iotapi.ModelCase do
   """
   def errors_on(struct, data) do
     struct.__struct__.changeset(struct, data)
-    |> Ecto.Changeset.traverse_errors(&Iotapi.ErrorHelpers.translate_error/1)
+    |> Ecto.Changeset.traverse_errors(&Core.ErrorHelpers.translate_error/1)
     |> Enum.flat_map(fn {key, errors} -> for msg <- errors, do: {key, msg} end)
   end
 end

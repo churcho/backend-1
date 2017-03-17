@@ -1,12 +1,12 @@
-defmodule Iotapi.ZoneView do
-  use Iotapi.Web, :view
+defmodule Core.ZoneView do
+  use Core.Web, :view
 
   def render("index.json", %{zones: zones}) do
     %{
       links: %{
         self:  "/api/v1/zones"
       },
-      data: render_many(zones, Iotapi.ZoneView, "zone.json")
+      data: render_many(zones, Core.ZoneView, "zone.json")
     }
   end
 
@@ -17,7 +17,7 @@ defmodule Iotapi.ZoneView do
       },
       type: "zones",
       id: zone.id,
-      attributes: render_one(zone, Iotapi.ZoneView, "zone.json")
+      attributes: render_one(zone, Core.ZoneView, "zone.json")
     }
   end
 

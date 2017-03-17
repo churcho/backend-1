@@ -1,12 +1,12 @@
-defmodule Iotapi.Setting do
-  use Iotapi.Web, :model
+defmodule Core.Setting do
+  use Core.Web, :model
 
   schema "settings" do
     field :name, :string
     field :value, :map
     field :environment, :string
     field :description, :string
-    belongs_to :user, Iotapi.User
+    belongs_to :user, Core.User
 
     timestamps()
   end

@@ -1,7 +1,7 @@
-defmodule Iotapi.SettingControllerTest do
-  use Iotapi.ConnCase
+defmodule Core.SettingControllerTest do
+  use Core.ConnCase
 
-  alias Iotapi.Setting
+  alias Core.Setting
   @valid_attrs %{description: "some content", environment: "some content", name: "some content", value: %{}}
   @invalid_attrs %{}
 

@@ -1,4 +1,4 @@
-defmodule Iotapi.ChannelCase do
+defmodule Core.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -20,22 +20,22 @@ defmodule Iotapi.ChannelCase do
       # Import conveniences for testing with channels
       use Phoenix.ChannelTest
 
-      alias Iotapi.Repo
+      alias Core.Repo
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
 
 
       # The default endpoint for testing
-      @endpoint Iotapi.Endpoint
+      @endpoint Core.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Iotapi.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Core.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Iotapi.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Core.Repo, {:shared, self()})
     end
 
     :ok

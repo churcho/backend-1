@@ -1,6 +1,6 @@
-defmodule Iotapi.Providers do
-  alias Iotapi.Provider
-  alias Iotapi.Repo
+defmodule Core.Providers do
+  alias Core.Provider
+  alias Core.Repo
 
   def register(provider) do
     changeset = Provider.changeset(%Provider{}, provider)

@@ -1,6 +1,6 @@
 
-defmodule Iotapi.UserChannel do
-  use Iotapi.Web, :channel
+defmodule Core.UserChannel do
+  use Core.Web, :channel
 
   def join("users:" <> user_id, _params, socket) do
     current_user = socket.assigns.current_user

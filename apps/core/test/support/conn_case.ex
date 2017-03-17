@@ -1,4 +1,4 @@
-defmodule Iotapi.ConnCase do
+defmodule Core.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -20,23 +20,23 @@ defmodule Iotapi.ConnCase do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
 
-      alias Iotapi.Repo
+      alias Core.Repo
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
 
-      import Iotapi.Router.Helpers
+      import Core.Router.Helpers
 
       # The default endpoint for testing
-      @endpoint Iotapi.Endpoint
+      @endpoint Core.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Iotapi.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Core.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Iotapi.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Core.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

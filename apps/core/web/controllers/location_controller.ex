@@ -1,7 +1,7 @@
-defmodule Iotapi.LocationController do
-  use Iotapi.Web, :controller
+defmodule Core.LocationController do
+  use Core.Web, :controller
 
-  alias Iotapi.Location
+  alias Core.Location
 
   def index(conn, _params) do
     locations = Repo.all(Location)
@@ -21,7 +21,7 @@ defmodule Iotapi.LocationController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -41,7 +41,7 @@ defmodule Iotapi.LocationController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

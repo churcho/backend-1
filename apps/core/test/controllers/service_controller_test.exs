@@ -1,7 +1,7 @@
-defmodule Iotapi.ServiceControllerTest do
-  use Iotapi.ConnCase
+defmodule Core.ServiceControllerTest do
+  use Core.ConnCase
 
-  alias Iotapi.Service
+  alias Core.Service
   @valid_attrs %{access_token: "some content", bridge: true, client_id: "some content", client_secret: "some content", enabled: true, name: "some content", oauth: true, search_path: "some content", service_state: %{}, type: "some content", url: "some content"}
   @invalid_attrs %{}
 

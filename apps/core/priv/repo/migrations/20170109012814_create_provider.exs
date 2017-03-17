@@ -1,4 +1,4 @@
-defmodule Iotapi.Repo.Migrations.CreateProvider do
+defmodule Core.Repo.Migrations.CreateProvider do
   use Ecto.Migration
 
   def change do

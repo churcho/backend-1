@@ -1,7 +1,7 @@
-defmodule Iotapi.LocationTest do
-  use Iotapi.ModelCase
+defmodule Core.LocationTest do
+  use Core.ModelCase
 
-  alias Iotapi.Location
+  alias Core.Location
 
   @valid_attrs %{address_one: "some content", address_two: "some content", city: "some content", latitude: "some content", longitude: "some content", name: "some content", state: "some content", zip: "some content"}
   @invalid_attrs %{}

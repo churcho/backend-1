@@ -1,7 +1,7 @@
-defmodule Iotapi.SettingController do
-  use Iotapi.Web, :controller
+defmodule Core.SettingController do
+  use Core.Web, :controller
 
-  alias Iotapi.Setting
+  alias Core.Setting
 
   def index(conn, _params) do
     settings = Repo.all(Setting)
@@ -20,7 +20,7 @@ defmodule Iotapi.SettingController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -39,7 +39,7 @@ defmodule Iotapi.SettingController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

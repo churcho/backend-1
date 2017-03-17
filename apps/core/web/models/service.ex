@@ -1,5 +1,5 @@
-defmodule Iotapi.Service do
-  use Iotapi.Web, :model
+defmodule Core.Service do
+  use Core.Web, :model
 
   schema "services" do
     field :name, :string
@@ -14,7 +14,7 @@ defmodule Iotapi.Service do
     field :search_path, :string
     field :service_state, :map
 
-    belongs_to :provider, Iotapi.Provider
+    belongs_to :provider, Core.Provider
     timestamps()
   end
 

@@ -1,7 +1,7 @@
-defmodule Iotapi.ZoneControllerTest do
-  use Iotapi.ConnCase
+defmodule Core.ZoneControllerTest do
+  use Core.ConnCase
 
-  alias Iotapi.Zone
+  alias Core.Zone
   @valid_attrs %{description: "some content", name: "some content", state: %{}}
   @invalid_attrs %{}
 

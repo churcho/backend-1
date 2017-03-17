@@ -1,4 +1,4 @@
-defmodule Iotapi.Repo.Migrations.CreateEvent do
+defmodule Core.Repo.Migrations.CreateEvent do
   use Ecto.Migration
 
   def change do

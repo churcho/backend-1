@@ -1,4 +1,4 @@
-defmodule Iotapi.EventManager.ThinkingCleaner do
+defmodule Core.EventManager.CouchPotato do
   @moduledoc """
   Decodes the payload to JSON and creates a new map that will be used to create a new event.
   """
@@ -8,10 +8,11 @@ defmodule Iotapi.EventManager.ThinkingCleaner do
   """
   def handler(params) do
       %{
-        message: "Morty is active",
-        type: "trigger",
-        entity: "Morty",
-        source: "Thinking Cleaner"
+        message: params["message"],
+        type: "CouchPotatoEvent",
+        entity: "Couch Potato Server",
+        payload: params,
+        source: "couchpotato"
       }
   end
 

@@ -1,4 +1,4 @@
-defmodule Iotapi.EventManager.Sonarr do
+defmodule Core.EventManager.SabNzbD do
   @moduledoc """
   Decodes the payload to JSON and creates a new map that will be used to create a new event.
   """
@@ -9,10 +9,10 @@ defmodule Iotapi.EventManager.Sonarr do
   def handler(params) do
       %{
         message: params["message"],
-        type: params["EventType"],
-        entity: "Sonarr Server",
+        type: params["Title"],
+        entity: "SabNzbD Server",
         payload: params,
-        source: "sonarr"
+        source: "sabnzbd"
       }
   end
 

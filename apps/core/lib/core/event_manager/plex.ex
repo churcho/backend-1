@@ -1,4 +1,4 @@
-defmodule Iotapi.EventManager.Plex do
+defmodule Core.EventManager.Plex do
   @moduledoc """
   Decodes the payload to JSON and creates a new map that will be used to create a new event.
   """

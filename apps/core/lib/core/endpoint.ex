@@ -1,14 +1,14 @@
-defmodule Iotapi.Endpoint do
-  use Phoenix.Endpoint, otp_app: :iotapi
+defmodule Core.Endpoint do
+  use Phoenix.Endpoint, otp_app: :core
 
-  socket "/socket", Iotapi.UserSocket
+  socket "/socket", Core.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
   plug Plug.Static,
-    at: "/", from: :iotapi, gzip: false,
+    at: "/", from: :core, gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
@@ -33,10 +33,10 @@ defmodule Iotapi.Endpoint do
   # Set :encryption_salt if you would also like to encrypt it.
   plug Plug.Session,
     store: :cookie,
-    key: "_iotapi_key",
+    key: "_core_key",
     signing_salt: "8jP1E3Q2"
 
   plug CORSPlug
 
-  plug Iotapi.Router
+  plug Core.Router
 end

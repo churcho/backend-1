@@ -1,10 +1,10 @@
-defmodule Iotapi.LocationView do
-  use Iotapi.Web, :view
+defmodule Core.LocationView do
+  use Core.Web, :view
 
   def render("index.json", %{locations: locations}) do
     %{
       links: %{ self: "/api/v1/locations"},
-      data: render_many(locations, Iotapi.LocationView, "show.json")
+      data: render_many(locations, Core.LocationView, "show.json")
     }
   end
 
@@ -14,8 +14,10 @@ defmodule Iotapi.LocationView do
     %{
      type: "locations",
      id: location.id,
-     included: render_many(zones, Iotapi.ZoneView, "show.json"),
-     attributes: render_one(location, Iotapi.LocationView, "location.json"),
+     included: %{
+       zones: render_many(zones, Core.ZoneView, "show.json")
+       },
+     attributes: render_one(location, Core.LocationView, "location.json"),
      links: %{
        self: "/api/v1/locations/#{location.id}"
      },
@@ -30,7 +32,7 @@ defmodule Iotapi.LocationView do
     %{
      type: "locations",
      id: location.id,
-     attributes: render_one(location, Iotapi.LocationView, "location.json"),
+     attributes: render_one(location, Core.LocationView, "location.json"),
      links: %{
        self: "/api/v1/locations/#{location.id}"
      },

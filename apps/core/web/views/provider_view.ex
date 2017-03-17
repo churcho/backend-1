@@ -1,12 +1,12 @@
-defmodule Iotapi.ProviderView do
-  use Iotapi.Web, :view
+defmodule Core.ProviderView do
+  use Core.Web, :view
 
   def render("index.json", %{providers: providers}) do
     %{
       links: %{
         self: "/api/v1/providers"
       },
-      data: render_many(providers, Iotapi.ProviderView, "show.json")
+      data: render_many(providers, Core.ProviderView, "show.json")
     }
   end
 
@@ -16,7 +16,7 @@ defmodule Iotapi.ProviderView do
         self: "/api/v1/providers/#{provider.id}"
       },
       id: provider.id,
-      attributes: render_one(provider, Iotapi.ProviderView, "provider.json")
+      attributes: render_one(provider, Core.ProviderView, "provider.json")
     }
   end
 

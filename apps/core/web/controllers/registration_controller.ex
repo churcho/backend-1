@@ -1,8 +1,8 @@
 
-defmodule Iotapi.RegistrationController  do
-  use Iotapi.Web, :controller
+defmodule Core.RegistrationController  do
+  use Core.Web, :controller
 
-  alias Iotapi.{Repo, User}
+  alias Core.{Repo, User}
 
   plug :scrub_params, "user" when action in [:create]
 
@@ -15,7 +15,7 @@ defmodule Iotapi.RegistrationController  do
 
         conn
         |> put_status(:created)
-        |> render(Iotapi.SessionView, "show.json", jwt: jwt, user: user)
+        |> render(Core.SessionView, "show.json", jwt: jwt, user: user)
 
       {:error, changeset} ->
         conn

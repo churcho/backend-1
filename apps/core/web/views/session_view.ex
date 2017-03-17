@@ -1,6 +1,6 @@
 
-defmodule Iotapi.SessionView do
-  use Iotapi.Web, :view
+defmodule Core.SessionView do
+  use Core.Web, :view
 
   def render("show.json", %{jwt: jwt, user: user}) do
     %{

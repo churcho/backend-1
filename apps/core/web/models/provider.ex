@@ -1,5 +1,5 @@
-defmodule Iotapi.Provider do
-  use Iotapi.Web, :model
+defmodule Core.Provider do
+  use Core.Web, :model
 
   schema "providers" do
     field :name, :string
@@ -17,7 +17,7 @@ defmodule Iotapi.Provider do
 
 
 
-    has_many :services, Iotapi.Service
+    has_many :services, Core.Service
     timestamps()
   end
 

@@ -1,7 +1,7 @@
-defmodule Iotapi.EventController do
-  use Iotapi.Web, :controller
+defmodule Core.EventController do
+  use Core.Web, :controller
 
-  alias Iotapi.Event
+  alias Core.Event
 
   def index(conn, _params) do
     query = from(e in Event, order_by: [desc: e.id])
@@ -12,7 +12,7 @@ defmodule Iotapi.EventController do
 
   def create(conn, params) do
 
-    payload = Iotapi.EventManager.handle_events(params)
+    payload = Core.EventManager.handle_events(params)
     changeset = Event.changeset(%Event{}, payload)
 
 
@@ -20,7 +20,7 @@ defmodule Iotapi.EventController do
     case Repo.insert(changeset) do
       {:ok, event} ->
 
-        Iotapi.EventChannel.broadcast_change(event)
+        Core.EventChannel.broadcast_change(event)
 
         conn
         |> put_status(:created)
@@ -29,7 +29,7 @@ defmodule Iotapi.EventController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -48,7 +48,7 @@ defmodule Iotapi.EventController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

@@ -1,8 +1,9 @@
-defmodule Iotapi.ProviderController do
-  use Iotapi.Web, :controller
+defmodule Core.ProviderController do
+  use Core.Web, :controller
 
-  alias Iotapi.Provider
+  alias Core.Provider
 
+  
   def index(conn, _params) do
     providers = Repo.all(Provider)
     render(conn, "index.json", providers: providers)
@@ -20,7 +21,7 @@ defmodule Iotapi.ProviderController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -39,7 +40,7 @@ defmodule Iotapi.ProviderController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

@@ -1,4 +1,4 @@
-# Iotapi
+# Core
 
 To start your Phoenix app:
 

@@ -1,7 +1,7 @@
-defmodule Iotapi.ServiceController do
-  use Iotapi.Web, :controller
+defmodule Core.ServiceController do
+  use Core.Web, :controller
 
-  alias Iotapi.Service
+  alias Core.Service
 
   def index(conn, _params) do
     services = Repo.all(Service)
@@ -21,7 +21,7 @@ defmodule Iotapi.ServiceController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 
@@ -41,7 +41,7 @@ defmodule Iotapi.ServiceController do
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
-        |> render(Iotapi.ChangesetView, "error.json", changeset: changeset)
+        |> render(Core.ChangesetView, "error.json", changeset: changeset)
     end
   end
 

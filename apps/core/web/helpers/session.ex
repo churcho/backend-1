@@ -1,5 +1,5 @@
-defmodule Iotapi.Session do
-  alias Iotapi.{Repo, User}
+defmodule Core.Session do
+  alias Core.{Repo, User}
 
   def authenticate(%{"email" => email, "password" => password}) do
     user = Repo.get_by(User, email: String.downcase(email))

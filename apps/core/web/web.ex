@@ -1,12 +1,12 @@
-defmodule Iotapi.Web do
+defmodule Core.Web do
   @moduledoc """
   A module that keeps using definitions for controllers,
   views and so on.
 
   This can be used in your application as:
 
-      use Iotapi.Web, :controller
-      use Iotapi.Web, :view
+      use Core.Web, :controller
+      use Core.Web, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -30,12 +30,12 @@ defmodule Iotapi.Web do
     quote do
       use Phoenix.Controller
 
-      alias Iotapi.Repo
+      alias Core.Repo
       import Ecto
       import Ecto.Query
 
-      import Iotapi.Router.Helpers
-      import Iotapi.Gettext
+      import Core.Router.Helpers
+      import Core.Gettext
     end
   end
 
@@ -46,9 +46,9 @@ defmodule Iotapi.Web do
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_csrf_token: 0, get_flash: 2, view_module: 1]
 
-      import Iotapi.Router.Helpers
-      import Iotapi.ErrorHelpers
-      import Iotapi.Gettext
+      import Core.Router.Helpers
+      import Core.ErrorHelpers
+      import Core.Gettext
     end
   end
 
@@ -62,10 +62,10 @@ defmodule Iotapi.Web do
     quote do
       use Phoenix.Channel
 
-      alias Iotapi.Repo
+      alias Core.Repo
       import Ecto
       import Ecto.Query
-      import Iotapi.Gettext
+      import Core.Gettext
     end
   end
 

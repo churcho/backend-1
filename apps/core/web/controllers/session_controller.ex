@@ -1,10 +1,10 @@
-defmodule Iotapi.SessionController do
-  use Iotapi.Web, :controller
+defmodule Core.SessionController do
+  use Core.Web, :controller
 
   plug :scrub_params, "session" when action in [:create]
 
   def create(conn, %{"session" => session_params}) do
-    case Iotapi.Session.authenticate(session_params) do
+    case Core.Session.authenticate(session_params) do
       {:ok, user} ->
         {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
 
@@ -33,6 +33,6 @@ defmodule Iotapi.SessionController do
   def unauthenticated(conn, _params) do
     conn
     |> put_status(:forbidden)
-    |> render(Iotapi.SessionView, "forbidden.json", error: "Not Authenticated")
+    |> render(Core.SessionView, "forbidden.json", error: "Not Authenticated")
   end
 end

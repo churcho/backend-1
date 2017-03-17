@@ -1,4 +1,4 @@
-defmodule Iotapi.ErrorHelpers do
+defmodule Core.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.
   """
@@ -21,9 +21,9 @@ defmodule Iotapi.ErrorHelpers do
     #     dgettext "errors", "is invalid"
     #
     if count = opts[:count] do
-      Gettext.dngettext(Iotapi.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext(Core.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(Iotapi.Gettext, "errors", msg, opts)
+      Gettext.dgettext(Core.Gettext, "errors", msg, opts)
     end
   end
 end

@@ -1,7 +1,7 @@
-defmodule Iotapi.ProviderControllerTest do
-  use Iotapi.ConnCase
+defmodule Core.ProviderControllerTest do
+  use Core.ConnCase
 
-  alias Iotapi.Provider
+  alias Core.Provider
   @valid_attrs %{callback_uri: "some content", name: "some content", uri: "some content"}
   @invalid_attrs %{}
 

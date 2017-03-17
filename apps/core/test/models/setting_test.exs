@@ -1,7 +1,7 @@
-defmodule Iotapi.SettingTest do
-  use Iotapi.ModelCase
+defmodule Core.SettingTest do
+  use Core.ModelCase
 
-  alias Iotapi.Setting
+  alias Core.Setting
 
   @valid_attrs %{description: "some content", environment: "some content", name: "some content", value: %{}}
   @invalid_attrs %{}

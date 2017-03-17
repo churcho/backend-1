@@ -1,5 +1,5 @@
-defmodule Iotapi.Location do
-  use Iotapi.Web, :model
+defmodule Core.Location do
+  use Core.Web, :model
 
   schema "locations" do
     field :name, :string
@@ -12,7 +12,7 @@ defmodule Iotapi.Location do
     field :latitude, :string
     field :longitude, :string
 
-    has_many :zones, Iotapi.Zone
+    has_many :zones, Core.Zone
 
     timestamps()
   end

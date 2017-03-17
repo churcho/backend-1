@@ -1,4 +1,4 @@
-defmodule Iotapi.Repo.Migrations.CreateSetting do
+defmodule Core.Repo.Migrations.CreateSetting do
   use Ecto.Migration
 
   def change do
@@ -7,7 +7,7 @@ defmodule Iotapi.Repo.Migrations.CreateSetting do
       add :value, :map
       add :environment, :string, default: "production"
       add :description, :string, default: "description.."
-      add :user_id, references(:users, on_delete: :nothing)
+      add :user_id, references(:users, on_delete: :delete_all)
 
       timestamps()
     end

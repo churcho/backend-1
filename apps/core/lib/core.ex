@@ -1,4 +1,4 @@
-defmodule Iotapi do
+defmodule Core do
   use Application
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
@@ -9,23 +9,23 @@ defmodule Iotapi do
     # Define workers and child supervisors to be supervised
     children = [
       # Start the Ecto repository
-      supervisor(Iotapi.Repo, []),
+      supervisor(Core.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(Iotapi.Endpoint, []),
-      # Start your own worker by calling: Iotapi.Worker.start_link(arg1, arg2, arg3)
-      # worker(Iotapi.Worker, [arg1, arg2, arg3]),
+      supervisor(Core.Endpoint, []),
+      # Start your own worker by calling: Core.Worker.start_link(arg1, arg2, arg3)
+      # worker(Core.Worker, [arg1, arg2, arg3]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Iotapi.Supervisor]
+    opts = [strategy: :one_for_one, name: Core.Supervisor]
     Supervisor.start_link(children, opts)
   end
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.
   def config_change(changed, _new, removed) do
-    Iotapi.Endpoint.config_change(changed, removed)
+    Core.Endpoint.config_change(changed, removed)
     :ok
   end
 end
