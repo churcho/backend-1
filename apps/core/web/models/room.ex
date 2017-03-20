@@ -4,7 +4,7 @@ defmodule Core.Room do
   schema "rooms" do
     field :name, :string
     field :description, :string
-    belongs_to :location, Core.Location
+    belongs_to :zone, Core.Zone
     timestamps()
   end
 

@@ -2,7 +2,10 @@ defmodule Core.RoomView do
   use Core.Web, :view
 
   def render("index.json", %{rooms: rooms}) do
-    %{data: render_many(rooms, Core.RoomView, "room.json")}
+    %{
+      links: %{ self: "/api/v1/rooms"},
+      data: render_many(rooms, Core.RoomView, "room.json")
+    }
   end
 
   def render("show.json", %{room: room}) do
@@ -10,9 +13,14 @@ defmodule Core.RoomView do
   end
 
   def render("room.json", %{room: room}) do
-    %{id: room.id,
-      name: room.name,
-      description: room.description,
-      location_id: room.location_id}
+    %{
+      links: %{ self: "/api/v1/rooms/#{room.id}"},
+      id: room.id,
+      attributes: %{
+        name: room.name,
+        description: room.description,
+        location_id: room.location_id
+      }
+    }
   end
 end

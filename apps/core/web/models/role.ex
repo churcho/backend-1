@@ -5,6 +5,7 @@ defmodule Core.Role do
     field :name, :string
     field :description, :string
 
+    has_many :users, Core.User
     timestamps()
   end
 

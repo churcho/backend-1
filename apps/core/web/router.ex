@@ -20,6 +20,7 @@ defmodule Core.Router do
       resources "/events", EventController, except: [:new, :edit]
       resources "/users", UserController, except: [:new, :edit]
       resources "/roles", RoleController, except: [:new, :edit]
+      resources "/users", UserController, except: [:new, :edit]
       # Route to services
       resources "/services", ServiceController, except: [:new, :edit]
       # Route to providers

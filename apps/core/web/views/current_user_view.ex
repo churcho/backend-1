@@ -2,7 +2,14 @@ defmodule Core.CurrentUserView do
   use Core.Web, :view
 
   def render("show.json", %{user: user}) do
-    user
+    %{
+     type: "user",
+     id: user.id,
+     first_name: user.first_name,
+     last_name: user.last_name,
+     email: user.email,
+     role: render_one(user.role, Core.RoleView, "show.json")       
+   }
   end
 
   def render("error.json", _) do

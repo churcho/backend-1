@@ -12,6 +12,10 @@ defmodule Core.RegistrationController  do
     case Repo.insert(changeset) do
       {:ok, user} ->
         {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
+        user 
+        |> Core.RoleManager.grant_role
+
+
 
         conn
         |> put_status(:created)

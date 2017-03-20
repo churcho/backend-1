@@ -12,6 +12,6 @@ defmodule Core.Repo.Migrations.CreateRoom do
       timestamps()
     end
     create index(:rooms, [:zone_id])
-     create unique_index(:rooms, [:slug])
+    create unique_index(:rooms, [:slug])
   end
 end

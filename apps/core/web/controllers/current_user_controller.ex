@@ -5,7 +5,7 @@ defmodule Core.CurrentUserController do
 
   def show(conn, _) do
     user = Guardian.Plug.current_resource(conn)
-
+    |> Core.Repo.preload(:role)
     conn
     |> put_status(:ok)
     |> render("show.json", user: user)

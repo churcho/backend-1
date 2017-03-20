@@ -8,6 +8,6 @@ defmodule Core.Repo.Migrations.CreateRole do
 
       timestamps()
     end
-
+    create unique_index(:roles, [:name])
   end
 end

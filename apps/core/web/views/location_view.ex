@@ -4,7 +4,7 @@ defmodule Core.LocationView do
   def render("index.json", %{locations: locations}) do
     %{
       links: %{ self: "/api/v1/locations"},
-      data: render_many(locations, Core.LocationView, "show.json")
+      data: render_many(locations, Core.LocationView, "location.json")
     }
   end
 
@@ -12,37 +12,23 @@ defmodule Core.LocationView do
     zones = location.zones
 
     %{
-     type: "locations",
-     id: location.id,
-     included: %{
-       zones: render_many(zones, Core.ZoneView, "show.json")
-       },
-     attributes: render_one(location, Core.LocationView, "location.json"),
-     links: %{
-       self: "/api/v1/locations/#{location.id}"
-     },
-
-
-   }
+     data: render_one(location, Core.LocationView, "location.json")
+    }
   end
 
-  def render("created.json", %{location: location}) do
-    zones = location.zones
-
-    %{
-     type: "locations",
-     id: location.id,
-     attributes: render_one(location, Core.LocationView, "location.json"),
-     links: %{
-       self: "/api/v1/locations/#{location.id}"
-     },
-
-
-   }
-  end
 
   def render("location.json", %{location: location}) do
-      %{
+    %{
+      links: %{
+        self: "/api/v1/locations/#{location.id}"
+      },
+      id: location.id,
+      type: "locations",
+      id: location.id,
+      included: %{
+       zones: render_many(location.zones, Core.ZoneView, "zone.json")
+      },
+      attributes: %{
         name: location.name,
         state: location.state,
         address_one: location.address_one,
@@ -54,6 +40,6 @@ defmodule Core.LocationView do
         longitude: location.longitude
       }
 
-
+    }
   end
 end

@@ -11,6 +11,6 @@ defmodule Core.Repo.Migrations.CreateZone do
       timestamps()
     end
     create index(:zones, [:location_id])
-    create unique_index(:locations, [:slug])
+    create unique_index(:zones, [:slug])
   end
 end

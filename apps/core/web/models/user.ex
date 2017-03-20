@@ -7,10 +7,15 @@ defmodule Core.User do
   schema "users" do
     field :first_name, :string
     field :last_name, :string
+    field :username, :string
     field :email, :string
+    field :slug, :string
+    field :last_seen, :utc_datetime
+    field :enabled, :boolean
     field :encrypted_password, :string
     field :password, :string, virtual: true
 
+    belongs_to :role, Core.Role
     timestamps()
   end
 
@@ -30,6 +35,15 @@ defmodule Core.User do
     |> unique_constraint(:email, message: "Email already taken")
     |> generate_encrypted_password
   end
+
+  @doc """
+  Update user profile without providing a password
+  """
+  def changeset_profile(struct, params \\ %{}) do
+    struct
+    |> cast(params, [:role_id], [])
+  end
+
 
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do
