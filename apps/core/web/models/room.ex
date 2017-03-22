@@ -13,7 +13,7 @@ defmodule Core.Room do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :description])
-    |> validate_required([:name, :description])
+    |> cast(params, [:name, :description, :zone_id])
+    |> validate_required([:name, :description, :zone_id])
   end
 end

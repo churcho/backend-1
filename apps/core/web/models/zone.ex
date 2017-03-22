@@ -16,6 +16,6 @@ defmodule Core.Zone do
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:name, :description, :state, :location_id])
-    |> validate_required([:name, :description])
+    |> validate_required([:name, :description, :location_id])
   end
 end

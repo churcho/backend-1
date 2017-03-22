@@ -19,7 +19,8 @@ defmodule Core.RoomView do
       attributes: %{
         name: room.name,
         description: room.description,
-        location_id: room.location_id
+        zone_id: room.zone_id,
+        zone_name: room.zone.name
       }
     }
   end

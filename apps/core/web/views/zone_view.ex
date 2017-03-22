@@ -12,8 +12,8 @@ defmodule Core.ZoneView do
 
   def render("show.json", %{zone: zone}) do
     %{
-      data: render_one(zone, Core.ZoneView, "zone.json")
-    }
+      data: render_one(zone , Core.ZoneView, "zone.json")
+     }
   end
 
   def render("zone.json", %{zone: zone}) do
@@ -22,10 +22,14 @@ defmodule Core.ZoneView do
       links: %{
         self: "/api/v1/zones/#{zone.id}"
       },
+      included: %{
+       rooms: render_many(zone.rooms  |> Core.Repo.preload([:zone]), Core.RoomView, "room.json")
+      },
       attributes: %{
         name: zone.name,
         description: zone.description,
         location_id: zone.location_id,
+        location_name: zone.location.name,
         state: zone.state
       }
     }

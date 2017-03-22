@@ -5,6 +5,7 @@ defmodule Core.RoomController do
 
   def index(conn, _params) do
     rooms = Repo.all(Room)
+    |> Repo.preload([:zone])
     render(conn, "index.json", rooms: rooms)
   end
 
@@ -16,7 +17,7 @@ defmodule Core.RoomController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", room_path(conn, :show, room))
-        |> render("show.json", room: room)
+        |> render("show.json", room: room |> Repo.preload([:zone]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -26,6 +27,7 @@ defmodule Core.RoomController do
 
   def show(conn, %{"id" => id}) do
     room = Repo.get!(Room, id)
+    |> Repo.preload([:zone])
     render(conn, "show.json", room: room)
   end
 
@@ -35,7 +37,7 @@ defmodule Core.RoomController do
 
     case Repo.update(changeset) do
       {:ok, room} ->
-        render(conn, "show.json", room: room)
+        render(conn, "show.json", room: room |> Repo.preload([:zone]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
