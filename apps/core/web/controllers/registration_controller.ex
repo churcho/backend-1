@@ -19,7 +19,7 @@ defmodule Core.RegistrationController  do
 
         conn
         |> put_status(:created)
-        |> render(Core.SessionView, "show.json", jwt: jwt, user: user)
+        |> render(Core.SessionView, "show.json", jwt: jwt, user: user |> Repo.preload(:role))
 
       {:error, changeset} ->
         conn

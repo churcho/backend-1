@@ -8,7 +8,7 @@ defmodule Core.CurrentUserView do
      first_name: user.first_name,
      last_name: user.last_name,
      email: user.email,
-     role: render_one(user.role, Core.RoleView, "show.json")       
+     role: render_one(user.role, Core.RoleView, "role.json")       
    }
   end
 

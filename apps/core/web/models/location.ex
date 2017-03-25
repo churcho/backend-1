@@ -13,7 +13,7 @@ defmodule Core.Location do
     field :longitude, :string
 
     has_many :zones, Core.Zone
-
+    has_many :zone_rooms, through: [:zones, :room]
     timestamps()
   end
 

@@ -5,6 +5,7 @@ defmodule Core.Room do
     field :name, :string
     field :description, :string
     belongs_to :zone, Core.Zone
+    has_one :zone_location, through: [:zone, :location]
     timestamps()
   end
 

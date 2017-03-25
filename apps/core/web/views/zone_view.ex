@@ -23,7 +23,7 @@ defmodule Core.ZoneView do
         self: "/api/v1/zones/#{zone.id}"
       },
       included: %{
-       rooms: render_many(zone.rooms  |> Core.Repo.preload([:zone]), Core.RoomView, "room.json")
+       rooms: render_many(zone.rooms  |> Core.Repo.preload([:zone, :zone_location]), Core.RoomView, "room.json")
       },
       attributes: %{
         name: zone.name,

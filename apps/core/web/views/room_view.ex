@@ -20,7 +20,9 @@ defmodule Core.RoomView do
         name: room.name,
         description: room.description,
         zone_id: room.zone_id,
-        zone_name: room.zone.name
+        zone_name: room.zone.name,
+        location_id: room.zone_location.id,
+        location_name: room.zone_location.name
       }
     }
   end

@@ -5,7 +5,14 @@ defmodule Core.SessionView do
   def render("show.json", %{jwt: jwt, user: user}) do
     %{
       jwt: jwt,
-      user: user
+      user:  %{
+         type: "user",
+         id: user.id,
+         first_name: user.first_name,
+         last_name: user.last_name,
+         email: user.email,
+         role: render_one(user.role, Core.RoleView, "role.json")       
+       }
     }
   end
 

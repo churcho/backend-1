@@ -10,7 +10,7 @@ defmodule Core.SessionController do
 
         conn
         |> put_status(:created)
-        |> render("show.json", jwt: jwt, user: user)
+        |> render("show.json", jwt: jwt, user: user |> Repo.preload(:role))
 
       :error ->
         conn
