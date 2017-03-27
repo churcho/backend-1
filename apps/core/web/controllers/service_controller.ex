@@ -5,7 +5,9 @@ defmodule Core.ServiceController do
 
   def index(conn, _params) do
     services = Repo.all(Service)
-    |> Repo.preload([:provider])
+    |> Repo.preload([:provider, :entities])
+    
+
     render(conn, "index.json", services: services)
   end
 
@@ -17,7 +19,7 @@ defmodule Core.ServiceController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", service_path(conn, :show, service))
-        |> render("created.json", service: service)
+        |> render("show.json", service: service |> Repo.preload([:provider]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -27,7 +29,8 @@ defmodule Core.ServiceController do
 
   def show(conn, %{"id" => id}) do
     service = Repo.get!(Service, id)
-    |> Repo.preload([:provider])
+    |> Repo.preload([:provider, :entities])
+
     render(conn, "show.json", service: service)
   end
 
@@ -37,7 +40,7 @@ defmodule Core.ServiceController do
 
     case Repo.update(changeset) do
       {:ok, service} ->
-        render(conn, "show.json", service: service)
+        render(conn, "show.json", service: service |> Repo.preload([:provider]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

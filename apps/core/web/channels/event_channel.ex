@@ -17,6 +17,7 @@ defmodule Core.EventChannel do
           "icon" => Core.Event.icon_url(event)
         },
         "attributes" => %{
+          "value" => event.value,
           "message" => event.message,
           "payload" => event.payload,
           "entity" => event.entity,

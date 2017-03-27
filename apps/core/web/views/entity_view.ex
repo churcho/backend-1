@@ -20,7 +20,10 @@ defmodule Core.EntityView do
       attributes: %{
         name: entity.name,
         uuid: entity.uuid,
+        service_id: entity.service_id,
+        service_name: entity.service.name,
         description: entity.description,
+        configuration: entity.configuration,
         label: entity.label,
         metadata: entity.metadata,
         state: entity.state}

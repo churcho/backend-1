@@ -6,6 +6,7 @@ defmodule Core.ProviderController do
   
   def index(conn, _params) do
     providers = Repo.all(Provider)
+    |> Repo.preload([:services])
     render(conn, "index.json", providers: providers)
   end
 
@@ -17,7 +18,7 @@ defmodule Core.ProviderController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", provider_path(conn, :show, provider))
-        |> render("show.json", provider: provider)
+        |> render("show.json", provider: provider |> Repo.preload([:services]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -27,6 +28,7 @@ defmodule Core.ProviderController do
 
   def show(conn, %{"id" => id}) do
     provider = Repo.get!(Provider, id)
+    |> Repo.preload([:services])
     render(conn, "show.json", provider: provider)
   end
 
@@ -36,7 +38,7 @@ defmodule Core.ProviderController do
 
     case Repo.update(changeset) do
       {:ok, provider} ->
-        render(conn, "show.json", provider: provider)
+        render(conn, "show.json", provider: provider |> Repo.preload([:services]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

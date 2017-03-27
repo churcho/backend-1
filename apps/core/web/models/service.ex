@@ -6,14 +6,14 @@ defmodule Core.Service do
     field :client_id, :string
     field :client_secret, :string
     field :access_token, :binary
-    field :url, :string
-    field :oauth, :boolean, default: false
-    field :bridge, :boolean, default: false
-    field :enabled, :boolean, default: false
-    field :type, :string
+    field :api_key, :string
+    field :enabled, :boolean
+    field :searchable, :boolean
     field :search_path, :string
     field :service_state, :map
+    field :slug, :string
 
+    has_many :entities, Core.Entity
     belongs_to :provider, Core.Provider
     timestamps()
   end
@@ -27,13 +27,12 @@ defmodule Core.Service do
                      :client_id,
                      :client_secret,
                      :access_token,
-                     :url,
-                     :oauth,
-                     :bridge,
+                     :api_key,
                      :enabled,
-                     :type,
+                     :searchable,
                      :search_path,
                      :service_state,
+                     :slug,
                      :provider_id])
     |> validate_required([:name, :provider_id])
   end

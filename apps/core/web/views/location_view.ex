@@ -24,9 +24,8 @@ defmodule Core.LocationView do
       },
       id: location.id,
       type: "locations",
-      id: location.id,
       included: %{
-       zones: render_many(location.zones |> Core.Repo.preload([:location]) |> Core.Repo.preload([:rooms]), Core.ZoneView, "zone.json")
+       zones: render_many(location.zones |> Core.Repo.preload([:location, :rooms]) , Core.ZoneView, "zone.json")
       },
       attributes: %{
         name: location.name,

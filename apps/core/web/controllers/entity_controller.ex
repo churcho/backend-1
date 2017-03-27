@@ -5,6 +5,7 @@ defmodule Core.EntityController do
 
   def index(conn, _params) do
     entities = Repo.all(Entity)
+     |> Repo.preload([:service])
     render(conn, "index.json", entities: entities)
   end
 
@@ -26,6 +27,7 @@ defmodule Core.EntityController do
 
   def show(conn, %{"id" => id}) do
     entity = Repo.get!(Entity, id)
+    |> Repo.preload([:service])
     render(conn, "show.json", entity: entity)
   end
 

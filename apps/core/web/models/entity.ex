@@ -8,6 +8,11 @@ defmodule Core.Entity do
     field :label, :string
     field :metadata, :map
     field :state, :map
+    field :display_name, :string
+    field :configuration, :map
+    field :source, :string
+
+    belongs_to :service, Core.Service
 
     timestamps()
   end
@@ -17,7 +22,16 @@ defmodule Core.Entity do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:name, :uuid, :description, :label, :metadata, :state])
-    |> validate_required([:name, :uuid, :description, :label, :metadata, :state])
+    |> cast(params, [:name, 
+                     :uuid, 
+                     :description, 
+                     :label, 
+                     :metadata, 
+                     :state, 
+                     :display_name, 
+                     :configuration, 
+                     :source,
+                     :service_id])
+    |> validate_required([:name, :uuid])
   end
 end
