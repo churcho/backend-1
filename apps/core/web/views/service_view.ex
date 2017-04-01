@@ -29,6 +29,7 @@ defmodule Core.ServiceView do
       attributes: %{
           
           name: service.name,
+          auth_method: service.provider.auth_method,
           provider_id: service.provider.id,
           provider_name: service.provider.name,
           client_id: service.client_id,
@@ -38,7 +39,7 @@ defmodule Core.ServiceView do
           enabled: service.enabled,
           searchable: service.searchable,
           search_path: service.search_path,
-          state: service.service_state,
+          state: service.state,
           slug: service.slug
         }
     }

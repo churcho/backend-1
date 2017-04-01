@@ -1,6 +1,6 @@
-defmodule Sabnzbd do
+defmodule PlexConnect do
   @moduledoc """
-  Documentation for Sabnzbd.
+  Documentation for PlexConnect.
   """
 
   @doc """
@@ -8,7 +8,7 @@ defmodule Sabnzbd do
 
   ## Examples
 
-      iex> Sabnzbd.hello
+      iex> PlexConnect.hello
       :world
 
   """

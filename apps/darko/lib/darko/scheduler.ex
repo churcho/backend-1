@@ -20,7 +20,7 @@ defmodule Darko.Scheduler do
   end
 
   defp schedule_work() do
-  	#We will poll the hue bridge every 200 ms
+  	#We will poll the Dark Sky API every 3 minutes
     Process.send_after(self(), :work, 180000)
   end
 end

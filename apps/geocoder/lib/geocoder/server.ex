@@ -12,7 +12,7 @@ defmodule Geocoder.Server do
 
 	def init(state) do
 		
-		IO.puts "Registering......."
+		IO.puts "Registering Geocoder....."
 		Geocoder.register_provider
 		{:ok, state}
 	end

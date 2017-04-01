@@ -14,7 +14,9 @@ defmodule Core.Router do
       # Resources
       resources "/settings", SettingController, except: [:new, :edit]
       resources "/locations", LocationController, except: [:new, :edit]
-      resources "/entities", EntityController, except: [:new, :edit]
+      resources "/entities", EntityController do
+        get "/events", EntityController, :entity_events
+      end
       resources "/zones", ZoneController, except: [:new, :edit]
       resources "/rooms", RoomController, except: [:new, :edit]
       resources "/events", EventController, except: [:new, :edit]

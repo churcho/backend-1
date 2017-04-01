@@ -40,7 +40,8 @@ defmodule Darko.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:oauth2, "~> 0.7"},
+    [{:core, in_umbrella: true},
+     {:oauth2, "~> 0.7"},
      {:httpoison, "~> 0.10.0"},
      {:poison, "~> 2.0"}
     ]

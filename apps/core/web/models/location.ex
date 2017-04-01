@@ -40,7 +40,7 @@ defmodule Core.Location do
       address = Core.Geocoder.compose_address(location)
       IO.inspect address
       if address != nil do
-        coords = Core.Geocoder.get_coords(address, service.access_token)
+        coords = Core.Geocoder.get_coords(address, service.api_key)
         changeset
         |> put_change(:latitude, coords.lat)
         |> put_change(:longitude, coords.lng)

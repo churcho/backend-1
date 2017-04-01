@@ -3,16 +3,22 @@ defmodule Core.Event do
 
   schema "events" do
     field :message, :string
-    field :entity, :string
+    field :uuid, :string
     field :value, :string
     field :units, :string
-    field :date, :utc_datetime
     field :source, :string
+    field :source_event, :string
     field :type, :string
     field :state_changed, :boolean
+    field :permissions, :map
     field :payload, :map
+    field :metadata, :map
 
+    belongs_to :entity, Core.Entity
+    belongs_to :service, Core.Service
 
+    field :date, :utc_datetime
+    field :expiration, :utc_datetime
     timestamps()
   end
 
@@ -21,7 +27,21 @@ defmodule Core.Event do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:message, :entity, :value, :units, :date, :source, :type, :state_changed, :payload, :inserted_at])
+    |> cast(params, [:message, 
+                     :permissions,
+                     :value, 
+                     :units, 
+                     :date, 
+                     :source,
+                     :source_event, 
+                     :type, 
+                     :state_changed, 
+                     :payload,
+                     :metadata,
+                     :expiration,
+                     :service_id,
+                     :entity_id, 
+                     :inserted_at])
     |> validate_required([])
   end
 

@@ -12,6 +12,7 @@ defmodule Core.Entity do
     field :configuration, :map
     field :source, :string
 
+    has_many :events, Core.Event
     belongs_to :service, Core.Service
 
     timestamps()

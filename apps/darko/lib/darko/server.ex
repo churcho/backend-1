@@ -22,25 +22,28 @@ defmodule Darko.Server do
   	Agent.start_link(fn -> %{} end, name: DarkoMemState)
   	Agent.start_link(fn -> %{} end, name: DarkoStations)
     
-    IO.puts "Registering......."
+    IO.puts "Registering Dark Sky Connect...."
     Darko.register_provider
+    Darko.Server.build_state
     Darko.Importer.import(find_enabled_service)
     Darko.Scheduler.start_link
   	{:ok, state}
   end
 
-  def find_enabled_service do
+  def build_state() do 
+    IO.puts "No stations. We need to put some in an agent"
+      service = find_enabled_service
+      Agent.update(DarkoStations, &(&1=service))
+  end
+
+  def find_enabled_service() do
     Repo.get_by(Service, name: "Darko")
     |> Repo.preload(:entities)
   end
 
   def poll() do
     if Agent.get(DarkoStations, &(&1)) == %{} do
-      IO.puts "No stations. We need to put some in an agent"
-      service = find_enabled_service
-      IO.inspect service
-      Agent.update(DarkoStations, &(&1=service))
-
+      Darko.Server.build_state
     else
     service = Agent.get(DarkoStations, &(&1))
       for entity <- service.entities do

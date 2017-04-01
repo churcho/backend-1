@@ -10,9 +10,13 @@ defmodule Core.Repo.Migrations.CreateEntity do
       add :metadata, :map
       add :state, :map
       add :slug, :string
-
+      add :configuration, :map
+      add :source, :string
+      add :display_name, :string
+      add :service_id, references(:services, on_delete: :delete_all)
       timestamps()
     end
     create unique_index(:entities, [:slug])
+    create index(:entities, [:service_id])
   end
 end

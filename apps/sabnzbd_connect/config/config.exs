@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure for your application as:
 #
-#     config :sabnzbd, key: :value
+#     config :sabnzbd_connect, key: :value
 #
 # And access this configuration in your application as:
 #
-#     Application.get_env(:sabnzbd, :key)
+#     Application.get_env(:sabnzbd_connect, :key)
 #
 # Or configure a 3rd-party app:
 #

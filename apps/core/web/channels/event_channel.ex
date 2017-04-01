@@ -16,14 +16,17 @@ defmodule Core.EventChannel do
           "logo" => Core.Event.logo_url(event),
           "icon" => Core.Event.icon_url(event)
         },
+        "id" => event.id,
         "attributes" => %{
           "value" => event.value,
           "message" => event.message,
           "payload" => event.payload,
-          "entity" => event.entity,
+          "uuid" => event.uuid,
           "type" => event.type,
           "source" => event.source,
-          "inserted_at" => event.inserted_at
+          "source_event" => event.source_event,
+          "inserted_at" => event.inserted_at,
+          "metadata" => event.metadata
       } 
     }
 

@@ -1,6 +1,6 @@
 defmodule Darko.Poller do
   @moduledoc """
-  Polling the darksky service to update your virutal westher stations.
+  Polling the darksky service to update your virutal weather stations.
   """
 
   @doc """
@@ -10,74 +10,85 @@ defmodule Darko.Poller do
     IO.puts "Connecting to DarkSky"
     server_state = fetch_currently(entity.configuration)
 
+    numeric_items = ["ozone", 
+                      "temperature",
+                      "humidity",
+                      "dewPoint",
+                      "cloudCover",
+                      "pressure"]
+    text_items = ["summary", "icon"]
+
     net_state = %{
-      temperature: server_state["currently"]["temperature"],
-      humidity: server_state["currently"]["humidity"]
+      "summary" =>server_state["currently"]["summary"],
+      "ozone" => server_state["currently"]["ozone"],
+      "icon" => server_state["currently"]["icon"],
+      "dewPoint" => server_state["currently"]["dewPoint"],
+      "pressure" => server_state["currently"]["pressure"],
+      "temperature" => server_state["currently"]["temperature"],
+      "humidity" => server_state["currently"]["humidity"],
+      "cloudCover" => server_state["currently"]["cloudCover"]
     }
-    IO.puts "Net State"
-    IO.inspect net_state.temperature
+
+
     target = Core.Repo.get_by(Core.Entity, uuid: entity.uuid)
 
-    IO.puts "Target State"
-    IO.inspect target.state
+  
 
     if net_state != target.state do
+      update_state(target, net_state)
 
-        if net_state.temperature != target.state["temperature"]  do
+        for measurement <- numeric_items do
           cond do
-             net_state.temperature > target.state["temperature"] ->
-              if net_state.temperature - target.state["temperature"] > 0.5 do
-                 type = "temperature"
-                 build_item(target, net_state.temperature, type)
+             net_state[measurement] > target.state[measurement] ->
+              if net_state[measurement] > 1 do
+                if net_state[measurement] - target.state[measurement] > 0.25 do
+                   type = measurement
+                   build_item(target, net_state[measurement], type)
+                end
+              else 
+                type = measurement
+                build_item(target, net_state[measurement], type)
               end
-            target.state["temperature"] > net_state.temperature ->
-              if target.state["temperature"] - net_state.temperature > 0.5 do
-                 type = "temperature"
-                 build_item(target, net_state.temperature, type)
+             net_state[measurement] < target.state[measurement]  ->
+              if target.state[measurement] > 1 do
+                if target.state[measurement] - net_state[measurement] > 0.25 do
+                   type = measurement
+                   build_item(target, net_state[measurement], type)
+                end
+              else
+                 type = measurement
+                 build_item(target, net_state[measurement], type)
               end
+              true -> 
+                nil
           end 
         end
 
-        if net_state.humidity != target.state["humidity"] do
-          type = "humidity"
-          build_item(target, net_state.humidity, type)
+        for measurement <- text_items do
+          if net_state[measurement] != target.state[measurement] do
+            type = measurement
+            build_item(target, net_state[measurement], type)
+          end
         end
-    end
 
+    end
   end
 
   def fetch_currently(station) do
-     {:ok, result} = Darko.Server.forecast(station["latitude"], station["longitude"], station["access_token"])
+     {:ok, result} = Darko.Server.forecast(station["latitude"], station["longitude"], station["api_key"])
      result
    end
 
-  def build_item(target, value, type) do
-    IO.puts "-----------------------------------------------------------"
-    IO.puts                      "Updating State"
-    IO.puts "-----------------------------------------------------------"
-    event = %{
-      entity: target.uuid,
-      value: value,
-      date: Ecto.DateTime.utc,
-      type: type,
-      source: "poll"
-    }
-    IO.puts "-----------------------------------------------------------"
 
-    update_state(event, target)
-    broadcast_change(event)
-  end
-
-
-  def update_state(event, target) do
+  def update_state(target, net_state) do
     new_state =
     if target.state != nil do
-      %{state: Map.put(target.state, event.type, event.value)}
+      %{state: Map.merge(target.state, net_state) }
     else
-      %{state: %{ event.type => event.value}}
+      IO.puts "build a state"
+      %{state: net_state}
     end
-
-    IO.inspect new_state
+    
 
     if new_state != nil do
       changeset = Core.Entity.changeset(target, new_state)
@@ -86,18 +97,33 @@ defmodule Darko.Poller do
 
   end
 
+
+  def build_item(target, value, type) do
+    event = %{
+      uuid: target.uuid,
+      value: to_string(value),
+      date: to_string(Ecto.DateTime.utc),
+      type: type,
+      source: "Darko",
+      service_id: target.service_id,
+      entity_id: target.id,
+      source_event: "POLL",
+      message: "Polling for changes",
+      metadata: %{}
+    }
+   
+    broadcast_change(event)
+  end
+
+
+
+
   def broadcast_change(event) do
-    new_event = %Core.Event{entity: event.entity, 
-                            value: to_string(event.value), 
-                            date: event.date, 
-                            type: event.type, 
-                            source: event.source,
-                            message: "test"}
-    
-    case Core.Repo.insert(new_event) do
+    changeset = Core.Event.changeset(%Core.Event{}, event)
+   
+    case Core.Repo.insert(changeset) do
       {:ok, event} ->
          Core.EventChannel.broadcast_change(event)
-
     end
    
   end

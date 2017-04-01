@@ -31,6 +31,17 @@ defmodule Core.EntityController do
     render(conn, "show.json", entity: entity)
   end
 
+  def entity_events(conn, %{"entity_id" => entity_id}) do
+    sorted = (from e in Core.Event, 
+              where: e.entity_id == ^entity_id, 
+              order_by: [desc: e.id],
+              limit: 100)
+              |> Repo.all()
+
+    render(conn, "entity_events.json", events: sorted)
+
+  end
+
   def update(conn, %{"id" => id, "entity" => entity_params}) do
     entity = Repo.get!(Entity, id)
     changeset = Entity.changeset(entity, entity_params)

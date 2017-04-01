@@ -21,7 +21,7 @@ defmodule Darko.Importer do
           location_id: location.id,
           longitude: location.longitude,
           latitude: location.latitude,
-          access_token: service.access_token
+          api_key: service.api_key
         } 
       }
 

@@ -11,6 +11,10 @@ defmodule Core.EntityView do
     %{data: render_one(entity, Core.EntityView, "entity.json")}
   end
 
+  def render("entity_events.json", %{events: events}) do
+    %{data: render_many(events, Core.EventView, "event.json")}
+  end
+
   def render("entity.json", %{entity: entity}) do
     %{
      links: %{

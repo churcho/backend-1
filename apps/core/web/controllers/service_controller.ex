@@ -19,7 +19,7 @@ defmodule Core.ServiceController do
         conn
         |> put_status(:created)
         |> put_resp_header("location", service_path(conn, :show, service))
-        |> render("show.json", service: service |> Repo.preload([:provider]))
+        |> render("show.json", service: service |> Repo.preload([:provider, :entities]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)
@@ -40,7 +40,7 @@ defmodule Core.ServiceController do
 
     case Repo.update(changeset) do
       {:ok, service} ->
-        render(conn, "show.json", service: service |> Repo.preload([:provider]))
+        render(conn, "show.json", service: service |> Repo.preload([:provider, :entities]))
       {:error, changeset} ->
         conn
         |> put_status(:unprocessable_entity)

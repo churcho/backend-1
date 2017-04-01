@@ -4,11 +4,11 @@ defmodule Core.EventController do
   alias Core.Event
 
   def index(conn, _params) do
-    query = from(e in Event, order_by: [desc: e.id])
+    query = from(e in Event, order_by: [desc: e.id], limit: 100)
     events = Repo.all(query)
-
     render(conn, "index.json", events: events)
   end
+
 
   def create(conn, params) do
 

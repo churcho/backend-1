@@ -10,10 +10,11 @@ defmodule Core.Service do
     field :enabled, :boolean
     field :searchable, :boolean
     field :search_path, :string
-    field :service_state, :map
+    field :state, :map
     field :slug, :string
 
     has_many :entities, Core.Entity
+    has_many :events, Core.Event
     belongs_to :provider, Core.Provider
     timestamps()
   end
@@ -31,7 +32,7 @@ defmodule Core.Service do
                      :enabled,
                      :searchable,
                      :search_path,
-                     :service_state,
+                     :state,
                      :slug,
                      :provider_id])
     |> validate_required([:name, :provider_id])
