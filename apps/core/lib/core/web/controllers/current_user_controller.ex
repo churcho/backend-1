@@ -7,9 +7,8 @@ defmodule Core.Web.CurrentUserController do
   plug Guardian.Plug.EnsureAuthenticated, handler: Core.SessionController
 
   def show(conn, _) do
-    user = Guardian.Plug.current_resource(conn)
 
-    user
+    user = Guardian.Plug.current_resource(conn)
     |> Core.Repo.preload(:role)
 
     conn

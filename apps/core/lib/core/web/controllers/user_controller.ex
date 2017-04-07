@@ -4,9 +4,9 @@ defmodule Core.Web.UserController do
   alias Core.User
 
   def index(conn, _params) do
-    users = Repo.all(User)
-
-    user
+    users =
+    User
+    |> Repo.all()
     |> Repo.preload(:role)
     render(conn, "index.json", users: users)
   end
@@ -18,7 +18,7 @@ defmodule Core.Web.UserController do
       {:ok, user} ->
         conn
         |> put_status(:created)
-        |> put_resp_header("location", user_path(conn, :show, user))
+        |> put_resp_header("location", user_path(conn, :show, user |> Repo.preload([:role])))
         |> render("show.json", user: user)
       {:error, changeset} ->
         conn
@@ -28,9 +28,9 @@ defmodule Core.Web.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Repo.get!(User, id)
-
-    user
+    user =
+    User
+    |> Repo.get!(id)
     |> Repo.preload(:role)
     render(conn, "show.json", user: user)
   end
