@@ -22,9 +22,8 @@ defmodule Core.ServiceManager do
 
   """
   def list_providers do
-  	result = Repo.all(Provider)
-
-    result
+    Provider
+    |> Repo.all()
   	|> Repo.preload([:services])
   end
 
@@ -39,9 +38,8 @@ defmodule Core.ServiceManager do
 
   """
   def list_services do
-  	result = Repo.all(Service)
-
-    result
+    Service
+  	|> Repo.all()
   	|> Repo.preload([:provider, :entities])
   end
 
@@ -55,9 +53,8 @@ defmodule Core.ServiceManager do
 
   """
   def list_entities do
-  	result = Repo.all(Entity)
-
-    result
+    Entity
+    |> Repo.all()
   	|> Repo.preload([:service])
   end
 
@@ -90,16 +87,14 @@ defmodule Core.ServiceManager do
   	"""
 
   def get_provider!(id) do
-  	result = Repo.get!(Provider, id)
-
-    result
+    Provider
+    |> Repo.get!(id)
   	|> Repo.preload([:services])
   end
 
   def get_provider_by_lorp_name(lorp_name) do
-    result = Repo.get_by(Provider, lorp_name: lorp_name)
-
-    result
+    Provider
+    |> Repo.get_by(lorp_name: lorp_name)
     |> Repo.preload([:services])
   end
 
@@ -120,9 +115,8 @@ defmodule Core.ServiceManager do
 
   	"""
   def get_service!(id) do
-  	result = Repo.get!(Service, id)
-
-    result
+    Service
+    |> Repo.get!(id)
   	|> Repo.preload([:provider, :entities])
   end
 
@@ -141,9 +135,8 @@ defmodule Core.ServiceManager do
 
   	"""
   def get_service_by_name(name) do
-  	result = Repo.get_by(Service, name: name)
-
-    result
+    Service
+    |> Repo.get_by(name: name)
   	|> Repo.preload([:provider, :entities])
   end
 
@@ -162,12 +155,17 @@ defmodule Core.ServiceManager do
 
   	"""
   def get_entity!(id) do
-  	result = Repo.get!(Entity, id)
-
-    result
+    Entity
+    |> Repo.get!(id)
   	|> Repo.preload([:service])
   end
 
+  @doc """
+  Get entity by uuid
+
+  ## Examples
+
+  """
   def get_entity_by_uuid(uuid) do
   	Repo.get_by(Entity, uuid: uuid)
   end
@@ -372,7 +370,7 @@ defmodule Core.ServiceManager do
 
   """
   def delete_provider(%Provider{} = provider) do
-  		Repo.delete(provider)
+    Repo.delete(provider)
   end
 
   @doc """
@@ -388,7 +386,7 @@ defmodule Core.ServiceManager do
 
   """
   def delete_service(%Service{} = service) do
-  		Repo.delete(service)
+    Repo.delete(service)
   end
 
   @doc """
@@ -404,7 +402,7 @@ defmodule Core.ServiceManager do
 
   """
   def delete_entity(%Entity{} = entity) do
-  		Repo.delete(entity)
+    Repo.delete(entity)
   end
 
     @doc """
@@ -420,7 +418,7 @@ defmodule Core.ServiceManager do
 
     """
   def delete_entity_type(%EntityType{} = entity_type) do
-  	Repo.delete(entity_type)
+    Repo.delete(entity_type)
   end
 
   @doc """
@@ -432,7 +430,7 @@ defmodule Core.ServiceManager do
     %Ecto.Changeset{source: %Provider{}}
 
   """
-  	def change_provider(%Provider{} = provider) do
+  def change_provider(%Provider{} = provider) do
   	provider_changeset(provider, %{})
   end
 
@@ -446,8 +444,8 @@ defmodule Core.ServiceManager do
     %Ecto.Changeset{source: %Service{}}
 
   """
-  	def change_service(%Service{} = service) do
-    	service_changeset(service, %{})
+  def change_service(%Service{} = service) do
+    service_changeset(service, %{})
   end
 
   @doc """
@@ -477,26 +475,26 @@ defmodule Core.ServiceManager do
   end
 
 
-  	defp provider_changeset(%Provider{} = provider, attrs) do
-      provider
-      |> cast(attrs, [:name,
-                       :description,
-                       :url,
-                       :enabled,
-                       :lorp_name,
-                       :auth_method,
-                       :registered_at,
-                       :last_seen,
-                       :provides,
-                       :max_services,
-                       :configuration,
-                       :logo_path,
-                       :icon_path,
-                       :keywords,
-                       :slug,
-                       :version])
-      |> validate_required([:name, :url])
-  	end
+  defp provider_changeset(%Provider{} = provider, attrs) do
+    provider
+    |> cast(attrs, [:name,
+                     :description,
+                     :url,
+                     :enabled,
+                     :lorp_name,
+                     :auth_method,
+                     :registered_at,
+                     :last_seen,
+                     :provides,
+                     :max_services,
+                     :configuration,
+                     :logo_path,
+                     :icon_path,
+                     :keywords,
+                     :slug,
+                     :version])
+    |> validate_required([:name, :url])
+  end
 
   def service_changeset(%Service{} = service, attrs) do
   	service
@@ -544,4 +542,4 @@ defmodule Core.ServiceManager do
   	|> validate_required([:name, :description])
   end
 
-  end
+end
