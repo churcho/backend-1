@@ -37,6 +37,6 @@ defmodule PlexConnect.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    []
+    [{:core, in_umbrella: true}]
   end
 end

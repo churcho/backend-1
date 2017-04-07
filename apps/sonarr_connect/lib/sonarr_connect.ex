@@ -1,18 +1,40 @@
 defmodule SonarrConnect do
+  import Ecto.Query
+  alias Core.Repo
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Provider
   @moduledoc """
-  Documentation for SonarrConnect.
+  Documentation for Sonarr.
   """
 
   @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> SonarrConnect.hello
-      :world
-
+  Basic Registration Information
   """
-  def hello do
-    :world
+  def registration do
+    %{
+      name: "Sonarr",
+      description: "Internet DVR for TV",
+      url: "http://sonarr.tv",
+      lorp_name: "SonarrConnect",
+      auth_method: "API_KEY",
+      max_services: 1,
+      version: "0.0.1",
+      configuration: %{
+        service_name: "Sonarr",
+        required_fields: ["host", "port"]
+      },
+      provides: %{
+        services: ["TV"]
+      }
+    }
+  end
+
+  @doc """
+  Register the provider
+  """
+  def register_provider do
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration) do
+      IO.puts "Registered "<>provider.name
+    end
   end
 end

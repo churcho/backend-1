@@ -1,17 +1,15 @@
 defmodule Darko.Importer do
   import Ecto.Query
   alias Core.Repo
-  alias Core.Entity
+  alias Core.ServiceManager
+  alias Core.LocationManager
 
   def import(service) do
-    locations = Core.Repo.all(Core.Location)
+    locations = LocationManager.list_locations
 
     for location <- locations do
       station_id = "darko_"<>Integer.to_string(location.id)
-    	result = Core.Repo.get_by(Core.Entity, uuid: station_id)
-  
-
-      changeset =  %{
+      target =  %{
         uuid: station_id,
         name: "Weather Station for "<>location.name,
         service_id: service.id,
@@ -25,13 +23,11 @@ defmodule Darko.Importer do
         } 
       }
 
-      result = 
-      case Repo.get_by(Entity, uuid: station_id) do
-        nil -> Entity.changeset(%Entity{}, changeset)
-        entity -> Entity.changeset(entity, changeset)
-      end
-      |> Repo.insert_or_update
-
+      import_entity(target)
     end
+  end
+
+  def import_entity(target) do
+      ServiceManager.create_or_update_entity(target)
   end
 end

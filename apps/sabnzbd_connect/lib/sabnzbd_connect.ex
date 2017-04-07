@@ -1,7 +1,8 @@
 defmodule SabnzbdConnect do
   import Ecto.Query
   alias Core.Repo
-  alias Core.Provider
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Provider
   @moduledoc """
   Documentation for Sabnzbd.
   """
@@ -19,7 +20,8 @@ defmodule SabnzbdConnect do
       max_services: 1,
       version: "0.0.1",
       configuration: %{
-        service_name: "Sabnzbd"
+        service_name: "Sabnzbd",
+        required_fields: ["host", "port"]
       },
       provides: %{
         services: ["NZB"]
@@ -31,12 +33,9 @@ defmodule SabnzbdConnect do
   Register the provider
   """
   def register_provider do
-     result = 
-      case Repo.get_by(Provider, lorp_name: SabnzbdConnect.registration.lorp_name) do
-        nil -> Provider.changeset(%Provider{}, SabnzbdConnect.registration)
-        provider -> Provider.changeset(provider, SabnzbdConnect.registration)
-      end
-      |> Repo.insert_or_update
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration) do
+      IO.puts "Registered "<>provider.name
+    end
   end
 
 end

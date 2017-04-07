@@ -1,4 +1,9 @@
 defmodule Darko.Poller do
+
+  alias Core.ServiceManager
+  alias Core.EventManager
+  alias Core.EventManager.Event
+  
   @moduledoc """
   Polling the darksky service to update your virutal weather stations.
   """
@@ -30,7 +35,7 @@ defmodule Darko.Poller do
     }
 
 
-    target = Core.Repo.get_by(Core.Entity, uuid: entity.uuid)
+     target = ServiceManager.get_entity_by_uuid(entity.uuid)
 
   
 
@@ -91,8 +96,7 @@ defmodule Darko.Poller do
     
 
     if new_state != nil do
-      changeset = Core.Entity.changeset(target, new_state)
-      Core.Repo.update!(changeset)
+      changeset = ServiceManager.update_entity(target, new_state)
     end
 
   end
@@ -119,12 +123,10 @@ defmodule Darko.Poller do
 
 
   def broadcast_change(event) do
-    changeset = Core.Event.changeset(%Core.Event{}, event)
-   
-    case Core.Repo.insert(changeset) do
-      {:ok, event} ->
-         Core.EventChannel.broadcast_change(event)
+
+    with {:ok, %Event{} = event} <- EventManager.create_event(event) do
+      IO.puts "event pushed."
     end
-   
+  
   end
 end

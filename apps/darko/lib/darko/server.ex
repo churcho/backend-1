@@ -2,20 +2,26 @@ defmodule Darko.Server do
   @moduledoc """
   DarkSky Weather Server.
   """
+  import Darko.Utils
   use GenServer
-  import Ecto.Query
-  alias Core.Repo
-  alias Core.Service
+
+  alias Core.ServiceManager
   use HTTPoison.Base
   alias Darko.Parser
-  import Darko.Utils
+ 
 
 
   @doc """
     Starts the server
   """
   def start_link() do
-     GenServer.start_link(__MODULE__, {})
+    GenServer.start_link(__MODULE__, {})
+  end
+
+
+
+  def handle_call(:stop, _from, status) do
+    {:stop, :normal, status}
   end
 
   def init(state) do
@@ -25,7 +31,6 @@ defmodule Darko.Server do
     IO.puts "Registering Dark Sky Connect...."
     Darko.register_provider
     Darko.Server.build_state
-    Darko.Importer.import(find_enabled_service)
     Darko.Scheduler.start_link
   	{:ok, state}
   end
@@ -34,11 +39,14 @@ defmodule Darko.Server do
     IO.puts "No stations. We need to put some in an agent"
       service = find_enabled_service
       Agent.update(DarkoStations, &(&1=service))
+
+      if Agent.get(DarkoStations, &(&1)) != nil do
+        Darko.Importer.import(Agent.get(DarkoStations, &(&1)))
+      end
   end
 
   def find_enabled_service() do
-    Repo.get_by(Service, name: "Darko")
-    |> Repo.preload(:entities)
+    ServiceManager.get_service_by_name("Darko")
   end
 
   def poll() do
@@ -86,7 +94,4 @@ defmodule Darko.Server do
     |> Map.merge(params)
     |> Map.delete(:__struct__)
   end
-
-
-
 end

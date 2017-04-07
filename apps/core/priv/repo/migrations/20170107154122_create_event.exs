@@ -14,8 +14,8 @@ defmodule Core.Repo.Migrations.CreateEvent do
       add :payload, :map
       add :metadata, :map
       add :permissions, :map
-      add :service_id, references(:services, on_delete: :nothing)
-      add :entity_id, references(:entities, on_delete: :nothing)
+      add :service_id, references(:service_manager_services, on_delete: :nothing)
+      add :entity_id, references(:service_manager_entities, on_delete: :nothing)
       add :date, :utc_datetime
       add :expiration, :utc_datetime
       timestamps()

@@ -1,7 +1,8 @@
 defmodule Geocoder do
   import Ecto.Query
   alias Core.Repo
-  alias Core.Provider
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Provider
   @moduledoc """
   Documentation for Geocoder.
   """
@@ -31,13 +32,9 @@ defmodule Geocoder do
   Register the provider
   """
   def register_provider do
-
-     result = 
-      case Repo.get_by(Provider, lorp_name: Geocoder.registration.lorp_name) do
-        nil -> Provider.changeset(%Provider{}, Geocoder.registration)
-        provider -> Provider.changeset(provider, Geocoder.registration)
-      end
-      |> Repo.insert_or_update
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration) do
+      IO.puts "Registered "<>provider.name
+    end
   end
 
 

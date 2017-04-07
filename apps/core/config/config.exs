@@ -10,10 +10,10 @@ config :core,
   ecto_repos: [Core.Repo]
 
 # Configures the endpoint
-config :core, Core.Endpoint,
+config :core, Core.Web.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "97FeC+AEph9EkkLxeuex6DnWzpU/mf9PuATczk7r/J15tz9xEy14MQR4o+Swm9Sv",
-  render_errors: [view: Core.ErrorView, accepts: ~w(json)],
+  render_errors: [view: Core.Web.ErrorView, accepts: ~w(json)],
   pubsub: [name: Core.PubSub,
            adapter: Phoenix.PubSub.PG2]
 
@@ -25,7 +25,7 @@ config :logger, :console,
 
 # Configures guardian
 config :guardian, Guardian,
-  issuer: "PhoenixTrello",
+  issuer: "Lorp",
   ttl: { 3, :days },
   verify_issuer: true,
   secret_key: "K5U15rCwqam0hz3EYovOp133hij04IVoFtsbKTgfxwdfBL91zBb8mH2WqzgMtpXC",
