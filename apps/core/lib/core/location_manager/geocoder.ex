@@ -1,24 +1,28 @@
 defmodule Core.Geocoder do
+  @moduledoc """
+  Geocoding helper
+  """
   use HTTPoison.Base
   def get_coords(address, api_key) do
     url = "https://maps.googleapis.com/maps/api/geocode/json?address="
-    {:ok, result} = Core.Geocoder.get(url<>address<>"&key="<>api_key)
+    {:ok, result} = Core.Geocoder.get(url <> address <> "&key = " <> api_key)
+
     final = result.body
-            |> Poison.decode!(keys: :atoms)
+    |> Poison.decode!(keys: :atoms)
+
     loc = Enum.at(final.results, 0)
     loc.geometry.location
   end
 
   def compose_address(location) do
-    IO.inspect location
-    if location.address_one 
-       && location.address_city 
-       && location.address_state 
-       && location.address_zip do
-      URI.encode(location.address_one<>
-                 "+,+"<>location.address_city<>
-                 "+,+"<>location.address_state<>
-                 "+,+"<>location.address_zip)
+    if location.address_one
+    && location.address_city
+    && location.address_state
+    && location.address_zip do
+      URI.encode(location.address_one <>
+                 " + , + " <> location.address_city <>
+                 " + , + " <> location.address_state <>
+                 " + , + " <> location.address_zip)
     end
 
   end

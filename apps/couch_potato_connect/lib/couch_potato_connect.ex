@@ -1,6 +1,5 @@
 defmodule CouchPotatoConnect do
-  import Ecto.Query
-  alias Core.Repo
+
   alias Core.ServiceManager
   alias Core.ServiceManager.Provider
   @moduledoc """
@@ -33,9 +32,10 @@ defmodule CouchPotatoConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration) do
-      IO.puts "Registered "<>provider.name
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration()) do
+      provider
     end
   end
+
 
 end

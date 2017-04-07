@@ -1,4 +1,7 @@
 defmodule Core.EventManager.Event do
+  @moduledoc """
+  Provides the event schema
+  """
   use Core.Web, :model
 
   schema "events" do

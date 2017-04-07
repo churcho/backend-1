@@ -3,7 +3,7 @@ defmodule Darko.Poller do
   alias Core.ServiceManager
   alias Core.EventManager
   alias Core.EventManager.Event
-  
+
   @moduledoc """
   Polling the darksky service to update your virutal weather stations.
   """
@@ -15,7 +15,7 @@ defmodule Darko.Poller do
     IO.puts "Connecting to DarkSky"
     server_state = fetch_currently(entity.configuration)
 
-    numeric_items = ["ozone", 
+    numeric_items = ["ozone",
                       "temperature",
                       "humidity",
                       "dewPoint",
@@ -37,7 +37,7 @@ defmodule Darko.Poller do
 
      target = ServiceManager.get_entity_by_uuid(entity.uuid)
 
-  
+
 
     if net_state != target.state do
       update_state(target, net_state)
@@ -50,7 +50,7 @@ defmodule Darko.Poller do
                    type = measurement
                    build_item(target, net_state[measurement], type)
                 end
-              else 
+              else
                 type = measurement
                 build_item(target, net_state[measurement], type)
               end
@@ -64,9 +64,9 @@ defmodule Darko.Poller do
                  type = measurement
                  build_item(target, net_state[measurement], type)
               end
-              true -> 
+              true ->
                 nil
-          end 
+          end
         end
 
         for measurement <- text_items do
@@ -88,12 +88,12 @@ defmodule Darko.Poller do
   def update_state(target, net_state) do
     new_state =
     if target.state != nil do
-      %{state: Map.merge(target.state, net_state) }
+      %{state: Map.merge(target.state, net_state)}
     else
       IO.puts "build a state"
       %{state: net_state}
     end
-    
+
 
     if new_state != nil do
       changeset = ServiceManager.update_entity(target, new_state)
@@ -115,7 +115,7 @@ defmodule Darko.Poller do
       message: "Polling for changes",
       metadata: %{}
     }
-   
+
     broadcast_change(event)
   end
 
@@ -127,6 +127,6 @@ defmodule Darko.Poller do
     with {:ok, %Event{} = event} <- EventManager.create_event(event) do
       IO.puts "event pushed."
     end
-  
+
   end
 end

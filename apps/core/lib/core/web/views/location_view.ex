@@ -3,7 +3,7 @@ defmodule Core.Web.LocationView do
 
   def render("index.json", %{locations: locations}) do
     %{
-      links: %{ self: "/api/v1/locations"},
+      links: %{self: "/api/v1/locations"},
       data: render_many(locations, Core.Web.LocationView, "location.json")
     }
   end

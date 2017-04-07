@@ -1,6 +1,9 @@
 defmodule Darko.Scheduler do
-	use GenServer
-	require Logger
+  @moduledoc """
+  Scheduler
+  """
+  use GenServer
+  require Logger
 
   def start_link do
     GenServer.start_link(__MODULE__, %{})
@@ -21,6 +24,6 @@ defmodule Darko.Scheduler do
 
   defp schedule_work() do
   	#We will poll the Dark Sky API every 3 minutes
-    Process.send_after(self(), :work, 180000)
+    Process.send_after(self(), :work, 180_000)
   end
 end

@@ -1,4 +1,7 @@
 defmodule Core.LocationManager.Location do
+  @moduledoc """
+  Location
+  """
   use Core.Web, :model
 
   schema "location_manager_locations" do

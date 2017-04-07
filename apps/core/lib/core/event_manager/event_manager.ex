@@ -17,16 +17,18 @@ defmodule Core.EventManager do
 
   """
   def list_events do
-    results = Repo.all(Event)
+    Repo.all(Event)
   end
-  
+
   def list_events_desc do
-    from(e in Event, order_by: [desc: e.id], limit: 100)
+    result = from(e in Event, order_by: [desc: e.id], limit: 100)
+    result
     |> Repo.all
   end
 
   def list_entity_events_desc(entity_id) do
-    from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
+    result = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
+    result
     |> Repo.all
   end
 
@@ -123,7 +125,7 @@ defmodule Core.EventManager do
   end
 
   def handle_events(params) do
-     IO.inspect params["couchPotato"]
+
      case params["source"] do
       "plex" ->
         Core.EventManager.Plex.handler(params)
@@ -136,8 +138,8 @@ defmodule Core.EventManager do
         Core.EventManager.ThinkingCleaner.handler(params)
       "sabnzbd" ->
         Core.EventManager.SabNzbD.handler(params)
-      _->
-        %{ message: "Unknown Event "}
+      _ ->
+        %{message: "Unknown Event "}
      end
   end
 
@@ -146,7 +148,7 @@ defmodule Core.EventManager do
   """
   def logo_url(event) do
     if event.source do
-      "http://localhost:4000/images/"<>event.source<>".png"
+      "http://localhost:4000/images/" <> event.source <> ".png"
     else
       "http://localhost:4000/images/generic.png"
     end
@@ -154,7 +156,7 @@ defmodule Core.EventManager do
 
   def icon_url(event) do
     if event.source do
-      "http://localhost:4000/images/"<>event.source<>"_icon.png"
+      "http://localhost:4000/images/" <> event.source <> "_icon.png"
     else
       "http://localhost:4000/images/generic_icon.png"
     end
@@ -171,23 +173,21 @@ defmodule Core.EventManager do
 
   defp event_changeset(%Event{} = event, attrs) do
     event
-    |> cast(attrs, [:message, 
+    |> cast(attrs, [:message,
                      :permissions,
-                     :value, 
-                     :units, 
-                     :date, 
+                     :value,
+                     :units,
+                     :date,
                      :source,
-                     :source_event, 
-                     :type, 
-                     :state_changed, 
+                     :source_event,
+                     :type,
+                     :state_changed,
                      :payload,
                      :metadata,
                      :expiration,
                      :service_id,
-                     :entity_id, 
+                     :entity_id,
                      :inserted_at])
     |> validate_required([])
   end
 end
-
-

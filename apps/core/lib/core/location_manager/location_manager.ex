@@ -1,31 +1,33 @@
 defmodule Core.LocationManager do
-	@moduledoc """
-	The boundary for the LocationManager system.
-	"""
+  @moduledoc """
+  The boundary for the LocationManager system.
+  """
 
-	import Ecto.{Query, Changeset}, warn: false
-	alias Core.Repo
+  import Ecto.{Query, Changeset}, warn: false
+  alias Core.Repo
 
-	alias Core.LocationManager.Location
+  alias Core.LocationManager.Location
   alias Core.LocationManager.LocationType
-	alias Core.LocationManager.Zone
-	alias Core.LocationManager.Room
+  alias Core.LocationManager.Zone
+  alias Core.LocationManager.Room
 
 
 
-	@doc """
-	Returns the list of locations.
+  @doc """
+  Returns the list of locations.
 
-	## Examples
+  ## Examples
 
-	  iex> list_locations()
-	  [%Location{}, ...]
+    iex> list_locations()
+    [%Location{}, ...]
 
-	"""
-	def list_locations do
-		results = Repo.all(Location)
-		|> Repo.preload([:zones])
-	end
+  """
+  def list_locations do
+  	results = Repo.all(Location)
+
+    results
+  	|> Repo.preload([:zones])
+  end
 
   @doc """
   Returns the list of location_types.
@@ -40,33 +42,35 @@ defmodule Core.LocationManager do
     Repo.all(LocationType)
   end
 
-	@doc """
-	Returns the list of zones.
+  @doc """
+  Returns the list of zones.
 
-	## Examples
+  ## Examples
 
-	  iex> list_zones()
-	  [%Zone{}, ...]
+    iex> list_zones()
+    [%Zone{}, ...]
 
-	"""
-	def list_zones do
-		results = Repo.all(Zone)
-		|> Repo.preload([:location, :rooms])
-	end
+  """
+  def list_zones do
+  	results = Repo.all(Zone)
 
-	@doc """
-	Returns the list of rooms.
+    results
+  	|> Repo.preload([:location, :rooms])
+  end
 
-	## Examples
+  @doc """
+  Returns the list of rooms.
 
-	  iex> list_rooms()
-	  [%Room{}, ...]
+  ## Examples
 
-	"""
-	def list_rooms do
-		results = Repo.all(Room)
-	end
-  
+    iex> list_rooms()
+    [%Room{}, ...]
+
+  """
+  def list_rooms do
+     Repo.all(Room)
+  end
+
   @doc """
   Gets a single Location.
 
@@ -81,9 +85,11 @@ defmodule Core.LocationManager do
       ** (Ecto.NoResultsError)
 
  	"""
-  
-  def get_location!(id) do 
-  	Repo.get!(Location, id)
+
+  def get_location!(id) do
+  	result = Repo.get!(Location, id)
+
+    result
   	|> Repo.preload([:zones])
   end
 
@@ -117,8 +123,10 @@ defmodule Core.LocationManager do
     ** (Ecto.NoResultsError)
 
  	"""
-  def get_zone!(id) do 
-  	Repo.get!(Zone, id)
+  def get_zone!(id) do
+  	result = Repo.get!(Zone, id)
+
+    result
   	|> Repo.preload([:location, :rooms])
   end
 
@@ -136,15 +144,17 @@ defmodule Core.LocationManager do
       ** (Ecto.NoResultsError)
 
  	"""
-  def get_room!(id) do 
-  	Repo.get!(Room, id)
+  def get_room!(id) do
+  	result = Repo.get!(Room, id)
+
+    result
   	|> Repo.preload([:zone])
   end
 
-	@doc """
-	Creates a Location.
+  @doc """
+  Creates a Location.
 
-	## Examples
+  ## Examples
 
     iex> create_location(%{field: value})
     {:ok, %Location{}}
@@ -152,12 +162,12 @@ defmodule Core.LocationManager do
     iex> create_location(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_location(attrs \\ %{}) do
-  	%Location{}
-  	|> location_changeset(attrs)
-  	|> Repo.insert()
-	end
+  """
+  def create_location(attrs \\ %{}) do
+    %Location{}
+    |> location_changeset(attrs)
+    |> Repo.insert()
+  end
 
   @doc """
   Creates a location_type.
@@ -177,10 +187,10 @@ defmodule Core.LocationManager do
     |> Repo.insert()
   end
 
-	@doc """
-	Creates a Zone.
+  @doc """
+  Creates a Zone.
 
-	## Examples
+  ## Examples
 
     iex> create_zone(%{field: value})
     {:ok, %Zone{}}
@@ -188,17 +198,17 @@ defmodule Core.LocationManager do
     iex> create_zone(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_zone(attrs \\ %{}) do
-  	%Zone{}
-  	|> location_changeset(attrs)
-  	|> Repo.insert()
-	end
+  """
+  def create_zone(attrs \\ %{}) do
+    %Zone{}
+    |> location_changeset(attrs)
+    |> Repo.insert()
+  end
 
-	@doc """
-	Creates a Room.
+  @doc """
+  Creates a Room.
 
-	## Examples
+  ## Examples
 
     iex> create_room(%{field: value})
     {:ok, %Room{}}
@@ -206,17 +216,17 @@ defmodule Core.LocationManager do
     iex> create_room(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_room(attrs \\ %{}) do
-  	%Room{}
-  	|> location_changeset(attrs)
-  	|> Repo.insert()
-	end
+  """
+  def create_room(attrs \\ %{}) do
+    %Room{}
+    |> location_changeset(attrs)
+    |> Repo.insert()
+  end
 
-	@doc """
-	Updates a Location.
+  @doc """
+  Updates a Location.
 
-	## Examples
+  ## Examples
 
     iex> update_location(Location, %{field: new_value})
     {:ok, %Location{}}
@@ -224,12 +234,12 @@ defmodule Core.LocationManager do
     iex> update_location(Location, %{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def update_location(%Location{} = location, attrs) do
-  	location
-  	|> location_changeset(attrs)
-  	|> Repo.update()
-	end
+  """
+  def update_location(%Location{} = location, attrs) do
+    location
+    |> location_changeset(attrs)
+    |> Repo.update()
+  end
 
   @doc """
   Updates a location_type.
@@ -250,10 +260,10 @@ defmodule Core.LocationManager do
   end
 
 
-	@doc """
-	Updates a Zone.
+  @doc """
+  Updates a Zone.
 
-	## Examples
+  ## Examples
 
     iex> update_zone(Zone, %{field: new_value})
     {:ok, %Zone{}}
@@ -261,17 +271,17 @@ defmodule Core.LocationManager do
     iex> update_zone(Zone, %{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def update_zone(%Zone{} = zone, attrs) do
-  	zone
-  	|> zone_changeset(attrs)
-  	|> Repo.update()
-	end
+  """
+  def update_zone(%Zone{} = zone, attrs) do
+    zone
+    |> zone_changeset(attrs)
+    |> Repo.update()
+  end
 
-	@doc """
-	Updates a Room.
+  @doc """
+  Updates a Room.
 
-	## Examples
+  ## Examples
 
     iex> update_room(Room, %{field: new_value})
     {:ok, %Room{}}
@@ -279,18 +289,18 @@ defmodule Core.LocationManager do
     iex> update_room(Room, %{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def update_room(%Room{} = room, attrs) do
-  	room
-  	|> room_changeset(attrs)
-  	|> Repo.update()
-	end
+  """
+  def update_room(%Room{} = room, attrs) do
+    room
+    |> room_changeset(attrs)
+    |> Repo.update()
+  end
 
 
-	@doc """
-	Deletes a Location.
+  @doc """
+  Deletes a Location.
 
-	## Examples
+  ## Examples
 
     iex> delete_location(Location)
     {:ok, %Location{}}
@@ -298,10 +308,10 @@ defmodule Core.LocationManager do
     iex> delete_location(Location)
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def delete_location(%Location{} = location) do
-  	Repo.delete(location)
-	end
+  """
+  def delete_location(%Location{} = location) do
+    Repo.delete(location)
+  end
 
   @doc """
   Deletes a LocationType.
@@ -319,10 +329,10 @@ defmodule Core.LocationManager do
     Repo.delete(location_type)
   end
 
-	@doc """
-	Deletes a Zone.
+  @doc """
+  Deletes a Zone.
 
-	## Examples
+  ## Examples
 
     iex> delete_zone(Zone)
     {:ok, %Zone{}}
@@ -330,15 +340,15 @@ defmodule Core.LocationManager do
     iex> delete_zone(Zone)
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def delete_zone(%Zone{} = zone) do
-  	Repo.delete(zone)
-	end
+  """
+  def delete_zone(%Zone{} = zone) do
+    Repo.delete(zone)
+  end
 
-	@doc """
-	Deletes a Room.
+  @doc """
+  Deletes a Room.
 
-	## Examples
+  ## Examples
 
     iex> delete_room(Room)
     {:ok, %Room{}}
@@ -346,20 +356,20 @@ defmodule Core.LocationManager do
     iex> delete_room(Room)
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def delete_room(%Room{} = room) do
-  	Repo.delete(room)
-	end
+  """
+  def delete_room(%Room{} = room) do
+    Repo.delete(room)
+  end
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking Location changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Location changes.
 
-	## Examples
+    ## Examples
 
-    iex> change_location(Location)
-    %Ecto.Changeset{source: %Location{}}
+      iex> change_location(Location)
+      %Ecto.Changeset{source: %Location{}}
 
-	"""
+  """
  	def change_location(%Location{} = location) do
     location_changeset(location, %{})
   end
@@ -367,7 +377,7 @@ defmodule Core.LocationManager do
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking location_type changes.
 
-  ## Examples
+    ## Examples
 
       iex> change_location_type(location_type)
       %Ecto.Changeset{source: %LocationType{}}
@@ -377,60 +387,59 @@ defmodule Core.LocationManager do
     location_type_changeset(location_type, %{})
   end
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking Zone changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Zone changes.
 
-	## Examples
+    ## Examples
 
-    iex> change_zone(Zone)
-    %Ecto.Changeset{source: %Zone{}}
+      iex> change_zone(Zone)
+      %Ecto.Changeset{source: %Zone{}}
 
-	"""
- 	def change_zone(%Zone{} = zone) do
-    	zone_changeset(zone, %{})
+  """
+  def change_zone(%Zone{} = zone) do
+  zone_changeset(zone, %{})
   end
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking Room changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Room changes.
 
-	## Examples
+    ## Examples
 
     iex> change_room(Room)
     %Ecto.Changeset{source: %Room}}
 
-	"""
- 	def change_room(%Room{} = room) do
-    room_changeset(room, %{})
+  """
+  def change_room(%Room{} = room) do
+  room_changeset(room, %{})
   end
 
 
 
-  	defp update_zip(changeset) do
-	    service = Core.ServiceManager.get_service_by_name("Geocoder")
-	      location = %{
-	         address_one: get_change(changeset, :address_one),
-	         address_city: get_change(changeset, :address_city),
-	         address_state: get_change(changeset, :address_state),
-	         address_zip: get_change(changeset, :address_zip)
-	      }
-	    if service != nil do
-	      address = Core.Geocoder.compose_address(location)
-	      IO.inspect address
-	      if address != nil do
-	        coords = Core.Geocoder.get_coords(address, service.api_key)
-	        changeset
-	        |> put_change(:latitude, coords.lat)
-	        |> put_change(:longitude, coords.lng)
-	      else
-	        changeset
-	      end
-	    else
-	      changeset
-	    end
-  	end
-   	
+  defp update_zip(changeset) do
+    service = Core.ServiceManager.get_service_by_name("Geocoder")
+    location = %{
+       address_one: get_change(changeset, :address_one),
+       address_city: get_change(changeset, :address_city),
+       address_state: get_change(changeset, :address_state),
+       address_zip: get_change(changeset, :address_zip)
+    }
+    if service != nil do
+    address = Core.Geocoder.compose_address(location)
 
-	defp location_changeset(%Location{} = location, attrs) do
+    if address != nil do
+      coords = Core.Geocoder.get_coords(address, service.api_key)
+      changeset
+      |> put_change(:latitude, coords.lat)
+      |> put_change(:longitude, coords.lng)
+      else
+        changeset
+      end
+    else
+      changeset
+    end
+  end
+
+  defp location_changeset(%Location{} = location, attrs) do
     location
     |> cast(attrs, [:name, :state, :address_state, :address_one, :address_two, :address_city, :address_zip, :latitude, :longitude])
     |> validate_required([:name])
@@ -454,5 +463,5 @@ defmodule Core.LocationManager do
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])
   end
-  
+
 end

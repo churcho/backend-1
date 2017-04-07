@@ -1,32 +1,34 @@
 defmodule Huebris.Importer do
-	alias Core.ServiceManager
+  alias Core.ServiceManager
 
-	@moduledoc """
-	Manages import of Hue devices.
-	"""
+  @moduledoc """
+  Manages import of Hue devices.
+  """
 
-	def update(service) do
-		lights = Huebris.connect(service.host, service.api_key)
-		|> Huebris.getlights
+  def update(service) do
+  	lights = Huebris.connect(service.host, service.api_key)
 
-		for {key, value} <- lights do
-			
-			target = %{
-				uuid: value["uniqueid"],
-				service_id: service.id,
-				name: value["name"],
-				metadata: %{
-					manufacturername: value["manufacturername"],
-					modelid: value["modelid"],
-					hue_id: key
-				}
-			}
+    lights
+  	|> Huebris.getlights
 
-			import_entity(target)
-		end
-	end
+  	for {key, value} <- lights do
 
-	def import_entity(target) do
-     	ServiceManager.create_or_update_entity(target)
+  		target = %{
+  			uuid: value["uniqueid"],
+  			service_id: service.id,
+  			name: value["name"],
+  			metadata: %{
+  				manufacturername: value["manufacturername"],
+  				modelid: value["modelid"],
+  				hue_id: key
+  			}
+  		}
+
+  		import_entity(target)
   	end
+  end
+
+  def import_entity(target) do
+     	ServiceManager.create_or_update_entity(target)
+  end
 end

@@ -1,4 +1,7 @@
 defmodule Core.ServiceManager.EntityType do
+  @moduledoc """
+  EntityType
+  """
   use Ecto.Schema
 
   schema "service_manager_entity_types" do

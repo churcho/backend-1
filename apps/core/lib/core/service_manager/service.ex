@@ -1,11 +1,14 @@
 defmodule Core.ServiceManager.Service do
+  @moduledoc """
+  Service
+  """
   use Core.Web, :model
 
   schema "service_manager_services" do
     field :name, :string
     field :slug, :string
     field :host, :string
-    field :port, :string 
+    field :port, :string
     field :client_id, :string
     field :client_secret, :string
     field :access_token, :binary

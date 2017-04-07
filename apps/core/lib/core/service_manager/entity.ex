@@ -1,4 +1,7 @@
 defmodule Core.ServiceManager.Entity do
+  @moduledoc """
+  Entity Schema
+  """
   use Core.Web, :model
 
   schema "service_manager_entities" do

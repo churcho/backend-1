@@ -7,10 +7,9 @@ defmodule Core.Web.ServiceView do
      }
   end
 
-  def render("show.json", %{service: service }) do
+  def render("show.json", %{service: service}) do
     %{
       data: render_one(service, Core.Web.ServiceView, "service.json")
-      
     }
   end
 
@@ -23,7 +22,7 @@ defmodule Core.Web.ServiceView do
   end
 
 
-  def render("service.json", %{service: service }) do
+  def render("service.json", %{service: service}) do
     %{
 
       id: service.id,
@@ -34,7 +33,7 @@ defmodule Core.Web.ServiceView do
         entities: render_many(service.entities |> Core.Repo.preload([:service]), Core.Web.EntityView, "entity.json")
       },
       attributes: %{
-          
+
           name: service.name,
           host: service.host,
           port: service.port,

@@ -1,4 +1,7 @@
 defmodule Core.LocationManager.LocationType do
+  @moduledoc """
+  LocationType
+  """
   use Ecto.Schema
 
   schema "location_manager_location_types" do

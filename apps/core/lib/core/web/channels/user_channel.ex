@@ -1,4 +1,7 @@
 defmodule Core.Web.UserChannel do
+  @moduledoc """
+  User Channel
+  """
   use Core.Web, :channel
 
   def join("users:" <> user_id, _params, socket) do

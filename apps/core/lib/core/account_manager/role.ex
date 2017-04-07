@@ -1,4 +1,7 @@
 defmodule Core.Role do
+  @moduledoc """
+  Role
+  """
   use Core.Web, :model
 
   schema "roles" do

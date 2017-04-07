@@ -1,4 +1,7 @@
 defmodule Core.Application do
+  @moduledoc """
+  The root is on fire
+  """
   use Application
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html

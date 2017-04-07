@@ -1,4 +1,7 @@
 defmodule Core.User do
+  @moduledoc """
+  User
+  """
   use Core.Web, :model
 
 

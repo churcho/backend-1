@@ -1,4 +1,7 @@
 defmodule Core.Setting do
+  @moduledoc """
+  Setting
+  """
   use Core.Web, :model
 
   schema "settings" do

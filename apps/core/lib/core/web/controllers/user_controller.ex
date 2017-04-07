@@ -5,6 +5,8 @@ defmodule Core.Web.UserController do
 
   def index(conn, _params) do
     users = Repo.all(User)
+
+    user
     |> Repo.preload(:role)
     render(conn, "index.json", users: users)
   end
@@ -27,6 +29,8 @@ defmodule Core.Web.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Repo.get!(User, id)
+
+    user
     |> Repo.preload(:role)
     render(conn, "show.json", user: user)
   end

@@ -1,136 +1,151 @@
 defmodule Core.ServiceManager do
-	@moduledoc """
-	The boundary for the ServiceManager system.
-	"""
-	
-	import Ecto.{Query, Changeset}, warn: false
-	alias Core.Repo
+  @moduledoc """
+  The boundary for the ServiceManager system.
+  """
 
-	alias Core.ServiceManager.Provider
-	alias Core.ServiceManager.Service
-	alias Core.ServiceManager.Entity
-	alias Core.ServiceManager.EntityType
+  import Ecto.{Query, Changeset}, warn: false
+  alias Core.Repo
 
-
-	@doc """
-	Returns the list of providers.
-
-	## Examples
-
-	  iex> list_providers()
-	  [%Provider{}, ...]
-
-	"""
-	def list_providers do
-		Repo.all(Provider)
-		|> Repo.preload([:services])
-	end
+  alias Core.ServiceManager.Provider
+  alias Core.ServiceManager.Service
+  alias Core.ServiceManager.Entity
+  alias Core.ServiceManager.EntityType
 
 
-	@doc """
-	Returns the list of services.
+  @doc """
+  Returns the list of providers.
 
-	## Examples
+  ## Examples
 
-	  iex> list_services()
-	  [%Service{}, ...]
+    iex> list_providers()
+    [%Provider{}, ...]
 
-	"""
-	def list_services do
-		Repo.all(Service)
-		|> Repo.preload([:provider, :entities])
-	end
+  """
+  def list_providers do
+  	result = Repo.all(Provider)
 
-	@doc """
-	Returns the list of entities.
+    result
+  	|> Repo.preload([:services])
+  end
 
-	## Examples
 
-	  iex> list_entities()
-	  [%Entity{}, ...]
+  @doc """
+  Returns the list of services.
 
-	"""
-	def list_entities do
-		Repo.all(Entity)
-		|> Repo.preload([:service])
-	end
+  ## Examples
 
-	@doc """
-	Returns the list of entity_types.
+    iex> list_services()
+    [%Service{}, ...]
 
-	## Examples
+  """
+  def list_services do
+  	result = Repo.all(Service)
 
-	  iex> list_entity_types()
-	  [%EntityType{}, ...]
+    result
+  	|> Repo.preload([:provider, :entities])
+  end
 
-	"""
-	def list_entity_types do
-		Repo.all(EntityType)
-	end
-  
+  @doc """
+  Returns the list of entities.
+
+  ## Examples
+
+    iex> list_entities()
+    [%Entity{}, ...]
+
+  """
+  def list_entities do
+  	result = Repo.all(Entity)
+
+    result
+  	|> Repo.preload([:service])
+  end
+
+  @doc """
+  Returns the list of entity_types.
+
+  ## Examples
+
+    iex> list_entity_types()
+    [%EntityType{}, ...]
+
+  """
+  def list_entity_types do
+  	Repo.all(EntityType)
+  end
+
   	@doc """
   	Gets a single Provider.
 
   	Raises `Ecto.NoResultsError` if the Provider does not exist.
 
-	    ## Examples
+      ## Examples
 
-	      iex> get_provider!(123)
-	      %Provider{}
+        iex> get_provider!(123)
+        %Provider{}
 
-	      iex> get_provider!(456)
-	      ** (Ecto.NoResultsError)
-	
- 	"""
+        iex> get_provider!(456)
+        ** (Ecto.NoResultsError)
 
-	def get_provider!(id) do 
-		Repo.get!(Provider, id)
-		|> Repo.preload([:services])
-	end
+  	"""
 
-	def get_provider_by_lorp_name(lorp_name) do
-		Repo.get_by(Provider, lorp_name: lorp_name) |> Repo.preload([:services])
-	end
+  def get_provider!(id) do
+  	result = Repo.get!(Provider, id)
 
-	
+    result
+  	|> Repo.preload([:services])
+  end
 
-	@doc """
-	Gets a single Service.
+  def get_provider_by_lorp_name(lorp_name) do
+    result = Repo.get_by(Provider, lorp_name: lorp_name)
 
-	Raises `Ecto.NoResultsError` if the Service does not exist.
+    result
+    |> Repo.preload([:services])
+  end
 
-	## Examples
 
-		iex> get_service!(123)
-		%Service{}
 
-		iex> get_service!(456)
-		** (Ecto.NoResultsError)
+  @doc """
+  Gets a single Service.
 
- 	"""
-	def get_service!(id) do 
-		Repo.get!(Service, id)
-		|> Repo.preload([:provider, :entities])
-	end
+  Raises `Ecto.NoResultsError` if the Service does not exist.
 
-	@doc """
-	Gets a single Service by its namne.
+  ## Examples
 
-	Raises `Ecto.NoResultsError` if the Service does not exist.
+  	iex> get_service!(123)
+  	%Service{}
 
-	## Examples
+  	iex> get_service!(456)
+  	** (Ecto.NoResultsError)
 
-		iex> get_service_by_name("howdy")
-		%Service{}
+  	"""
+  def get_service!(id) do
+  	result = Repo.get!(Service, id)
 
-		iex> get_service_by_name(456)
-		** (Ecto.NoResultsError)
+    result
+  	|> Repo.preload([:provider, :entities])
+  end
 
- 	"""
-	def get_service_by_name(name) do
-		Repo.get_by(Service, name: name)
-		|> Repo.preload([:provider, :entities])
-	end
+  @doc """
+  Gets a single Service by its namne.
+
+  Raises `Ecto.NoResultsError` if the Service does not exist.
+
+  ## Examples
+
+  	iex> get_service_by_name("howdy")
+  	%Service{}
+
+  	iex> get_service_by_name(456)
+  	** (Ecto.NoResultsError)
+
+  	"""
+  def get_service_by_name(name) do
+  	result = Repo.get_by(Service, name: name)
+
+    result
+  	|> Repo.preload([:provider, :entities])
+  end
 
   	@doc """
   	Gets a single Entity.
@@ -145,37 +160,39 @@ defmodule Core.ServiceManager do
       iex> get_entity!(456)
       ** (Ecto.NoResultsError)
 
- 	"""
-	def get_entity!(id) do 
-		Repo.get!(Entity, id)
-		|> Repo.preload([:service])
-	end
+  	"""
+  def get_entity!(id) do
+  	result = Repo.get!(Entity, id)
 
-	def get_entity_by_uuid(uuid) do
-		Repo.get_by(Entity, uuid: uuid)
-	end
+    result
+  	|> Repo.preload([:service])
+  end
 
-	@doc """
-	Gets a single entity_type.
+  def get_entity_by_uuid(uuid) do
+  	Repo.get_by(Entity, uuid: uuid)
+  end
 
-	Raises `Ecto.NoResultsError` if the Entity type does not exist.
+  @doc """
+  Gets a single entity_type.
 
-	## Examples
+  Raises `Ecto.NoResultsError` if the Entity type does not exist.
 
-	  iex> get_entity_type!(123)
-	  %EntityType{}
+  ## Examples
 
-	  iex> get_entity_type!(456)
-	  ** (Ecto.NoResultsError)
+    iex> get_entity_type!(123)
+    %EntityType{}
 
-	"""
-	def get_entity_type!(id), do: Repo.get!(EntityType, id)
+    iex> get_entity_type!(456)
+    ** (Ecto.NoResultsError)
+
+  """
+  def get_entity_type!(id), do: Repo.get!(EntityType, id)
 
 
-	@doc """
-	Creates a Provider.
+  @doc """
+  Creates a Provider.
 
-	## Examples
+  ## Examples
 
     iex> create_provider(%{field: value})
     {:ok, %Provider{}}
@@ -183,25 +200,27 @@ defmodule Core.ServiceManager do
     iex> create_provider(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_provider(attrs \\ %{}) do
-	  	%Provider{}
-	  	|> provider_changeset(attrs)
-	  	|> Repo.insert()
-	end
+  """
+  def create_provider(attrs \\ %{}) do
+    	%Provider{}
+    	|> provider_changeset(attrs)
+    	|> Repo.insert()
+  end
 
-	def create_or_update_provider(target) do
-		case Repo.get_by(Provider, lorp_name: target.lorp_name) do
-			nil -> provider_changeset(%Provider{}, target)
-			provider -> provider_changeset(provider, target)
-		end
-		|> Repo.insert_or_update
-	end
+  def create_or_update_provider(target) do
+    result =
+  	case Repo.get_by(Provider, lorp_name: target.lorp_name) do
+  		nil -> provider_changeset(%Provider{}, target)
+  		provider -> provider_changeset(provider, target)
+  	end
+    result
+  	|> Repo.insert_or_update
+  end
 
-	@doc """
-	Creates a Service.
+  @doc """
+  Creates a Service.
 
-	## Examples
+  ## Examples
 
     iex> create_service(%{field: value})
     {:ok, %Service{}}
@@ -209,17 +228,17 @@ defmodule Core.ServiceManager do
     iex> create_service(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_service(attrs \\ %{}) do
-	  	%Service{}
-	  	|> service_changeset(attrs)
-	  	|> Repo.insert()
-	end
+  """
+  def create_service(attrs \\ %{}) do
+    	%Service{}
+    	|> service_changeset(attrs)
+    	|> Repo.insert()
+  end
 
-	@doc """
-	Creates a Entity.
+  @doc """
+  Creates a Entity.
 
-	## Examples
+  ## Examples
 
     iex> create_entity(%{field: value})
     {:ok, %Entity{}}
@@ -227,46 +246,49 @@ defmodule Core.ServiceManager do
     iex> create_entity(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_entity(attrs \\ %{}) do
-	  	%Entity{}
-	  	|> entity_changeset(attrs)
-	  	|> Repo.insert()
-	end
+  """
+  def create_entity(attrs \\ %{}) do
+    	%Entity{}
+    	|> entity_changeset(attrs)
+    	|> Repo.insert()
+  end
 
 
-	def create_or_update_entity(target) do
-		case Repo.get_by(Entity, uuid: target.uuid) do
-			nil -> entity_changeset(%Entity{}, target)
-			entity -> entity_changeset(entity, target)
-		end
-		|> Repo.insert_or_update
-	end
+  def create_or_update_entity(target) do
+    result =
+  	case Repo.get_by(Entity, uuid: target.uuid) do
+  		nil -> entity_changeset(%Entity{}, target)
+  		entity -> entity_changeset(entity, target)
+  	end
 
-	@doc """
+    result
+  	|> Repo.insert_or_update
+  end
+
+  @doc """
   	Creates a entity_type.
 
-	## Examples
+  ## Examples
 
-	  iex> create_entity_type(%{field: value})
-	  {:ok, %EntityType{}}
+    iex> create_entity_type(%{field: value})
+    {:ok, %EntityType{}}
 
-	  iex> create_entity_type(%{field: bad_value})
-	  {:error, %Ecto.Changeset{}}
+    iex> create_entity_type(%{field: bad_value})
+    {:error, %Ecto.Changeset{}}
 
-	"""
-	def create_entity_type(attrs \\ %{}) do
-		%EntityType{}
-		|> entity_type_changeset(attrs)
-		|> Repo.insert()
-	end
+  """
+  def create_entity_type(attrs \\ %{}) do
+  	%EntityType{}
+  	|> entity_type_changeset(attrs)
+  	|> Repo.insert()
+  end
 
 
 
-	@doc """
-	Updates a Provider.
+  @doc """
+  Updates a Provider.
 
-	## Examples
+  ## Examples
 
     iex> update_provider(Provider, %{field: new_value})
     {:ok, %Provider{}}
@@ -274,18 +296,18 @@ defmodule Core.ServiceManager do
     iex> update_provider(Provider, %{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def update_provider(%Provider{} = provider, attrs) do
-	  	provider
-	  	|> provider_changeset(attrs)
-	  	|> Repo.update()
-	end
+  """
+  def update_provider(%Provider{} = provider, attrs) do
+    	provider
+    	|> provider_changeset(attrs)
+    	|> Repo.update()
+  end
 
 
-	@doc """
-	Updates a Service.
+  @doc """
+  Updates a Service.
 
-	## Examples
+  ## Examples
 
     iex> update_service(Service, %{field: new_value})
     {:ok, %Service{}}
@@ -293,17 +315,17 @@ defmodule Core.ServiceManager do
     iex> update_service(Service, %{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def update_service(%Service{} = service, attrs) do
-	  	service
-	  	|> service_changeset(attrs)
-	  	|> Repo.update()
-	end
+  """
+  def update_service(%Service{} = service, attrs) do
+    	service
+    	|> service_changeset(attrs)
+    	|> Repo.update()
+  end
 
-	@doc """
-	Updates a Entity.
+  @doc """
+  Updates a Entity.
 
-	## Examples
+  ## Examples
 
     iex> update_entity(Entity, %{field: new_value})
     {:ok, %Entity{}}
@@ -311,36 +333,36 @@ defmodule Core.ServiceManager do
     iex> update_entity(Entity, %{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def update_entity(%Entity{} = entity, attrs) do
-	  	entity
-	  	|> entity_changeset(attrs)
-	  	|> Repo.update()
-	end
+  """
+  def update_entity(%Entity{} = entity, attrs) do
+    	entity
+    	|> entity_changeset(attrs)
+    	|> Repo.update()
+  end
 
-	@doc """
-	Updates a entity_type.
+  @doc """
+  Updates a entity_type.
 
-	  ## Examples
+    ## Examples
 
-	      iex> update_entity_type(entity_type, %{field: new_value})
-	      {:ok, %EntityType{}}
+        iex> update_entity_type(entity_type, %{field: new_value})
+        {:ok, %EntityType{}}
 
-	      iex> update_entity_type(entity_type, %{field: bad_value})
-	      {:error, %Ecto.Changeset{}}
+        iex> update_entity_type(entity_type, %{field: bad_value})
+        {:error, %Ecto.Changeset{}}
 
-	 """
-	def update_entity_type(%EntityType{} = entity_type, attrs) do
-		entity_type
-		|> entity_type_changeset(attrs)
-		|> Repo.update()
-	end
+   """
+  def update_entity_type(%EntityType{} = entity_type, attrs) do
+  	entity_type
+  	|> entity_type_changeset(attrs)
+  	|> Repo.update()
+  end
 
 
-	@doc """
-	Deletes a Provider.
+  @doc """
+  Deletes a Provider.
 
-	## Examples
+  ## Examples
 
     iex> delete_provider(Provider)
     {:ok, %Provider{}}
@@ -348,15 +370,15 @@ defmodule Core.ServiceManager do
     iex> delete_provider(Provider)
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def delete_provider(%Provider{} = provider) do
+  """
+  def delete_provider(%Provider{} = provider) do
   		Repo.delete(provider)
-	end
+  end
 
-	@doc """
-	Deletes a Service.
+  @doc """
+  Deletes a Service.
 
-	## Examples
+  ## Examples
 
     iex> delete_service(Service)
     {:ok, %Service{}}
@@ -364,15 +386,15 @@ defmodule Core.ServiceManager do
     iex> delete_service(Service)
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def delete_service(%Service{} = service) do
+  """
+  def delete_service(%Service{} = service) do
   		Repo.delete(service)
-	end
+  end
 
-	@doc """
-	Deletes a Entity.
+  @doc """
+  Deletes a Entity.
 
-	## Examples
+  ## Examples
 
     iex> delete_entity(Entity)
     {:ok, %Entity{}}
@@ -380,146 +402,146 @@ defmodule Core.ServiceManager do
     iex> delete_entity(Entity)
     {:error, %Ecto.Changeset{}}
 
-	"""
-	def delete_entity(%Entity{} = entity) do
+  """
+  def delete_entity(%Entity{} = entity) do
   		Repo.delete(entity)
-	end
-    
+  end
+
     @doc """
-	  Deletes a EntityType.
+    Deletes a EntityType.
 
-	  ## Examples
+    ## Examples
 
-	      iex> delete_entity_type(entity_type)
-	      {:ok, %EntityType{}}
+        iex> delete_entity_type(entity_type)
+        {:ok, %EntityType{}}
 
-	      iex> delete_entity_type(entity_type)
-	      {:error, %Ecto.Changeset{}}
+        iex> delete_entity_type(entity_type)
+        {:error, %Ecto.Changeset{}}
 
-	  """
-	def delete_entity_type(%EntityType{} = entity_type) do
-		Repo.delete(entity_type)
-	end
+    """
+  def delete_entity_type(%EntityType{} = entity_type) do
+  	Repo.delete(entity_type)
+  end
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking Provider changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Provider changes.
 
-	## Examples
+  ## Examples
 
     iex> change_provider(Provider)
     %Ecto.Changeset{source: %Provider{}}
 
-	"""
- 	def change_provider(%Provider{} = provider) do
-		provider_changeset(provider, %{})
-	end
+  """
+  	def change_provider(%Provider{} = provider) do
+  	provider_changeset(provider, %{})
+  end
 
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking Service changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Service changes.
 
-	## Examples
+  ## Examples
 
     iex> change_service(Service)
     %Ecto.Changeset{source: %Service{}}
 
-	"""
- 	def change_service(%Service{} = service) do
+  """
+  	def change_service(%Service{} = service) do
     	service_changeset(service, %{})
-  	end
+  end
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking Entity changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking Entity changes.
 
-	## Examples
+  ## Examples
 
     iex> change_entity(Entity)
     %Ecto.Changeset{source: %Entity}}
 
-	"""
- 	def change_entity(%Entity{} = entity) do
-    	entity_changeset(entity, %{})
-  	end
+  """
+  def change_entity(%Entity{} = entity) do
+    entity_changeset(entity, %{})
+  end
 
-	@doc """
-	Returns an `%Ecto.Changeset{}` for tracking entity_type changes.
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking entity_type changes.
 
-	## Examples
+  ## Examples
 
-	  iex> change_entity_type(entity_type)
-	  %Ecto.Changeset{source: %EntityType{}}
+    iex> change_entity_type(entity_type)
+    %Ecto.Changeset{source: %EntityType{}}
 
-	"""
-	def change_entity_type(%EntityType{} = entity_type) do
-		entity_type_changeset(entity_type, %{})
-	end
+  """
+  def change_entity_type(%EntityType{} = entity_type) do
+  	entity_type_changeset(entity_type, %{})
+  end
 
 
   	defp provider_changeset(%Provider{} = provider, attrs) do
-	    provider
-	    |> cast(attrs, [:name,
-	                     :description,
-	                     :url,
-	                     :enabled,
-	                     :lorp_name,
-	                     :auth_method,
-	                     :registered_at,
-	                     :last_seen,
-	                     :provides,
-	                     :max_services,
-	                     :configuration,
-	                     :logo_path,
-	                     :icon_path,
-	                     :keywords,
-	                     :slug,
-	                     :version])
-	    |> validate_required([:name, :url])
+      provider
+      |> cast(attrs, [:name,
+                       :description,
+                       :url,
+                       :enabled,
+                       :lorp_name,
+                       :auth_method,
+                       :registered_at,
+                       :last_seen,
+                       :provides,
+                       :max_services,
+                       :configuration,
+                       :logo_path,
+                       :icon_path,
+                       :keywords,
+                       :slug,
+                       :version])
+      |> validate_required([:name, :url])
   	end
-	
-	def service_changeset(%Service{} = service, attrs) do
-		service
-		|> cast(attrs, [:name,
-		                 :host,
-		                 :port,
-		                 :client_id,
-		                 :client_secret,
-		                 :access_token,
-		                 :api_key,
-		                 :enabled,
-		                 :authorized,
-		                 :searchable,
-		                 :search_path,
-		                 :state,
-		                 :slug,
-		                 :imported_at,
-		                 :allows_import,
-		                 :requires_authorization,
-		                 :metadata,
-		                 :configuration,
-		                 :provider_id])
-		|> validate_required([:name, :provider_id])
-	end
 
-	defp entity_changeset(%Entity{} = entity, attrs) do
-		entity
-		|> cast(attrs, [:name, 
-		                 :uuid, 
-		                 :description, 
-		                 :label, 
-		                 :metadata, 
-		                 :state, 
-		                 :display_name,
-		                 :slug, 
-		                 :configuration, 
-		                 :source,
-		                 :service_id])
-		|> validate_required([:name, :uuid])
-	end
+  def service_changeset(%Service{} = service, attrs) do
+  	service
+  	|> cast(attrs, [:name,
+  	                 :host,
+  	                 :port,
+  	                 :client_id,
+  	                 :client_secret,
+  	                 :access_token,
+  	                 :api_key,
+  	                 :enabled,
+  	                 :authorized,
+  	                 :searchable,
+  	                 :search_path,
+  	                 :state,
+  	                 :slug,
+  	                 :imported_at,
+  	                 :allows_import,
+  	                 :requires_authorization,
+  	                 :metadata,
+  	                 :configuration,
+  	                 :provider_id])
+  	|> validate_required([:name, :provider_id])
+  end
 
-	defp entity_type_changeset(%EntityType{} = entity_type, attrs) do
-		entity_type
-		|> cast(attrs, [:name, :description])
-		|> validate_required([:name, :description])
-	end
+  defp entity_changeset(%Entity{} = entity, attrs) do
+  	entity
+  	|> cast(attrs, [:name,
+  	                 :uuid,
+  	                 :description,
+  	                 :label,
+  	                 :metadata,
+  	                 :state,
+  	                 :display_name,
+  	                 :slug,
+  	                 :configuration,
+  	                 :source,
+  	                 :service_id])
+  	|> validate_required([:name, :uuid])
+  end
 
-end
+  defp entity_type_changeset(%EntityType{} = entity_type, attrs) do
+  	entity_type
+  	|> cast(attrs, [:name, :description])
+  	|> validate_required([:name, :description])
+  end
+
+  end

@@ -1,6 +1,9 @@
 defmodule Huebris.Scheduler do
-	use GenServer
-	require Logger
+  @moduledoc """
+  Scheduler
+  """
+  use GenServer
+  require Logger
 
   def start_link do
     GenServer.start_link(__MODULE__, %{})

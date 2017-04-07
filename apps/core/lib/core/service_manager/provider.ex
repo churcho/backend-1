@@ -1,4 +1,7 @@
 defmodule Core.ServiceManager.Provider do
+  @moduledoc """
+  Provider
+  """
   use Core.Web, :model
 
   schema "service_manager_providers" do

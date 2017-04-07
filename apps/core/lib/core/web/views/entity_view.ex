@@ -3,7 +3,7 @@ defmodule Core.Web.EntityView do
 
   def render("index.json", %{entities: entities}) do
     %{
-      links: %{ self: "/api/v1/entities"},
+      links: %{self: "/api/v1/entities"},
       data: render_many(entities, Core.Web.EntityView, "entity.json")}
   end
 
@@ -35,6 +35,6 @@ defmodule Core.Web.EntityView do
         label: entity.label,
         metadata: entity.metadata,
         state: entity.state}
-      } 
+      }
   end
 end

@@ -1,4 +1,7 @@
 defmodule Core.Web.Session do
+  @moduledoc """
+  Session Helper
+  """
   alias Core.{Repo, User}
 
   def authenticate(%{"email" => email, "password" => password}) do

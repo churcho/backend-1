@@ -1,4 +1,7 @@
 defmodule Core.Web.SessionController do
+  @moduledoc """
+  Session Controller
+  """
   use Core.Web, :controller
 
   plug :scrub_params, "session" when action in [:create]
