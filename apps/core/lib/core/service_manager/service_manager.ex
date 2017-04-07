@@ -24,7 +24,7 @@ defmodule Core.ServiceManager do
   def list_providers do
     Provider
     |> Repo.all()
-  	|> Repo.preload([:services])
+    |> Repo.preload([:services])
   end
 
 
@@ -39,8 +39,8 @@ defmodule Core.ServiceManager do
   """
   def list_services do
     Service
-  	|> Repo.all()
-  	|> Repo.preload([:provider, :entities])
+    |> Repo.all()
+    |> Repo.preload([:provider, :entities])
   end
 
   @doc """
@@ -55,7 +55,7 @@ defmodule Core.ServiceManager do
   def list_entities do
     Entity
     |> Repo.all()
-  	|> Repo.preload([:service])
+    |> Repo.preload([:service])
   end
 
   @doc """
@@ -68,7 +68,7 @@ defmodule Core.ServiceManager do
 
   """
   def list_entity_types do
-  	Repo.all(EntityType)
+    Repo.all(EntityType)
   end
 
   	@doc """
@@ -117,7 +117,7 @@ defmodule Core.ServiceManager do
   def get_service!(id) do
     Service
     |> Repo.get!(id)
-  	|> Repo.preload([:provider, :entities])
+    |> Repo.preload([:provider, :entities])
   end
 
   @doc """
@@ -137,7 +137,7 @@ defmodule Core.ServiceManager do
   def get_service_by_name(name) do
     Service
     |> Repo.get_by(name: name)
-  	|> Repo.preload([:provider, :entities])
+    |> Repo.preload([:provider, :entities])
   end
 
   	@doc """
@@ -157,7 +157,7 @@ defmodule Core.ServiceManager do
   def get_entity!(id) do
     Entity
     |> Repo.get!(id)
-  	|> Repo.preload([:service])
+    |> Repo.preload([:service])
   end
 
   @doc """
