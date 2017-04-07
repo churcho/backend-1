@@ -200,16 +200,16 @@ defmodule Core.ServiceManager do
 
   """
   def create_provider(attrs \\ %{}) do
-    	%Provider{}
-    	|> provider_changeset(attrs)
-    	|> Repo.insert()
+    %Provider{}
+    |> provider_changeset(attrs)
+    |> Repo.insert()
   end
 
   def create_or_update_provider(target) do
     result =
   	case Repo.get_by(Provider, lorp_name: target.lorp_name) do
-  		nil -> provider_changeset(%Provider{}, target)
-  		provider -> provider_changeset(provider, target)
+      nil -> provider_changeset(%Provider{}, target)
+      provider -> provider_changeset(provider, target)
   	end
     result
   	|> Repo.insert_or_update
@@ -228,9 +228,9 @@ defmodule Core.ServiceManager do
 
   """
   def create_service(attrs \\ %{}) do
-    	%Service{}
-    	|> service_changeset(attrs)
-    	|> Repo.insert()
+    %Service{}
+    |> service_changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -246,9 +246,9 @@ defmodule Core.ServiceManager do
 
   """
   def create_entity(attrs \\ %{}) do
-    	%Entity{}
-    	|> entity_changeset(attrs)
-    	|> Repo.insert()
+    %Entity{}
+    |> entity_changeset(attrs)
+    |> Repo.insert()
   end
 
 
@@ -296,9 +296,9 @@ defmodule Core.ServiceManager do
 
   """
   def update_provider(%Provider{} = provider, attrs) do
-    	provider
-    	|> provider_changeset(attrs)
-    	|> Repo.update()
+    provider
+    |> provider_changeset(attrs)
+    |> Repo.update()
   end
 
 
@@ -315,9 +315,9 @@ defmodule Core.ServiceManager do
 
   """
   def update_service(%Service{} = service, attrs) do
-    	service
-    	|> service_changeset(attrs)
-    	|> Repo.update()
+    service
+    |> service_changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """
@@ -333,9 +333,9 @@ defmodule Core.ServiceManager do
 
   """
   def update_entity(%Entity{} = entity, attrs) do
-    	entity
-    	|> entity_changeset(attrs)
-    	|> Repo.update()
+    entity
+    |> entity_changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """
@@ -496,28 +496,28 @@ defmodule Core.ServiceManager do
     |> validate_required([:name, :url])
   end
 
-  def service_changeset(%Service{} = service, attrs) do
-  	service
-  	|> cast(attrs, [:name,
-  	                 :host,
-  	                 :port,
-  	                 :client_id,
-  	                 :client_secret,
-  	                 :access_token,
-  	                 :api_key,
-  	                 :enabled,
-  	                 :authorized,
-  	                 :searchable,
-  	                 :search_path,
-  	                 :state,
-  	                 :slug,
-  	                 :imported_at,
-  	                 :allows_import,
-  	                 :requires_authorization,
-  	                 :metadata,
-  	                 :configuration,
-  	                 :provider_id])
-  	|> validate_required([:name, :provider_id])
+  defp service_changeset(%Service{} = service, attrs) do
+    service
+    |> cast(attrs, [:name,
+                     :host,
+                     :port,
+                     :client_id,
+                     :client_secret,
+                     :access_token,
+                     :api_key,
+                     :enabled,
+                     :authorized,
+                     :searchable,
+                     :search_path,
+                     :state,
+                     :slug,
+                     :imported_at,
+                     :allows_import,
+                     :requires_authorization,
+                     :metadata,
+                     :configuration,
+                     :provider_id])
+    |> validate_required([:name, :provider_id])
   end
 
   defp entity_changeset(%Entity{} = entity, attrs) do
