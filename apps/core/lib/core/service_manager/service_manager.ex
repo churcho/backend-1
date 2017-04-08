@@ -89,7 +89,7 @@ defmodule Core.ServiceManager do
   def get_provider!(id) do
     Provider
     |> Repo.get!(id)
-  	|> Repo.preload([:services])
+    |> Repo.preload([:services])
   end
 
   def get_provider_by_lorp_name(lorp_name) do
@@ -117,7 +117,8 @@ defmodule Core.ServiceManager do
   def get_service!(id) do
     Service
     |> Repo.get!(id)
-    |> Repo.preload([:provider, :entities])
+    |> Repo.preload([:provider])
+    |> Repo.preload entities: from(e in Entity, order_by: e.name)
   end
 
   @doc """

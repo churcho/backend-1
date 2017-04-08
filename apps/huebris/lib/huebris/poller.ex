@@ -10,32 +10,34 @@ defmodule Huebris.Poller do
   @doc """
   Poll a bridge entity for changes
   """
-  def poll(service) do
-
-  	lights = Huebris.connect(service.host, service.api_key)
-
-    lights
-  	|> Huebris.getlights
+  def poll(current_bridge, new_bridge) do
+    lights = new_bridge
 
   	for {key, value} <- lights do
 
-  		target = ServiceManager.get_entity_by_uuid(value["uniqueid"])
-  		net_state = %{
-  			"level" => value["state"]["bri"],
-  			"switch" => convert_bools(value["state"]["on"])
-  		}
+      state_match = Huebris.Server.state_check(value, current_bridge[key])
 
-  		if net_state != target.state do
-  			update_state(target, net_state)
+      if state_match == false do
+        target = ServiceManager.get_entity_by_uuid(value["uniqueid"])
+        net_state = %{
+         "level" => value["state"]["bri"],
+         "switch" => convert_bools(value["state"]["on"])
+        }
 
-  			for {key, value} <- net_state do
-  				if value != target.state[key] do
-  					build_item(target, value, key)
-  				end
-  			end
-  		end
+       if net_state != target.state do
+         update_state(target, net_state)
+         IO.puts "Hue Bridge Updated"
+         for {key, value} <- net_state do
+           if value != target.state[key] do
+             build_item(target, value, key)
+           end
+         end
+       end
+      end
 
 
+
+      Agent.update(HueBridges, &(&1 = new_bridge))
   	end
   end
 
@@ -74,7 +76,7 @@ defmodule Huebris.Poller do
   def broadcast_change(event) do
   	with {:ok, %Event{} = event} <- EventManager.create_event(event) do
       event
-  	 
+
   	end
   end
 

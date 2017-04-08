@@ -29,9 +29,9 @@ defmodule Huebris.Server do
   	if services != nil do
     	for service <- services do
     		if service.authorized do
-  	    	bridge = Huebris.connect(service.host, service.api_key)
-
-          bridge
+  	    	bridge =
+          service.host
+          |> Huebris.connect(service.api_key)
           |> Huebris.getlights
 
   				Agent.update(HueMemState, &(&1 = service))
@@ -48,23 +48,33 @@ defmodule Huebris.Server do
   	providers.services
   end
 
+  def build_bridge(service) do
+    service.host
+    |> Huebris.connect(service.api_key)
+    |> Huebris.getlights
+  end
+
+  def state_check(entity_a, entity_b) do
+    if entity_a == entity_b do
+      true
+    else
+      false
+    end
+  end
+
   def poll() do
-
-
   	if Agent.get(HueMemState, &(&1)) == %{} do
   	  	Huebris.Server.build_state
+
   	else
   		service = Agent.get(HueMemState, &(&1))
+  		new_bridge = build_bridge(service)
+      current_bridge = Agent.get(HueBridges, &(&1))
 
-  		bridge = Huebris.connect(service.host, service.api_key)
-
-      bridge
-  		|> Huebris.getlights
-
-   	  	if Agent.get(HueBridges, &(&1)) != bridge do
-   	  	  Agent.update(HueBridges, &(&1 = bridge))
-  		  Huebris.Poller.poll(service)
+   	  if current_bridge != new_bridge do
+  		  Huebris.Poller.poll(current_bridge, new_bridge)
   		end
+
   	end
   end
 end

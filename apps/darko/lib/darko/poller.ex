@@ -2,6 +2,8 @@ defmodule Darko.Poller do
 
   alias Core.ServiceManager
   alias Core.EventManager
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Entity
   alias Core.EventManager.Event
 
   @moduledoc """
@@ -42,64 +44,44 @@ defmodule Darko.Poller do
     if net_state != target.state do
       update_state(target, net_state)
 
-        for measurement <- numeric_items do
-          cond do
-             net_state[measurement] > target.state[measurement] ->
-              if net_state[measurement] > 1 do
-                if net_state[measurement] - target.state[measurement] > 0.25 do
-                   type = measurement
-                   build_item(target, net_state[measurement], type)
-                end
-              else
-                type = measurement
-                build_item(target, net_state[measurement], type)
-              end
-             net_state[measurement] < target.state[measurement]  ->
-              if target.state[measurement] > 1 do
-                if target.state[measurement] - net_state[measurement] > 0.25 do
-                   type = measurement
-                   build_item(target, net_state[measurement], type)
-                end
-              else
-                 type = measurement
-                 build_item(target, net_state[measurement], type)
-              end
-              true ->
-                nil
-          end
+      for measurement <- numeric_items do
+        if net_state[measurement] != target.state[measurement] do
+          type = measurement
+          build_item(target, net_state[measurement], type)
         end
+      end
 
-        for measurement <- text_items do
-          if net_state[measurement] != target.state[measurement] do
-            type = measurement
-            build_item(target, net_state[measurement], type)
-          end
+
+      for measurement <- text_items do
+        if net_state[measurement] != target.state[measurement] do
+          type = measurement
+          build_item(target, net_state[measurement], type)
         end
-
+      end
     end
   end
 
   def fetch_currently(station) do
-     {:ok, result} = Darko.Server.forecast(station["latitude"], station["longitude"], station["api_key"])
-     result
-   end
+    {:ok, result} = Darko.Server.forecast(station["latitude"], station["longitude"], station["api_key"])
+    result
+  end
 
 
-  def update_state(target, net_state) do
+  def update_state(entity, net_state) do
+
     new_state =
-    if target.state != nil do
-      %{state: Map.merge(target.state, net_state)}
+    if entity.state != nil do
+      %{state: Map.merge(entity.state, net_state)}
     else
-      IO.puts "build a state"
       %{state: net_state}
     end
 
 
-    if new_state != nil do
-      changeset = ServiceManager.update_entity(target, new_state)
+    with {:ok, %Entity{} = entity} <- ServiceManager.update_entity(entity, new_state) do
+      entity
     end
-
   end
+
 
 
   def build_item(target, value, type) do
@@ -125,7 +107,7 @@ defmodule Darko.Poller do
   def broadcast_change(event) do
 
     with {:ok, %Event{} = event} <- EventManager.create_event(event) do
-      IO.puts "event pushed."
+      event
     end
 
   end
