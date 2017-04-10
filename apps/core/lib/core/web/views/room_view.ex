@@ -12,7 +12,10 @@ defmodule Core.Web.RoomView do
   end
 
   def render("room.json", %{room: room}) do
-    %{links: %{self: "/api/v1/rooms/#{room.id}"},
+    %{
+      links: %{
+        self: "/api/v1/rooms/#{room.id}"
+        },
       id: room.id,
       attributes: %{
         name: room.name,

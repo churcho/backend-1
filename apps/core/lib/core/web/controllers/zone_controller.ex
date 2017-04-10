@@ -11,11 +11,11 @@ defmodule Core.Web.ZoneController do
   end
 
   def create(conn, %{"zone" => zone_params}) do
-    with {:ok, %Zone{} = zone} <- LocationManager.create_location(zone_params) do
+    with {:ok, %Zone{} = zone} <- LocationManager.create_zone(zone_params) do
       conn
       |> put_status(:created)
       |> put_resp_header("zone", zone_path(conn, :show, zone))
-      |> render("show.json", zone: zone)
+      |> render("show.json", zone: zone |> Core.Repo.preload([:location, :rooms]))
     end
   end
 
@@ -29,7 +29,7 @@ defmodule Core.Web.ZoneController do
     zone = LocationManager.get_zone!(id)
 
     with {:ok, %Zone{} = zone} <- LocationManager.update_zone(zone, zone_params) do
-      render(conn, "show.json", zone: zone)
+      render(conn, "show.json", zone: zone |> Core.Repo.preload([:location, :rooms]))
     end
   end
 

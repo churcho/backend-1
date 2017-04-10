@@ -26,7 +26,7 @@ config :logger, :console,
 # Configures guardian
 config :guardian, Guardian,
   issuer: "Lorp",
-  ttl: { 3, :days },
+  ttl: {3, :days},
   verify_issuer: true,
   secret_key: "K5U15rCwqam0hz3EYovOp133hij04IVoFtsbKTgfxwdfBL91zBb8mH2WqzgMtpXC",
   serializer: Core.GuardianSerializer

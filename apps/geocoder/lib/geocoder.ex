@@ -1,11 +1,11 @@
 defmodule Geocoder do
-
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
   @moduledoc """
   Documentation for Geocoder.
   """
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Provider
 
+  
   @doc """
   Basic Registration Information
   """

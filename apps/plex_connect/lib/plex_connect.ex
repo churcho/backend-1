@@ -1,10 +1,10 @@
 defmodule PlexConnect do
-
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
   @moduledoc """
   Documentation for Plex.
   """
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Provider
+
 
   @doc """
   Basic Registration Information

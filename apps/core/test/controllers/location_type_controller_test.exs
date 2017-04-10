@@ -1,4 +1,7 @@
 defmodule Core.Web.LocationTypeControllerTest do
+  @moduledoc """
+  Location Type Controller
+  """
   use Core.Web.ConnCase
 
   alias Core.LocationManager

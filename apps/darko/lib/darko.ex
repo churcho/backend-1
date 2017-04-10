@@ -1,9 +1,13 @@
 defmodule Darko do
+  @moduledoc """
+  API Boundary for Darko.
+
+  Darko provides virtual weather stations for a given location using data from
+  the Dark Sky weather API.
+  """
   alias Core.ServiceManager
   alias Core.ServiceManager.Provider
-  @moduledoc """
-  Documentation for Geocoder.
-  """
+
 
   @doc """
   Basic Registration Information

@@ -24,19 +24,14 @@ defmodule Huebris.Poller do
          "switch" => convert_bools(value["state"]["on"])
         }
 
-       if net_state != target.state do
-         update_state(target, net_state)
-         IO.puts "Hue Bridge Updated"
-         for {key, value} <- net_state do
-           if value != target.state[key] do
-             build_item(target, value, key)
-           end
-         end
-       end
+        update_state(target, net_state)
+        IO.puts "Hue Bridge Updated"
+        for {key, value} <- net_state do
+          if value != target.state[key] do
+            build_item(target, value, key)
+          end
+        end
       end
-
-
-
       Agent.update(HueBridges, &(&1 = new_bridge))
   	end
   end
@@ -76,7 +71,6 @@ defmodule Huebris.Poller do
   def broadcast_change(event) do
   	with {:ok, %Event{} = event} <- EventManager.create_event(event) do
       event
-
   	end
   end
 

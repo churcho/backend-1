@@ -14,8 +14,8 @@ defmodule Core.Web.ServiceController do
     with {:ok, %Service{} = service} <- ServiceManager.create_service(service_params) do
       conn
       |> put_status(:created)
-      |> put_resp_header("service", service_path(conn, :show, service |> Core.Repo.preload([:provider, :entities])))
-      |> render("show.json", service: service)
+      |> put_resp_header("service", service_path(conn, :show, service))
+      |> render("show.json", service: service |> Core.Repo.preload([:provider, :entities]))
     end
   end
 

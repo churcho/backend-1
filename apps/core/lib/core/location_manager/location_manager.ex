@@ -143,7 +143,7 @@ defmodule Core.LocationManager do
   def get_room!(id) do
     Room
     |> Repo.get!(id)
-  	|> Repo.preload([:zone])
+  	|> Repo.preload([:zone, :zone_location])
   end
 
   @doc """
@@ -196,8 +196,9 @@ defmodule Core.LocationManager do
   """
   def create_zone(attrs \\ %{}) do
     %Zone{}
-    |> location_changeset(attrs)
+    |> zone_changeset(attrs)
     |> Repo.insert()
+
   end
 
   @doc """
@@ -214,7 +215,7 @@ defmodule Core.LocationManager do
   """
   def create_room(attrs \\ %{}) do
     %Room{}
-    |> location_changeset(attrs)
+    |> room_changeset(attrs)
     |> Repo.insert()
   end
 

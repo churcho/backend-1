@@ -1,6 +1,7 @@
 defmodule Core.EventManager.CouchPotato do
   @moduledoc """
-  Decodes the payload to JSON and creates a new map that will be used to create a new event.
+  Decodes the payload to JSON and creates a new map that will be used to create
+  a new event.
   """
 
   @doc """

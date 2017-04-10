@@ -68,7 +68,8 @@ defmodule Core.ServiceManager do
 
   """
   def list_entity_types do
-    Repo.all(EntityType)
+    EntityType
+    |> Repo.all()
   end
 
   	@doc """
@@ -371,7 +372,8 @@ defmodule Core.ServiceManager do
 
   """
   def delete_provider(%Provider{} = provider) do
-    Repo.delete(provider)
+    provider
+    |> Repo.delete()
   end
 
   @doc """
@@ -387,7 +389,8 @@ defmodule Core.ServiceManager do
 
   """
   def delete_service(%Service{} = service) do
-    Repo.delete(service)
+    service
+    |> Repo.delete()
   end
 
   @doc """
@@ -403,7 +406,8 @@ defmodule Core.ServiceManager do
 
   """
   def delete_entity(%Entity{} = entity) do
-    Repo.delete(entity)
+    entity
+    |> Repo.delete()
   end
 
     @doc """
@@ -419,7 +423,8 @@ defmodule Core.ServiceManager do
 
     """
   def delete_entity_type(%EntityType{} = entity_type) do
-    Repo.delete(entity_type)
+    entity_type
+    |> Repo.delete()
   end
 
   @doc """
@@ -432,7 +437,8 @@ defmodule Core.ServiceManager do
 
   """
   def change_provider(%Provider{} = provider) do
-  	provider_changeset(provider, %{})
+    provider
+  	|> provider_changeset(%{})
   end
 
 
@@ -446,7 +452,8 @@ defmodule Core.ServiceManager do
 
   """
   def change_service(%Service{} = service) do
-    service_changeset(service, %{})
+    service
+    |> service_changeset(%{})
   end
 
   @doc """
@@ -459,7 +466,8 @@ defmodule Core.ServiceManager do
 
   """
   def change_entity(%Entity{} = entity) do
-    entity_changeset(entity, %{})
+    entity
+    |> entity_changeset(%{})
   end
 
   @doc """

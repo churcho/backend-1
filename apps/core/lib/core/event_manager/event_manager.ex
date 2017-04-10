@@ -6,6 +6,7 @@ defmodule Core.EventManager do
   import Ecto.{Query, Changeset}, warn: false
   alias Core.Repo
   alias Core.EventManager.Event
+  alias Core.Web.EventChannel
 
   @doc """
   Returns the list of events.
@@ -21,14 +22,14 @@ defmodule Core.EventManager do
   end
 
   def list_events_desc do
-    result = from(e in Event, order_by: [desc: e.id], limit: 100)
-    result
+    query = from(e in Event, order_by: [desc: e.id], limit: 100)
+    query
     |> Repo.all
   end
 
   def list_entity_events_desc(entity_id) do
-    result = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
-    result
+    query = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
+    query
     |> Repo.all
   end
 
@@ -71,10 +72,9 @@ defmodule Core.EventManager do
   Broadcast an event to the events channel
   """
 
-  def broadcast(event) do
-     {:ok, target} = event
-     Core.Web.EventChannel.broadcast_change(target)
-     event
+  def broadcast({:ok, event} = event) do
+    event
+    |> EventChannel.broadcast_change()
   end
 
   @doc """

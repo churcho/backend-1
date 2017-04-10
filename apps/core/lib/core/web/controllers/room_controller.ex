@@ -15,7 +15,7 @@ defmodule Core.Web.RoomController do
       conn
       |> put_status(:created)
       |> put_resp_header("room", room_path(conn, :show, room))
-      |> render("show.json", room: room)
+      |> render("show.json", room: room |> Core.Repo.preload([:zone, :zone_location]))
     end
   end
 
@@ -29,7 +29,7 @@ defmodule Core.Web.RoomController do
     room = LocationManager.get_room!(id)
 
     with {:ok, %Room{} = room} <- LocationManager.update_room(room, room_params) do
-      render(conn, "show.json", room: room)
+      render(conn, "show.json", room: room |> Core.Repo.preload([:zone, :zone_location]))
     end
   end
 

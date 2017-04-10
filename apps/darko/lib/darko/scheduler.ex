@@ -1,6 +1,6 @@
 defmodule Darko.Scheduler do
   @moduledoc """
-  Scheduler
+  Darko Scheduler 
   """
   use GenServer
   require Logger
