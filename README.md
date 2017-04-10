@@ -25,7 +25,13 @@ mix ecto.migrate
 Runs migrations
 
 ```
-mix phoenix.server
+mix run apps/core/priv/repo/seeds.exs
+```
+
+Seeds the database
+
+```
+mix phx.server
 ```
 
 Starts the backend server on port 4000
