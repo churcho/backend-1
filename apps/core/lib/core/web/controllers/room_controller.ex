@@ -6,7 +6,7 @@ defmodule Core.Web.RoomController do
 
 
   def index(conn, _params) do
-    rooms = LocationManager.list_zones()
+    rooms = LocationManager.list_rooms()
     render(conn, "index.json", rooms: rooms)
   end
 

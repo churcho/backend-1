@@ -66,7 +66,9 @@ defmodule Core.LocationManager do
 
   """
   def list_rooms do
-     Repo.all(Room)
+    Room
+    |> Repo.all()
+    |> Repo.preload([:zone, :zone_location])
   end
 
   @doc """
