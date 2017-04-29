@@ -106,7 +106,9 @@ defmodule Core.LocationManager do
       ** (Ecto.NoResultsError)
 
   """
-  def get_location_type!(id), do: Repo.get!(LocationType, id)
+  def get_location_type!(id) do
+    Repo.get!(LocationType, id)
+  end
 
   @doc """
   Gets a single Zone.
@@ -423,12 +425,11 @@ defmodule Core.LocationManager do
     }
     if service != nil do
     address = Core.Geocoder.compose_address(location)
-
-    if address != nil do
-      coords = Core.Geocoder.get_coords(address, service.api_key)
-      changeset
-      |> put_change(:latitude, coords.lat)
-      |> put_change(:longitude, coords.lng)
+      if address != nil do
+        coords = Core.Geocoder.get_coords(address, service.api_key)
+        changeset
+        |> put_change(:latitude, coords.lat)
+        |> put_change(:longitude, coords.lng)
       else
         changeset
       end

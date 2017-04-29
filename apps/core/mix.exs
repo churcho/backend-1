@@ -15,6 +15,7 @@ defmodule Core.Mixfile do
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      start_permanent: Mix.env == :prod,
+     test_coverage: [tool: Coverex.Task],
      aliases: aliases(),
      deps: deps()]
   end
@@ -36,6 +37,7 @@ defmodule Core.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, "~> 1.3.0-rc.1", override: true},
+     {:phoenix_live_reload, "~> 1.0"},
      {:phoenix_pubsub, "~> 1.0"},
      {:phoenix_ecto, "~> 3.2"},
      {:timex, "~> 3.0"},

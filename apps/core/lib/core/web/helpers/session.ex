@@ -2,10 +2,10 @@ defmodule Core.Web.Session do
   @moduledoc """
   Session Helper
   """
-  alias Core.{Repo, User}
+  alias Core.AccountManager
 
   def authenticate(%{"email" => email, "password" => password}) do
-    user = Repo.get_by(User, email: String.downcase(email))
+    user = AccountManager.get_user_by_email(email)
 
     case check_password(user, password) do
       true -> {:ok, user}

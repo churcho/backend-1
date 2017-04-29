@@ -1,8 +1,7 @@
-defmodule HuebrisTest do
+defmodule StarterTest do
   @moduledoc false
-  
   use ExUnit.Case
-  doctest Huebris
+  doctest Starter
 
   test "the truth" do
     assert 1 + 1 == 2

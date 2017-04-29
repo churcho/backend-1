@@ -1,4 +1,5 @@
 defmodule Core.Repo.Migrations.CreateRole do
+  @moduledoc false
   use Ecto.Migration
 
   def change do

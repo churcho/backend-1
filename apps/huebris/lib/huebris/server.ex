@@ -10,7 +10,7 @@ defmodule Huebris.Server do
   Starts the server
   """
   def start_link() do
-  	 GenServer.start_link(__MODULE__, {})
+  	 GenServer.start_link(__MODULE__, %{services: %{}, bridges: %{}, entities: %{}}, name: __MODULE__)
   end
 
   @doc """
@@ -22,37 +22,107 @@ defmodule Huebris.Server do
   We will init the scheduler service and return the state.
   """
   def init(state) do
+
+
   	IO.puts "Registering Huebris...."
-    
+    #Register the provider
   	Huebris.register_provider
-  	Agent.start_link(fn -> %{} end, name: HueMemState)
-    Agent.start_link(fn -> %{} end, name: HueBridges)
+    Huebris.Server.build_state
     Huebris.Scheduler.start_link
+
+    #Return state
     {:ok, state}
   end
 
+  #Server Callbacks for Service Life Cycle
+
+  @doc """
+  Callback on install
+  """
+  def service_installed() do
+    # Do something on install
+    build_state()
+  end
+
+  @doc """
+  Callback on update
+  """
+  def service_updated() do
+    # Do something on update
+
+  end
+
+  @doc """
+  Callback on service removal
+  """
+  def service_removed() do
+    # Do something on remove
+    clear_state()
+  end
+
+  @doc """
+  Loads authorized serivces into state
+  """
+  def load_services(loaded_services) do
+    GenServer.cast(__MODULE__, {:load_services, loaded_services})
+  end
+
+  @doc """
+  Fetches the services from state
+  """
+  def fetch_services() do
+    GenServer.call(__MODULE__, :fetch_services)
+  end
+
+  @doc """
+  Loads authorized bridges into state
+  """
+  def load_bridges(loaded_bridges) do
+    GenServer.cast(__MODULE__, {:load_bridges, loaded_bridges})
+  end
+
+  @doc """
+  Fetches the bridge from state
+  """
+  def fetch_bridges() do
+    GenServer.call(__MODULE__, :fetch_bridges)
+  end
+
+  @doc """
+  Clear the state
+  """
+  def clear_state() do
+    Huebris.Server.load_services(%{})
+    Huebris.Server.load_bridges(%{})
+  end
 
   @doc """
   Build a state object by iterating through the available Huebris services that
   have been authorzied.
   """
   def build_state() do
-  	services = find_enabled_services()
-  	if services != nil do
-    	for service <- services do
-    		if service.authorized do
-  	    	bridge =
-          service.host
-          |> Huebris.connect(service.api_key)
-          |> Huebris.getlights
+    IO.puts "No bridges. We need to put some in state"
+      services = find_enabled_services()
+      if services do
+        for service <- services do
+          target =
+          service
+          |> Core.Repo.preload(:entities)
 
-  				Agent.update(HueMemState, &(&1 = service))
-  	    	Agent.update(HueBridges, &(&1 = bridge))
-      	end
+          load_target =
+          target.name
+          |> String.downcase
+          |> String.replace(" ", "_")
+          |> String.to_atom
+
+
+          new_service_map = %{load_target => target}
+
+          Huebris.Server.load_services(new_service_map)
+
+
+        end
       end
-     else
-  	     IO.puts "Stopping here. No enabled Services"
-  	end
   end
 
   @doc """
@@ -87,18 +157,35 @@ defmodule Huebris.Server do
   Poll function
   """
   def poll() do
-  	if Agent.get(HueMemState, &(&1)) == %{} do
-  	  	Huebris.Server.build_state
+    services = Huebris.Server.fetch_services
+    for {_key, value} <- services do
+       if value != %{} do
+         new_bridge = build_bridge(value)
+         current_bridge = Huebris.Server.fetch_bridges
+         if current_bridge != new_bridge do
+           Huebris.Poller.poll(current_bridge, new_bridge)
+         end
+       end
+    end
 
-  	else
-  		service = Agent.get(HueMemState, &(&1))
-  		new_bridge = build_bridge(service)
-      current_bridge = Agent.get(HueBridges, &(&1))
+  end
 
-   	  if current_bridge != new_bridge do
-  		  Huebris.Poller.poll(current_bridge, new_bridge)
-  		end
+  #handle calls/casts
 
-  	end
+  def handle_call(:fetch_services, _from, state) do
+    {:reply, state.services, state}
+  end
+
+  def handle_call(:fetch_bridges, _from, state) do
+    {:reply, state.bridges, state}
+  end
+
+  def handle_cast({:load_services, loaded_services}, state) do
+    service_target = Map.merge(state.services, loaded_services)
+    {:noreply, %{state | services: service_target}}
+  end
+
+  def handle_cast({:load_bridges, loaded_bridges}, state) do
+    {:noreply, %{state | bridges: loaded_bridges}}
   end
 end

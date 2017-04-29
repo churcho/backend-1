@@ -5,7 +5,7 @@ defmodule Darko.Importer do
   alias Core.ServiceManager
   alias Core.LocationManager
 
-  def import(service) do
+  def update(service) do
     locations = LocationManager.list_locations
 
     for location <- locations do

@@ -5,12 +5,13 @@ defmodule Core.Web.EventChannel do
 
   use Core.Web, :channel
 
-  def join("events:all", payload, socket) do
+  def join("events:all", _payload, socket) do
     {:ok, socket}
   end
 
   def broadcast_change(event) do
-    payload = %{ 
+    IO.puts "Channel Broadcasting........."
+    payload = %{
         "links" => %{
           "self" =>  "/api/v1/events/#{event.id}",
           "logo" => Core.EventManager.logo_url(event),
@@ -29,9 +30,15 @@ defmodule Core.Web.EventChannel do
         "metadata" => event.metadata,
         "entity_id" => event.entity_id,
         "service_id" => event.service_id
-      } 
+      }
     }
 
     Core.Web.Endpoint.broadcast("events:all", "change", payload)
+    target = Core.ServiceManager.get_entity!(event.entity_id)
+    state_update = %{
+      "entity" => target.id,
+      "state" =>  target.state
+    }
+    Core.Web.Endpoint.broadcast("events:all", "state_change", state_update)
   end
 end

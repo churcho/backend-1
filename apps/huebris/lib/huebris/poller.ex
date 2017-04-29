@@ -4,7 +4,7 @@ defmodule Huebris.Poller do
   """
 
   alias Core.EventManager
-  alias Core.EventManager.Event
+  alias Core.Web.EventChannel
   alias Core.ServiceManager
 
   @doc """
@@ -32,7 +32,7 @@ defmodule Huebris.Poller do
           end
         end
       end
-      Agent.update(HueBridges, &(&1 = new_bridge))
+      Huebris.Server.load_bridges(new_bridge)
   	end
   end
 
@@ -53,25 +53,27 @@ defmodule Huebris.Poller do
 
   def build_item(target, value, type) do
   	event = %{
-  	  uuid: target.uuid,
-  	  value: to_string(value),
-  	  date: to_string(Ecto.DateTime.utc),
-  	  type: type,
-  	  source: "Huebris",
-  	  service_id: target.service_id,
-  	  entity_id: target.id,
-  	  source_event: "POLL",
-  	  message: "Polling for changes",
-  	  metadata: %{}
+
+        uuid: target.uuid,
+    	  value: to_string(value),
+    	  date: to_string(Ecto.DateTime.utc),
+    	  type: type,
+    	  source: "Huebris",
+    	  service_id: target.service_id,
+    	  entity_id: target.id,
+    	  source_event: "POLL",
+    	  message: "Polling for changes",
+    	  metadata: %{}
+
   	}
 
   	broadcast_change(event)
   end
 
   def broadcast_change(event) do
-  	with {:ok, %Event{} = event} <- EventManager.create_event(event) do
-      event
-  	end
+    IO.puts "broadcasting......."
+  	{:ok, event} = EventManager.create_event(event)
+    EventChannel.broadcast_change(event)
   end
 
 

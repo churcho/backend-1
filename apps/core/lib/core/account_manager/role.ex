@@ -1,6 +1,6 @@
-defmodule Core.Role do
+defmodule Core.AccountManager.Role do
   @moduledoc """
-  Role
+  Role schema
   """
   use Core.Web, :model
 
@@ -8,16 +8,7 @@ defmodule Core.Role do
     field :name, :string
     field :description, :string
 
-    has_many :users, Core.User
+    has_many :users, Core.AccountManager.User
     timestamps()
-  end
-
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:name, :description])
-    |> validate_required([:name, :description])
   end
 end

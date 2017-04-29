@@ -1,4 +1,6 @@
 defmodule Core.ServiceManagerTest do
+  @moduledoc false
+  
   use Core.DataCase
 
   alias Core.ServiceManager

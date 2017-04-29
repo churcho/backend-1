@@ -25,7 +25,8 @@ defmodule Core.Web.UserView do
       attributes: %{
         first_name: user.first_name,
         last_name: user.last_name,
-        username: user.username, 
+        username: user.username,
+        email: user.email, 
       },
       role: render_one(user.role, Core.Web.RoleView, "role.json")
     }

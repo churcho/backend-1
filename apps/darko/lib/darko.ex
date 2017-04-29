@@ -8,14 +8,14 @@ defmodule Darko do
   alias Core.ServiceManager
   alias Core.ServiceManager.Provider
 
-
+  
   @doc """
   Basic Registration Information
   """
   def registration do
     %{
       name: "Dark Sky",
-      description: "The Dark Sky Company specializes in weather forecasting and visualization. ",
+      description: "Dark Sky Weather",
       url: "https://darksky.net/dev/",
       lorp_name: "Darko",
       auth_method: "API_KEY",

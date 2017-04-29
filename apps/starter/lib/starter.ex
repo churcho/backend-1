@@ -1,31 +1,35 @@
-defmodule Huebris do
+defmodule Starter do
   @moduledoc """
-  Huebris.
+  Starter App implementation.
   """
+
+  # Aliases for Core Service Manager
+  # These will provide shortcuts to commonly used modules.
   alias Core.ServiceManager
   alias Core.ServiceManager.Provider
 
 
   @doc """
-  Basic Registration Information
+  Registration imformation that your app will provide to the core
+  service manager.
   """
   def registration do
     %{
-      name: "Hue",
-      description: "Hue Lights",
-      url: "http://meethue.com",
-      lorp_name: "Huebris",
-      auth_method: "PUSH_BUTTON",
+      name: "Starter Application",
+      description: "A friendly description",
+      url: "www.exampleapp.com",
+      lorp_name: "Starter",
+      auth_method: "",
       max_services: 5,
       version: "0.0.1",
       configuration: %{
-        service_name: "Huebris",
-        service_atom: "huebris",
+        service_name: "Starter",
+        service_atom: "starter",
         required_fields: ["host"],
         requires_authorization: true
       },
       provides: %{
-        services: ["light"]
+        services: ["Tutorial"]
       }
     }
   end
@@ -38,19 +42,4 @@ defmodule Huebris do
       provider
     end
   end
-
-  @doc """
-  Connect to a bridge
-  """
-  def connect(host, api_key) do
-    Huex.connect(host, api_key)
-  end
-
-  @doc """
-  Get the lights payload
-  """
-  def getlights(bridge)  do    
-    Huex.lights(bridge)
-  end
-
 end

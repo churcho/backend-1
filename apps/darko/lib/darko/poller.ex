@@ -4,7 +4,7 @@ defmodule Darko.Poller do
   alias Core.EventManager
   alias Core.ServiceManager
   alias Core.ServiceManager.Entity
-  alias Core.EventManager.Event
+  alias Core.Web.EventChannel
 
   @moduledoc """
   Polling the darksky service to update your virutal weather stations.
@@ -16,6 +16,7 @@ defmodule Darko.Poller do
   def poll(entity) do
     IO.puts "Connecting to DarkSky"
     server_state = fetch_currently(entity.configuration)
+
 
     numeric_items = ["ozone",
                       "temperature",
@@ -62,13 +63,14 @@ defmodule Darko.Poller do
   end
 
   def fetch_currently(station) do
+    IO.puts "fetching..........."
     {:ok, result} = Darko.Server.forecast(station["latitude"], station["longitude"], station["api_key"])
     result
   end
 
 
   def update_state(entity, net_state) do
-
+    IO.puts "updating state........"
     new_state =
     if entity.state != nil do
       %{state: Map.merge(entity.state, net_state)}
@@ -85,30 +87,29 @@ defmodule Darko.Poller do
 
 
   def build_item(target, value, type) do
+    IO.puts "building item........"
     event = %{
-      uuid: target.uuid,
-      value: to_string(value),
-      date: to_string(Ecto.DateTime.utc),
-      type: type,
-      source: "Darko",
-      service_id: target.service_id,
-      entity_id: target.id,
-      source_event: "POLL",
-      message: "Polling for changes",
-      metadata: %{}
+
+        uuid: target.uuid,
+        value: to_string(value),
+        date: to_string(Ecto.DateTime.utc),
+        type: type,
+        source: "Darko",
+        service_id: target.service_id,
+        entity_id: target.id,
+        source_event: "POLL",
+        message: "Polling for changes",
+        metadata: %{}
+
+
     }
 
     broadcast_change(event)
   end
 
-
-
-
   def broadcast_change(event) do
-
-    with {:ok, %Event{} = event} <- EventManager.create_event(event) do
-      event
-    end
-
+    IO.puts "broadcasting......."
+  	{:ok, event} = EventManager.create_event(event)
+    EventChannel.broadcast_change(event)
   end
 end

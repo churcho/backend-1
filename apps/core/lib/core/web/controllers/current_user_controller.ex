@@ -8,7 +8,9 @@ defmodule Core.Web.CurrentUserController do
 
   def show(conn, _) do
 
-    user = Guardian.Plug.current_resource(conn)
+    user =
+    conn
+    |> Guardian.Plug.current_resource()
     |> Core.Repo.preload(:role)
 
     conn

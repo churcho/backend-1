@@ -1,55 +1,39 @@
 defmodule Core.Web.SettingController do
   use Core.Web, :controller
 
-  alias Core.Setting
+  alias Core.AccountManager
 
   def index(conn, _params) do
-    settings = Repo.all(Setting)
+    settings = Core.AccountManager.list_settings()
     render(conn, "index.json", settings: settings)
   end
 
   def create(conn, %{"setting" => setting_params}) do
-    changeset = Setting.changeset(%Setting{}, setting_params)
-
-    case Repo.insert(changeset) do
-      {:ok, setting} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", setting_path(conn, :show, setting))
-        |> render("show.json", setting: setting)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Core.Web.ChangesetView, "error.json", changeset: changeset)
+    with {:ok, %setting{} = setting} <- AccountManager.create_setting(setting_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("setting", setting_path(conn, :show, setting))
+      |> render("show.json", setting: setting)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    setting = Repo.get!(Setting, id)
+    setting = AccountManager.get_setting!(id)
     render(conn, "show.json", setting: setting)
   end
 
   def update(conn, %{"id" => id, "setting" => setting_params}) do
-    setting = Repo.get!(Setting, id)
-    changeset = Setting.changeset(setting, setting_params)
+    setting = AccountManager.get_setting!(id)
 
-    case Repo.update(changeset) do
-      {:ok, setting} ->
-        render(conn, "show.json", setting: setting)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Core.Web.ChangesetView, "error.json", changeset: changeset)
+    with {:ok, %setting{} = setting} <- AccountManager.update_setting(setting, setting_params) do
+      render(conn, "show.json", setting: setting)
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    setting = Repo.get!(Setting, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
-    Repo.delete!(setting)
-
-    send_resp(conn, :no_content, "")
+    setting = AccountManager.get_setting!(id)
+    with {:ok, %setting{}} <- AccountManager.delete_setting(setting) do
+      send_resp(conn, :no_content, "")
+    end
   end
 end

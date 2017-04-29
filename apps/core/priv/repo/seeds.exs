@@ -11,6 +11,6 @@
 # and so on) as they will fail if something goes wrong.
 
 
-Core.Repo.insert!(%Core.Role{name: "Admin", description: "Administrator of the system"})
-Core.Repo.insert!(%Core.Role{name: "User", description: "User of the system"})
-Core.Repo.insert!(%Core.Role{name: "Guest", description: "Guest of the system"})
+Core.Repo.insert!(%Core.AccountManager.Role{name: "Admin", description: "Administrator of the system"})
+Core.Repo.insert!(%Core.AccountManager.Role{name: "User", description: "User of the system"})
+Core.Repo.insert!(%Core.AccountManager.Role{name: "Guest", description: "Guest of the system"})

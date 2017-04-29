@@ -5,7 +5,7 @@ defmodule Core.Geocoder do
   use HTTPoison.Base
   def get_coords(address, api_key) do
     url = "https://maps.googleapis.com/maps/api/geocode/json?address="
-    {:ok, result} = Core.Geocoder.get(url <> address <> "&key = " <> api_key)
+    {:ok, result} = Core.Geocoder.get(url <> address <> "&key=" <> api_key)
 
     final = result.body
     |> Poison.decode!(keys: :atoms)
@@ -20,9 +20,9 @@ defmodule Core.Geocoder do
     && location.address_state
     && location.address_zip do
       URI.encode(location.address_one <>
-                 " + , + " <> location.address_city <>
-                 " + , + " <> location.address_state <>
-                 " + , + " <> location.address_zip)
+         " + , + " <> location.address_city <>
+         " + , + " <> location.address_state <>
+         " + , + " <> location.address_zip)
     end
 
   end

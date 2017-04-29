@@ -1,12 +1,17 @@
 defmodule Lorp.Mixfile do
+  @moduledoc """
+  false
+  """
   use Mix.Project
 
   def project do
     [apps_path: "apps",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     test_coverage: [tool: Coverex.Task],
      deps: deps()]
   end
+
 
   # Dependencies can be Hex packages:
   #
@@ -22,6 +27,7 @@ defmodule Lorp.Mixfile do
   # and cannot be accessed from applications inside the apps folder
   defp deps do
     [{:distillery, "~> 1.0"},
-     {:credo, "~> 0.7", only: [:dev, :test]}]
+     {:credo, "~> 0.7", only: [:dev, :test]},
+     {:coverex, "~> 1.4.10", only: :test}]
   end
 end

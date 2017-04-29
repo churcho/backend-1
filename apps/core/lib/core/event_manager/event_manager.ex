@@ -26,7 +26,7 @@ defmodule Core.EventManager do
     query
     |> Repo.all
   end
-
+  
   def list_entity_events_desc(entity_id) do
     query = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
     query
@@ -65,16 +65,18 @@ defmodule Core.EventManager do
     %Event{}
     |> event_changeset(attrs)
     |> Repo.insert()
-    |> broadcast()
+
   end
 
   @doc """
   Broadcast an event to the events channel
   """
 
-  def broadcast({:ok, event} = event) do
-    event
+  def broadcast(event) do
+    IO.puts "Event Manager Broadcast"
+
     |> EventChannel.broadcast_change()
+    event
   end
 
   @doc """

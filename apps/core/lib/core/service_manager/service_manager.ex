@@ -233,6 +233,7 @@ defmodule Core.ServiceManager do
     %Service{}
     |> service_changeset(attrs)
     |> Repo.insert()
+    |> service_create_action
   end
 
   @doc """
@@ -320,6 +321,7 @@ defmodule Core.ServiceManager do
     service
     |> service_changeset(attrs)
     |> Repo.update()
+    |> service_update_action()
   end
 
   @doc """
@@ -391,6 +393,7 @@ defmodule Core.ServiceManager do
   def delete_service(%Service{} = service) do
     service
     |> Repo.delete()
+    |> service_delete_action()
   end
 
   @doc """
@@ -408,6 +411,7 @@ defmodule Core.ServiceManager do
   def delete_entity(%Entity{} = entity) do
     entity
     |> Repo.delete()
+
   end
 
     @doc """
@@ -551,4 +555,26 @@ defmodule Core.ServiceManager do
   	|> validate_required([:name, :description])
   end
 
+  defp service_create_action(service) do
+
+    {:ok, serv} = service
+    target = serv |> Repo.preload([:provider])
+    backend = Module.concat(target.provider.configuration["service_name"], Server)
+    backend.service_installed()
+    service
+  end
+
+  defp service_delete_action(service) do
+    {:ok, serv} = service
+    backend = Module.concat(serv.provider.configuration["service_name"], Server)
+    backend.service_removed()
+    service
+  end
+
+  defp service_update_action(service) do
+    {:ok, serv} = service
+    backend = Module.concat(serv.provider.configuration["service_name"], Server)
+    backend.service_updated()
+    service
+  end
 end

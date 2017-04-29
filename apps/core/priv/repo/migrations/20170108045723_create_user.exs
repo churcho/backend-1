@@ -1,4 +1,6 @@
 defmodule Core.Repo.Migrations.CreateUser do
+  @moduledoc false
+  
   use Ecto.Migration
 
   def change do

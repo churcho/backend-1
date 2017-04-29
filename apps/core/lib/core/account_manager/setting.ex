@@ -1,4 +1,4 @@
-defmodule Core.Setting do
+defmodule Core.AccountManager.Setting do
   @moduledoc """
   Setting
   """
@@ -9,17 +9,10 @@ defmodule Core.Setting do
     field :value, :map
     field :environment, :string
     field :description, :string
-    belongs_to :user, Core.User
+    belongs_to :user, Core.AccountManager.User
 
     timestamps()
   end
 
-  @doc """
-  Builds a changeset based on the `struct` and `params`.
-  """
-  def changeset(struct, params \\ %{}) do
-    struct
-    |> cast(params, [:name, :value, :environment, :description, :user_id])
-    |> validate_required([:name, :value, :environment, :description, :user_id])
-  end
+
 end

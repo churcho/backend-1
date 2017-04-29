@@ -1,55 +1,39 @@
 defmodule Core.Web.RoleController do
   use Core.Web, :controller
 
-  alias Core.Role
+  alias Core.AccountManager
 
   def index(conn, _params) do
-    roles = Repo.all(Role)
+    roles = Core.AccountManager.list_roles()
     render(conn, "index.json", roles: roles)
   end
 
   def create(conn, %{"role" => role_params}) do
-    changeset = Role.changeset(%Role{}, role_params)
-
-    case Repo.insert(changeset) do
-      {:ok, role} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", role_path(conn, :show, role))
-        |> render("show.json", role: role)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Core.Web.ChangesetView, "error.json", changeset: changeset)
+    with {:ok, %role{} = role} <- AccountManager.create_role(role_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("role", role_path(conn, :show, role))
+      |> render("show.json", role: role)
     end
   end
 
   def show(conn, %{"id" => id}) do
-    role = Repo.get!(Role, id)
+    role = AccountManager.get_role!(id)
     render(conn, "show.json", role: role)
   end
 
   def update(conn, %{"id" => id, "role" => role_params}) do
-    role = Repo.get!(Role, id)
-    changeset = Role.changeset(role, role_params)
+    role = AccountManager.get_role!(id)
 
-    case Repo.update(changeset) do
-      {:ok, role} ->
-        render(conn, "show.json", role: role)
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render(Core.Web.ChangesetView, "error.json", changeset: changeset)
+    with {:ok, %role{} = role} <- AccountManager.update_role(role, role_params) do
+      render(conn, "show.json", role: role)
     end
   end
 
   def delete(conn, %{"id" => id}) do
-    role = Repo.get!(Role, id)
-
-    # Here we use delete! (with a bang) because we expect
-    # it to always work (and if it does not, it will raise).
-    Repo.delete!(role)
-
-    send_resp(conn, :no_content, "")
+    role = AccountManager.get_role!(id)
+    with {:ok, %role{}} <- AccountManager.delete_role(role) do
+      send_resp(conn, :no_content, "")
+    end
   end
 end

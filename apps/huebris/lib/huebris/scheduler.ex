@@ -24,6 +24,6 @@ defmodule Huebris.Scheduler do
 
   defp schedule_work() do
   	#We will poll the hue bridge every 200 ms
-    Process.send_after(self(), :work, 200)
+    Process.send_after(self(), :work, 600)
   end
 end

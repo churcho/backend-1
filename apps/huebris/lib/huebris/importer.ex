@@ -1,13 +1,17 @@
 defmodule Huebris.Importer do
-  alias Core.ServiceManager
-
   @moduledoc """
   Manages import of Hue devices.
   """
 
-  def update(service) do
-  	lights = Huebris.connect(service.host, service.api_key)
+  alias Core.ServiceManager
 
+  @doc """
+  Update funcntion takes a services and builds a service import object
+  """
+  def update(service) do
+    IO.puts "Importing devices on ------"
+
+    lights = Huebris.connect(service.host, service.api_key)
     lights
   	|> Huebris.getlights
 
@@ -16,6 +20,10 @@ defmodule Huebris.Importer do
   		target = %{
   			uuid: value["uniqueid"],
   			service_id: service.id,
+        state: %{
+          level: nil,
+          switch: ""
+        },
   			name: value["name"],
   			metadata: %{
   				manufacturername: value["manufacturername"],
@@ -28,6 +36,9 @@ defmodule Huebris.Importer do
   	end
   end
 
+  @doc """
+  Imports the service entity created by the update function
+  """
   def import_entity(target) do
      	ServiceManager.create_or_update_entity(target)
   end
