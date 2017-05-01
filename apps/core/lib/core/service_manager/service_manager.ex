@@ -53,8 +53,9 @@ defmodule Core.ServiceManager do
 
   """
   def list_entities do
-    Entity
-    |> Repo.all()
+    query = from(e in Entity, order_by: [asc: e.name])
+    query
+    |> Repo.all
     |> Repo.preload([:service])
   end
 

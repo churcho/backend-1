@@ -15,10 +15,6 @@ defmodule Huebris.Server do
 
   @doc """
   Ininitalze the server.
-
-  Creates two agents, one for holding the bridge state and another for
-  holding the service object
-
   We will init the scheduler service and return the state.
   """
   def init(state) do

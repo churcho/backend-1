@@ -43,6 +43,5 @@ defmodule Core.Web.Router do
       # Route for the current user
       get "/current_user", CurrentUserController, :show
     end
-
   end
 end
