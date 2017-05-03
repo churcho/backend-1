@@ -164,7 +164,7 @@ defmodule Core.LocationManager do
   """
   def create_location(attrs \\ %{}) do
     %Location{}
-    |> location_changeset(attrs)
+    |> Location.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -182,7 +182,7 @@ defmodule Core.LocationManager do
   """
   def create_location_type(attrs \\ %{}) do
     %LocationType{}
-    |> location_type_changeset(attrs)
+    |> LocationType.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -200,7 +200,7 @@ defmodule Core.LocationManager do
   """
   def create_zone(attrs \\ %{}) do
     %Zone{}
-    |> zone_changeset(attrs)
+    |> Zone.changeset(attrs)
     |> Repo.insert()
 
   end
@@ -219,7 +219,7 @@ defmodule Core.LocationManager do
   """
   def create_room(attrs \\ %{}) do
     %Room{}
-    |> room_changeset(attrs)
+    |> Room.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -237,7 +237,7 @@ defmodule Core.LocationManager do
   """
   def update_location(%Location{} = location, attrs) do
     location
-    |> location_changeset(attrs)
+    |> Location.changeset(attrs)
     |> Repo.update()
   end
 
@@ -255,7 +255,7 @@ defmodule Core.LocationManager do
   """
   def update_location_type(%LocationType{} = location_type, attrs) do
     location_type
-    |> location_type_changeset(attrs)
+    |> LocationType.changeset(attrs)
     |> Repo.update()
   end
 
@@ -274,7 +274,7 @@ defmodule Core.LocationManager do
   """
   def update_zone(%Zone{} = zone, attrs) do
     zone
-    |> zone_changeset(attrs)
+    |> Zone.changeset(attrs)
     |> Repo.update()
   end
 
@@ -292,7 +292,7 @@ defmodule Core.LocationManager do
   """
   def update_room(%Room{} = room, attrs) do
     room
-    |> room_changeset(attrs)
+    |> Room.changeset(attrs)
     |> Repo.update()
   end
 
@@ -371,7 +371,7 @@ defmodule Core.LocationManager do
 
   """
  	def change_location(%Location{} = location) do
-    location_changeset(location, %{})
+    Location.changeset(location, %{})
   end
 
   @doc """
@@ -384,7 +384,7 @@ defmodule Core.LocationManager do
 
   """
   def change_location_type(%LocationType{} = location_type) do
-    location_type_changeset(location_type, %{})
+    LocationType.changeset(location_type, %{})
   end
 
   @doc """
@@ -397,7 +397,7 @@ defmodule Core.LocationManager do
 
   """
   def change_zone(%Zone{} = zone) do
-    zone_changeset(zone, %{})
+    Zone.changeset(zone, %{})
   end
 
   @doc """
@@ -410,57 +410,7 @@ defmodule Core.LocationManager do
 
   """
   def change_room(%Room{} = room) do
-    room_changeset(room, %{})
-  end
-
-
-
-  defp update_zip(changeset) do
-    service = Core.ServiceManager.get_service_by_name("Geocoder")
-    location = %{
-       address_one: get_change(changeset, :address_one),
-       address_city: get_change(changeset, :address_city),
-       address_state: get_change(changeset, :address_state),
-       address_zip: get_change(changeset, :address_zip)
-    }
-    if service != nil do
-    address = Core.Geocoder.compose_address(location)
-      if address != nil do
-        coords = Core.Geocoder.get_coords(address, service.api_key)
-        changeset
-        |> put_change(:latitude, coords.lat)
-        |> put_change(:longitude, coords.lng)
-      else
-        changeset
-      end
-    else
-      changeset
-    end
-  end
-
-  defp location_changeset(%Location{} = location, attrs) do
-    location
-    |> cast(attrs, [:name, :state, :address_state, :address_one, :address_two, :address_city, :address_zip, :latitude, :longitude])
-    |> validate_required([:name])
-    |> update_zip
-  end
-
-  defp zone_changeset(%Zone{} = zone, attrs) do
-    zone
-    |> cast(attrs, [:name, :description, :state, :location_id])
-    |> validate_required([:name, :description, :location_id])
-  end
-
-  defp room_changeset(%Room{} = room, attrs) do
-    room
-    |> cast(attrs, [:name, :description, :zone_id])
-    |> validate_required([:name, :description, :zone_id])
-  end
-
-  defp location_type_changeset(%LocationType{} = location_type, attrs) do
-    location_type
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
+    Room.changeset(room, %{})
   end
 
 end

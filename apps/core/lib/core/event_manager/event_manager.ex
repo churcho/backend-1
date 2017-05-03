@@ -6,6 +6,7 @@ defmodule Core.EventManager do
   import Ecto.{Query, Changeset}, warn: false
   alias Core.Repo
   alias Core.EventManager.Event
+  alias Core.ServiceManager.Service
   alias Core.Web.EventChannel
 
   @doc """
@@ -26,7 +27,7 @@ defmodule Core.EventManager do
     query
     |> Repo.all
   end
-  
+
   def list_entity_events_desc(entity_id) do
     query = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
     query
@@ -63,7 +64,7 @@ defmodule Core.EventManager do
   """
   def create_event(attrs \\ %{}) do
     %Event{}
-    |> event_changeset(attrs)
+    |> Event.changeset(handle_events(attrs))
     |> Repo.insert()
 
   end
@@ -74,7 +75,6 @@ defmodule Core.EventManager do
 
   def broadcast(event) do
     IO.puts "Event Manager Broadcast"
-
     |> EventChannel.broadcast_change()
     event
   end
@@ -93,7 +93,7 @@ defmodule Core.EventManager do
   """
   def update_event(%Event{} = event, attrs) do
     event
-    |> event_changeset(attrs)
+    |> Event.changeset(handle_events(attrs))
     |> Repo.update()
   end
 
@@ -123,26 +123,34 @@ defmodule Core.EventManager do
 
   """
   def change_event(%Event{} = event) do
-    event_changeset(event, %{})
+    Event.changeset(event, %{})
   end
 
+  @doc """
+  Handle events
+  """
   def handle_events(params) do
 
-     case params["source"] do
-      "plex" ->
-        Core.EventManager.Plex.handler(params)
-      "sonarr" ->
-        Core.EventManager.Sonarr.handler(params)
-      "couchPotato" ->
-        IO.puts "Couchy!"
-        Core.EventManager.CouchPotato.handler(params)
-      "thinkingCleaner" ->
-        Core.EventManager.ThinkingCleaner.handler(params)
-      "sabnzbd" ->
-        Core.EventManager.SabNzbD.handler(params)
-      _ ->
-        %{message: "Unknown Event "}
-     end
+    if params["service_id"] do
+      target =
+      Service
+      |> Repo.get(params["service_id"])
+      |> Repo.preload([:provider])
+
+      backend = Module.concat(target.provider.lorp_name, EventHandler)
+      IO.puts "Handling events for #{target.provider.name}"
+      backend.parse(params)
+    else
+      target =
+      Service
+      |> Repo.get(params.service_id)
+      |> Repo.preload([:provider])
+
+      backend = Module.concat(target.provider.lorp_name, EventHandler)
+      IO.puts "Handling events for #{target.provider.name}"
+      backend.parse(params)
+    end
+
   end
 
   @doc """
@@ -171,25 +179,5 @@ defmodule Core.EventManager do
     title
     |> String.slice(0..18)
     |> String.replace(~r{-[^-]*$}, "")
-  end
-
-  defp event_changeset(%Event{} = event, attrs) do
-    event
-    |> cast(attrs, [:message,
-                     :permissions,
-                     :value,
-                     :units,
-                     :date,
-                     :source,
-                     :source_event,
-                     :type,
-                     :state_changed,
-                     :payload,
-                     :metadata,
-                     :expiration,
-                     :service_id,
-                     :entity_id,
-                     :inserted_at])
-    |> validate_required([])
   end
 end

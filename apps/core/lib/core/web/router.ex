@@ -26,6 +26,8 @@ defmodule Core.Web.Router do
       resources "/users", UserController, except: [:new, :edit]
       resources "/roles", RoleController, except: [:new, :edit]
       resources "/users", UserController, except: [:new, :edit]
+      # Route to actions
+      resources "/actions", ActionController, except: [:new, :edit]
       # Route to services
       resources "/services", ServiceController do
         get  "/events", ServiceController, :service_events

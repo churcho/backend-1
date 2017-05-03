@@ -1,8 +1,8 @@
 defmodule Core.EventManager.Event do
-  @moduledoc """
-  Provides the event schema
-  """
-  use Core.Web, :model
+  @moduledoc false
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Core.EventManager.Event
 
   schema "events" do
     field :message, :string
@@ -23,5 +23,25 @@ defmodule Core.EventManager.Event do
     field :date, :utc_datetime
     field :expiration, :utc_datetime
     timestamps()
+  end
+
+  def changeset(%Event{} = event, attrs) do
+    event
+    |> cast(attrs, [:message,
+                     :permissions,
+                     :value,
+                     :units,
+                     :date,
+                     :source,
+                     :source_event,
+                     :type,
+                     :state_changed,
+                     :payload,
+                     :metadata,
+                     :expiration,
+                     :service_id,
+                     :entity_id,
+                     :inserted_at])
+    |> validate_required([])
   end
 end

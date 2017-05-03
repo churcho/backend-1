@@ -19,7 +19,7 @@ defmodule PlexConnect do
       max_services: 1,
       version: "0.0.1",
       configuration: %{
-        service_name: "Plex",
+        service_name: "PlexConnect",
         required_fields: ["host", "port"]
       },
       provides: %{

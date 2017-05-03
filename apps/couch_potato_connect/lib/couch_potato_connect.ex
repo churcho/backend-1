@@ -19,7 +19,7 @@ defmodule CouchPotatoConnect do
       max_services: 1,
       version: "0.0.1",
       configuration: %{
-        service_name: "CouchPotato",
+        service_name: "CouchPotatoConnect",
         required_fields: ["host", "port"]
       },
       provides: %{

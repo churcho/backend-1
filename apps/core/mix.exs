@@ -36,10 +36,10 @@ defmodule Core.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.3.0-rc.1", override: true},
+    [{:phoenix, github: "phoenixframework/phoenix", override: true},
      {:phoenix_live_reload, "~> 1.0.8"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.2"},    
+     {:phoenix_ecto, "~> 3.2"},
      {:timex, "~> 3.1.13"},
      {:timex_ecto, "~> 3.1.1"},
      {:guardian, "~> 0.14.2"},
@@ -47,6 +47,7 @@ defmodule Core.Mixfile do
      {:postgrex, "~> 0.13.2"},
      {:gettext, "~> 0.13.1"},
      {:cors_plug, "~> 1.2.1"},
+     {:poison, "~> 3.0"},
      {:httpoison, "~> 0.11.2"},
      {:cowboy, "~> 1.1.2"},
      {:distillery, "~> 1.0"}]

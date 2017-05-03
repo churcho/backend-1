@@ -2,7 +2,9 @@ defmodule Core.ServiceManager.Provider do
   @moduledoc """
   Provider
   """
-  use Core.Web, :model
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Core.ServiceManager.Provider
 
   schema "service_manager_providers" do
     field :name, :string
@@ -24,5 +26,26 @@ defmodule Core.ServiceManager.Provider do
 
     has_many :services, Core.ServiceManager.Service
     timestamps()
+  end
+
+  def changeset(%Provider{} = provider, attrs) do
+    provider
+    |> cast(attrs, [:name,
+                     :description,
+                     :url,
+                     :enabled,
+                     :lorp_name,
+                     :auth_method,
+                     :registered_at,
+                     :last_seen,
+                     :provides,
+                     :max_services,
+                     :configuration,
+                     :logo_path,
+                     :icon_path,
+                     :keywords,
+                     :slug,
+                     :version])
+    |> validate_required([:name, :url])
   end
 end

@@ -1,8 +1,8 @@
 defmodule Core.AccountManager.Setting do
-  @moduledoc """
-  Setting
-  """
-  use Core.Web, :model
+  @moduledoc false
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Core.AccountManager.Setting
 
   schema "settings" do
     field :name, :string
@@ -14,5 +14,9 @@ defmodule Core.AccountManager.Setting do
     timestamps()
   end
 
-
+  def changeset(%Setting{} = setting, attrs) do
+    setting
+    |> cast(attrs, [:name, :value, :environment, :description, :user_id])
+    |> validate_required([:name, :value, :environment, :description, :user_id])
+  end
 end

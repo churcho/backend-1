@@ -171,7 +171,7 @@ defmodule Core.AccountManager do
   """
   def create_user(attrs \\ %{}) do
     %User{}
-    |> user_changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -189,7 +189,7 @@ defmodule Core.AccountManager do
   """
   def create_role(attrs \\ %{}) do
     %Role{}
-    |> role_changeset(attrs)
+    |> Role.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -207,7 +207,7 @@ defmodule Core.AccountManager do
   """
   def create_setting(attrs \\ %{}) do
     %Setting{}
-    |> role_changeset(attrs)
+    |> Setting.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -225,7 +225,7 @@ defmodule Core.AccountManager do
   """
   def update_user(%User{} = user, attrs) do
     user
-    |> user_changeset(attrs)
+    |> User.changeset(attrs)
     |> Repo.update()
   end
 
@@ -243,7 +243,7 @@ defmodule Core.AccountManager do
   """
   def update_role(%Role{} = role, attrs) do
     role
-    |> role_changeset(attrs)
+    |> Role.changeset(attrs)
     |> Repo.update()
   end
 
@@ -261,7 +261,7 @@ defmodule Core.AccountManager do
   """
   def update_setting(%Setting{} = setting, attrs) do
     setting
-    |> setting_changeset(attrs)
+    |> Setting.changeset(attrs)
     |> Repo.update()
   end
 
@@ -328,47 +328,8 @@ defmodule Core.AccountManager do
     user_params = %{role_id: role.id}
 
     user
-    |> profile_changeset(user_params)
+    |> User.profile_changeset(user_params)
     |> Repo.update
 
-  end
-
-
-  defp profile_changeset(%User{} = user, attrs) do
-    user
-    |> cast(attrs, [:role_id], [])
-  end
-
-  @user_required_fields ~w(first_name last_name email password)
-  @user_optional_fields ~w(encrypted_password)
-  defp user_changeset(%User{} = user, attrs) do
-    user
-    |> cast(attrs, @user_required_fields, @user_optional_fields)
-    |> validate_format(:email, ~r/@/)
-    |> validate_length(:password, min: 5)
-    |> validate_confirmation(:password, message: "Password does not match")
-    |> unique_constraint(:email, message: "Email already taken")
-    |> generate_encrypted_password
-  end
-
-  defp role_changeset(%Role{} = role, attrs) do
-    role
-    |> cast(attrs, [:name, :description])
-    |> validate_required([:name, :description])
-  end
-
-  defp setting_changeset(%Setting{} = setting, attrs) do
-    setting
-    |> cast(attrs, [:name, :value, :environment, :description, :user_id])
-    |> validate_required([:name, :value, :environment, :description, :user_id])
-  end
-
-  defp generate_encrypted_password(current_changeset) do
-    case current_changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(current_changeset, :encrypted_password, Comeonin.Bcrypt.hashpwsalt(password))
-      _ ->
-        current_changeset
-    end
   end
 end

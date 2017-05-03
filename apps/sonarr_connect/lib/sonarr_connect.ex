@@ -19,7 +19,7 @@ defmodule SonarrConnect do
       max_services: 1,
       version: "0.0.1",
       configuration: %{
-        service_name: "Sonarr",
+        service_name: "SonarrConnect",
         required_fields: ["host", "port"]
       },
       provides: %{

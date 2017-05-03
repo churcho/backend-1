@@ -1,8 +1,9 @@
 defmodule Core.AccountManager.Role do
-  @moduledoc """
-  Role schema
-  """
-  use Core.Web, :model
+  @moduledoc false
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Core.AccountManager.Role
+
 
   schema "roles" do
     field :name, :string
@@ -10,5 +11,11 @@ defmodule Core.AccountManager.Role do
 
     has_many :users, Core.AccountManager.User
     timestamps()
+  end
+
+  def role_changeset(%Role{} = role, attrs) do
+    role
+    |> cast(attrs, [:name, :description])
+    |> validate_required([:name, :description])
   end
 end

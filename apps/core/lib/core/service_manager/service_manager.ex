@@ -73,20 +73,20 @@ defmodule Core.ServiceManager do
     |> Repo.all()
   end
 
-  	@doc """
-  	Gets a single Provider.
+  @doc """
+  Gets a single Provider.
 
-  	Raises `Ecto.NoResultsError` if the Provider does not exist.
+  Raises `Ecto.NoResultsError` if the Provider does not exist.
 
-      ## Examples
+    ## Examples
 
-        iex> get_provider!(123)
-        %Provider{}
+      iex> get_provider!(123)
+      %Provider{}
 
-        iex> get_provider!(456)
-        ** (Ecto.NoResultsError)
+      iex> get_provider!(456)
+      ** (Ecto.NoResultsError)
 
-  	"""
+  """
 
   def get_provider!(id) do
     Provider
@@ -94,6 +94,20 @@ defmodule Core.ServiceManager do
     |> Repo.preload([:services])
   end
 
+  @doc """
+  Gets a single Provider by its LORP name.
+
+  Raises `Ecto.NoResultsError` if the Provider does not exist.
+
+    ## Examples
+
+      iex> get_provider_by_lorp_name("lorp_name")
+      %Provider{}
+
+      iex> get_provider_lorp_name(456)
+      ** (Ecto.NoResultsError)
+
+  """
   def get_provider_by_lorp_name(lorp_name) do
     Provider
     |> Repo.get_by(lorp_name: lorp_name)
@@ -204,15 +218,27 @@ defmodule Core.ServiceManager do
   """
   def create_provider(attrs \\ %{}) do
     %Provider{}
-    |> provider_changeset(attrs)
+    |> Provider.changeset(attrs)
     |> Repo.insert()
   end
 
+  @doc """
+  Creates OR updates a Provider if none exists.
+
+  ## Examples
+
+    iex> create_or_update_provider(%{field: value})
+    {:ok, %Provider{}}
+
+    iex> create_or_update_provider(%{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+  """
   def create_or_update_provider(target) do
     result =
   	case Repo.get_by(Provider, lorp_name: target.lorp_name) do
-      nil -> provider_changeset(%Provider{}, target)
-      provider -> provider_changeset(provider, target)
+      nil -> Provider.changeset(%Provider{}, target)
+      provider -> Provider.changeset(provider, target)
   	end
     result
   	|> Repo.insert_or_update
@@ -232,7 +258,7 @@ defmodule Core.ServiceManager do
   """
   def create_service(attrs \\ %{}) do
     %Service{}
-    |> service_changeset(attrs)
+    |> Service.changeset(attrs)
     |> Repo.insert()
     |> service_create_action
   end
@@ -251,16 +277,27 @@ defmodule Core.ServiceManager do
   """
   def create_entity(attrs \\ %{}) do
     %Entity{}
-    |> entity_changeset(attrs)
+    |> Entity.changeset(attrs)
     |> Repo.insert()
   end
 
+  @doc """
+  Creates or updates an Entity if none exists.
 
+  ## Examples
+
+    iex> create_or_update_entity(%{field: value})
+    {:ok, %Entity{}}
+
+    iex> create_or_update_entity(%{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+  """
   def create_or_update_entity(target) do
     result =
   	case Repo.get_by(Entity, uuid: target.uuid) do
-  		nil -> entity_changeset(%Entity{}, target)
-  		entity -> entity_changeset(entity, target)
+  		nil -> Entity.changeset(%Entity{}, target)
+  		entity -> Entity.changeset(entity, target)
   	end
 
     result
@@ -281,7 +318,7 @@ defmodule Core.ServiceManager do
   """
   def create_entity_type(attrs \\ %{}) do
   	%EntityType{}
-  	|> entity_type_changeset(attrs)
+  	|> EntityType.changeset(attrs)
   	|> Repo.insert()
   end
 
@@ -301,7 +338,7 @@ defmodule Core.ServiceManager do
   """
   def update_provider(%Provider{} = provider, attrs) do
     provider
-    |> provider_changeset(attrs)
+    |> Provider.changeset(attrs)
     |> Repo.update()
   end
 
@@ -320,7 +357,7 @@ defmodule Core.ServiceManager do
   """
   def update_service(%Service{} = service, attrs) do
     service
-    |> service_changeset(attrs)
+    |> Service.changeset(attrs)
     |> Repo.update()
     |> service_update_action()
   end
@@ -339,7 +376,7 @@ defmodule Core.ServiceManager do
   """
   def update_entity(%Entity{} = entity, attrs) do
     entity
-    |> entity_changeset(attrs)
+    |> Entity.changeset(attrs)
     |> Repo.update()
   end
 
@@ -357,7 +394,7 @@ defmodule Core.ServiceManager do
    """
   def update_entity_type(%EntityType{} = entity_type, attrs) do
   	entity_type
-  	|> entity_type_changeset(attrs)
+  	|> EntityType.changeset(attrs)
   	|> Repo.update()
   end
 
@@ -442,8 +479,7 @@ defmodule Core.ServiceManager do
 
   """
   def change_provider(%Provider{} = provider) do
-    provider
-  	|> provider_changeset(%{})
+    Provider.changeset(provider, %{})
   end
 
 
@@ -457,8 +493,7 @@ defmodule Core.ServiceManager do
 
   """
   def change_service(%Service{} = service) do
-    service
-    |> service_changeset(%{})
+    Service.changeset(service, %{})
   end
 
   @doc """
@@ -471,8 +506,7 @@ defmodule Core.ServiceManager do
 
   """
   def change_entity(%Entity{} = entity) do
-    entity
-    |> entity_changeset(%{})
+    Entity.changeset(entity, %{})
   end
 
   @doc """
@@ -485,76 +519,9 @@ defmodule Core.ServiceManager do
 
   """
   def change_entity_type(%EntityType{} = entity_type) do
-  	entity_type_changeset(entity_type, %{})
+  	EntityType.changeset(entity_type, %{})
   end
 
-
-  defp provider_changeset(%Provider{} = provider, attrs) do
-    provider
-    |> cast(attrs, [:name,
-                     :description,
-                     :url,
-                     :enabled,
-                     :lorp_name,
-                     :auth_method,
-                     :registered_at,
-                     :last_seen,
-                     :provides,
-                     :max_services,
-                     :configuration,
-                     :logo_path,
-                     :icon_path,
-                     :keywords,
-                     :slug,
-                     :version])
-    |> validate_required([:name, :url])
-  end
-
-  defp service_changeset(%Service{} = service, attrs) do
-    service
-    |> cast(attrs, [:name,
-                     :host,
-                     :port,
-                     :client_id,
-                     :client_secret,
-                     :access_token,
-                     :api_key,
-                     :enabled,
-                     :authorized,
-                     :searchable,
-                     :search_path,
-                     :state,
-                     :slug,
-                     :imported_at,
-                     :allows_import,
-                     :requires_authorization,
-                     :metadata,
-                     :configuration,
-                     :provider_id])
-    |> validate_required([:name, :provider_id])
-  end
-
-  defp entity_changeset(%Entity{} = entity, attrs) do
-  	entity
-  	|> cast(attrs, [:name,
-  	                 :uuid,
-  	                 :description,
-  	                 :label,
-  	                 :metadata,
-  	                 :state,
-  	                 :display_name,
-  	                 :slug,
-  	                 :configuration,
-  	                 :source,
-  	                 :service_id])
-  	|> validate_required([:name, :uuid])
-  end
-
-  defp entity_type_changeset(%EntityType{} = entity_type, attrs) do
-  	entity_type
-  	|> cast(attrs, [:name, :description])
-  	|> validate_required([:name, :description])
-  end
 
   defp service_create_action(service) do
 

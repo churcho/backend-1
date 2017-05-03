@@ -1,8 +1,8 @@
 defmodule Core.LocationManager.Zone do
-  @moduledoc """
-  Zone
-  """
-  use Core.Web, :model
+  @moduledoc false
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Core.LocationManager.Zone
 
   schema "location_manager_zones" do
     field :name, :string
@@ -11,5 +11,11 @@ defmodule Core.LocationManager.Zone do
     belongs_to :location, Core.LocationManager.Location
     has_many :rooms, Core.LocationManager.Room
     timestamps()
+  end
+
+  def changeset(%Zone{} = zone, attrs) do
+    zone
+    |> cast(attrs, [:name, :description, :state, :location_id])
+    |> validate_required([:name, :description, :location_id])
   end
 end

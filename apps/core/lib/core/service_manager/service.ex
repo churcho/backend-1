@@ -2,7 +2,9 @@ defmodule Core.ServiceManager.Service do
   @moduledoc """
   Service
   """
-  use Core.Web, :model
+  use Ecto.Schema
+  import Ecto.Changeset
+  alias Core.ServiceManager.Service
 
   schema "service_manager_services" do
     field :name, :string
@@ -29,5 +31,29 @@ defmodule Core.ServiceManager.Service do
     has_many :events, Core.EventManager.Event
     belongs_to :provider, Core.ServiceManager.Provider
     timestamps()
+  end
+
+  def changeset(%Service{} = service, attrs) do
+    service
+    |> cast(attrs, [:name,
+                     :host,
+                     :port,
+                     :client_id,
+                     :client_secret,
+                     :access_token,
+                     :api_key,
+                     :enabled,
+                     :authorized,
+                     :searchable,
+                     :search_path,
+                     :state,
+                     :slug,
+                     :imported_at,
+                     :allows_import,
+                     :requires_authorization,
+                     :metadata,
+                     :configuration,
+                     :provider_id])
+    |> validate_required([:name, :provider_id])
   end
 end

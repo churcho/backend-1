@@ -25,7 +25,6 @@ defmodule Huebris.Poller do
         }
 
         update_state(target, net_state)
-        IO.puts "Hue Bridge Updated"
         for {key, value} <- net_state do
           if value != target.state[key] do
             build_item(target, value, key)

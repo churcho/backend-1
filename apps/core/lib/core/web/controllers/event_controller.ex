@@ -1,8 +1,8 @@
 defmodule Core.Web.EventController do
   use Core.Web, :controller
-
   alias Core.EventManager
   alias Core.EventManager.Event
+  alias Core.Web.EventChannel
 
 
   def index(conn, _params) do
@@ -10,8 +10,12 @@ defmodule Core.Web.EventController do
     render(conn, "index.json", events: events)
   end
 
-  def create(conn, %{"event" => event_params}) do
+  def create(conn, event_params) do
+
+
+
     with {:ok, %Event{} = event} <- EventManager.create_event(event_params) do
+      EventChannel.broadcast_change(event)
       conn
       |> put_status(:created)
       |> put_resp_header("location", event_path(conn, :show, event))

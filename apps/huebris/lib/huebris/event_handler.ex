@@ -1,4 +1,4 @@
-defmodule Darko.EventHandler do
+defmodule Huebris.EventHandler do
   @moduledoc """
   Handle events for huebris
   """

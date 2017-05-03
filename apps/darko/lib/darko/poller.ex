@@ -109,7 +109,8 @@ defmodule Darko.Poller do
 
   def broadcast_change(event) do
     IO.puts "broadcasting......."
-  	{:ok, event} = EventManager.create_event(event)
-    EventChannel.broadcast_change(event)
+  	{:ok, new_event} = EventManager.create_event(event)
+    new_event
+    |> EventChannel.broadcast_change
   end
 end
