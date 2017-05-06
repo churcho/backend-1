@@ -12,8 +12,6 @@ defmodule SonarrConnect.Server do
 
 
   def init(state) do
-
-  	IO.puts "Registering Sonarr...."
   	SonarrConnect.register_provider
   	{:ok, state}
   end
@@ -45,5 +43,5 @@ defmodule SonarrConnect.Server do
   def poll() do
 
   end
-  
+
 end

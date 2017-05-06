@@ -2,7 +2,7 @@ defmodule Core.EventManager do
   @moduledoc """
   The boundary for the EventManager system.
   """
-
+  require Logger
   import Ecto.{Query, Changeset}, warn: false
   alias Core.Repo
   alias Core.EventManager.Event
@@ -74,9 +74,12 @@ defmodule Core.EventManager do
   """
 
   def broadcast(event) do
-    IO.puts "Event Manager Broadcast"
-    |> EventChannel.broadcast_change()
     event
+    |> EventChannel.broadcast_change()
+
+    Logger.info fn ->
+      "Broadcasting event #{inspect(event)}"
+    end
   end
 
   @doc """
@@ -138,7 +141,9 @@ defmodule Core.EventManager do
       |> Repo.preload([:provider])
 
       backend = Module.concat(target.provider.lorp_name, EventHandler)
-      IO.puts "Handling events for #{target.provider.name}"
+      Logger.info fn ->
+         "Handling events for #{target.provider.name}"
+      end
       backend.parse(params)
     else
       target =
@@ -147,7 +152,9 @@ defmodule Core.EventManager do
       |> Repo.preload([:provider])
 
       backend = Module.concat(target.provider.lorp_name, EventHandler)
-      IO.puts "Handling events for #{target.provider.name}"
+      Logger.info fn ->
+        "Handling events for #{target.provider.name}"
+      end
       backend.parse(params)
     end
 
@@ -158,17 +165,17 @@ defmodule Core.EventManager do
   """
   def logo_url(event) do
     if event.source do
-      "http://localhost:4000/images/" <> event.source <> ".png"
+      "/images/" <> event.source <> ".png"
     else
-      "http://localhost:4000/images/generic.png"
+      "/images/generic.png"
     end
   end
 
   def icon_url(event) do
     if event.source do
-      "http://localhost:4000/images/" <> event.source <> "_icon.png"
+      "/images/" <> event.source <> "_icon.png"
     else
-      "http://localhost:4000/images/generic_icon.png"
+      "/images/generic_icon.png"
     end
   end
 

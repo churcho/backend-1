@@ -3,29 +3,30 @@ defmodule Core.Web.ServiceChannel do
   Service Channel
   """
   use Core.Web, :channel
-
+  alias Core.ServiceManager
+  alias Core.Repo
 
   def join("services:" <> _service_id , _payload, socket) do
       {:ok, socket}
-    end
+  end
 
   def handle_in("service:start", %{"service" => service}, socket) do
     service
-    |> Core.ServiceManager.get_service!()
+    |> ServiceManager.get_service!()
     broadcast! socket, "new_msg", %{}
     {:noreply, socket}
   end
 
   def handle_in("service:stop", %{"service" => service}, socket) do
     service
-    |> Core.ServiceManager.get_service!()
+    |> ServiceManager.get_service!()
     broadcast! socket, "new_msg", %{}
     {:noreply, socket}
   end
 
   def handle_in("service:reload", %{"service" => service}, socket) do
-    serv = Core.ServiceManager.get_service!(service)
-    IO.puts serv.id
+    service
+    |> ServiceManager.get_service!()
     broadcast! socket, "new_msg", %{}
     {:noreply, socket}
   end
@@ -33,8 +34,8 @@ defmodule Core.Web.ServiceChannel do
   def handle_in("service:server_update", %{"service" => service}, socket) do
     serv =
     service
-    |> Core.ServiceManager.get_service!()
-    |> Core.Repo.preload(:provider)
+    |> ServiceManager.get_service!()
+    |> Repo.preload(:provider)
 
     backend = Module.concat(serv.provider.configuration["service_name"], Server)
     backend.build_state()
@@ -42,38 +43,38 @@ defmodule Core.Web.ServiceChannel do
   end
 
   def handle_in("service:server_init", %{"service" => service}, socket) do
-    serv =
     service
-    |> Core.ServiceManager.get_service!()
-    |> Core.Repo.preload(:provider)
+    |> ServiceManager.get_service!()
+    |> Repo.preload(:provider)
+    |> ServiceManager.init_service()
 
-    backend = Module.concat(serv.provider.configuration["service_name"], Server)
-    backend.build_state()
     {:noreply, socket}
   end
 
   def handle_in("service:server_remove", %{"service" => service}, socket) do
-    serv =
     service
-    |> Core.ServiceManager.get_service!()
-    |> Core.Repo.preload(:provider)
+    |> ServiceManager.get_service!()
+    |> Repo.preload(:provider)
+    |> ServiceManager.remove_service()
 
-    backend = Module.concat(serv.provider.configuration["service_name"], Server)
-    backend.clear_state()
     {:noreply, socket}
   end
 
   def handle_in("service:authorize", %{"service" => service}, socket) do
-    serv = Core.ServiceManager.get_service!(service)
-    backend = Module.concat(serv.provider.configuration["service_name"], Auth)
-    backend.start_link(serv)
+    service
+    |> ServiceManager.get_service!()
+    |> Repo.preload(:provider)
+    |> SeriiceManager.authorize_service()
+
     {:noreply, socket}
   end
 
   def handle_in("service:import", %{"service_id" => service_id}, socket) do
-    serv = Core.ServiceManager.get_service!(service_id)
-    backend = Module.concat(serv.provider.configuration["service_name"], Importer)
-    backend.update(serv)
+    service_id
+    |> ServiceManager.get_service!()
+    |> Repo.preload(:provider)
+    |> ServiceManager.import_entities()
+
     {:noreply, socket}
   end
 

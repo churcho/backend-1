@@ -36,17 +36,12 @@ defmodule Huebris.Auth do
   	end
 
   	if bridge.username do
-
   		#if we have a bridge token we should store it in the database and start
   		#the authorized action.
   		service = ServiceManager.get_service!(state.id)
   		attrs = %{api_key: bridge.username, authorized: true}
-
   		ServiceManager.update_service(service, attrs)
-
-
   	end
-
   	{:noreply, state}
   end
 

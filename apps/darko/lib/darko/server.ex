@@ -2,14 +2,9 @@ defmodule Darko.Server do
   @moduledoc """
   DarkSky Weather Server.
   """
-  import Darko.Utils
+  require Logger
   use GenServer
-
   alias Core.ServiceManager
-  use HTTPoison.Base
-  alias Darko.Parser
-
-
 
   @doc """
     Starts the server
@@ -22,7 +17,6 @@ defmodule Darko.Server do
   Initialize the Server
   """
   def init(state) do
-    IO.puts "Registering Dark Sky Connect...."
     Darko.register_provider
     Darko.Server.build_state()
     Darko.Scheduler.start_link
@@ -83,33 +77,28 @@ defmodule Darko.Server do
     GenServer.call(__MODULE__, :fetch_stations)
   end
 
-
-
   @doc """
   Build the state
   """
   def build_state() do
+    services = find_enabled_services()
+    if services do
+      for service <- services do
+        target =
+        service
+        |> Core.Repo.preload(:entities)
 
-    IO.puts "No stations. We need to put some in an agent"
-      services = find_enabled_services()
-      if services do
-        for service <- services do
-          target =
-          service
-          |> Core.Repo.preload(:entities)
+        load_target =
+        target.name
+        |> String.downcase
+        |> String.to_atom
 
-          load_target =
-          target.name
-          |> String.downcase
-          |> String.to_atom
+        new_service_map = %{load_target => target}
 
-          new_service_map = %{load_target => target}
-
-          Darko.Server.load_services(new_service_map)
-          Darko.Server.load_stations(target.entities)
-
-        end
+        Darko.Server.load_services(new_service_map)
+        Darko.Server.load_stations(target.entities)
       end
+    end
   end
 
   def clear_state() do
@@ -123,50 +112,11 @@ defmodule Darko.Server do
   end
 
   def poll() do
-
     stations = Darko.Server.fetch_stations()
-
     for entity <- stations do
-      IO.puts "polling.........."
       Darko.Poller.poll(entity)
     end
   end
-
-  @base_url "https://api.darksky.net/forecast"
-
-
-
-   def forecast(lat, lng, token, params \\ defaults()) do
-     read("#{token}/#{lat},#{lng}", params)
-   end
-
-   def time_machine(lat, lng, time, token, params \\ defaults()) do
-     read("#{token}/#{lat},#{lng},#{time}", params)
-   end
-
-   def build_url(path_arg, query_params) do
-    query_params = query_params
-      |> process_params
-    "#{@base_url}/#{path_arg}?#{URI.encode_query(query_params)}"
-   end
-
-   def read(path_arg, query_params \\ %{}) do
-    path_arg
-    |> build_url(query_params)
-    |> Darko.Server.get(request_headers())
-    |> Parser.parse
-  end
-
-  def process_params(nil) do
-    defaults()
-  end
-
-  def process_params(params) do
-    defaults()
-    |> Map.merge(params)
-    |> Map.delete(:__struct__)
-  end
-
 
   #GenServer Implementation
   #handle calls/casts

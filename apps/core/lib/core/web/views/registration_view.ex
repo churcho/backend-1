@@ -3,7 +3,6 @@ defmodule Core.Web.RegistrationView do
   use Core.Web, :view
 
   def render("error.json", error) do
-    IO.inspect error
     %{error: error}
   end
 end

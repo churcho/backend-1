@@ -47,5 +47,6 @@ defmodule Core.ServiceManager.Provider do
                      :slug,
                      :version])
     |> validate_required([:name, :url])
+    |> unique_constraint(:name)
   end
 end

@@ -1,7 +1,10 @@
 defmodule CouchPotatoConnect.Server do
   @moduledoc """
+  CouchPotato Server
   """
+  require Logger
   use GenServer
+  #alias Core.ServiceManager
 
   @doc """
   Starts the server
@@ -10,10 +13,10 @@ defmodule CouchPotatoConnect.Server do
   	 GenServer.start_link(__MODULE__, {})
   end
 
-
+  @doc """
+  init takes state and runs any valid commands
+  """
   def init(state) do
-
-  	IO.puts "Registering Couch Potato...."
   	CouchPotatoConnect.register_provider
   	{:ok, state}
   end

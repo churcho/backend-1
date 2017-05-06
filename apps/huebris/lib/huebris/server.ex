@@ -2,7 +2,7 @@ defmodule Huebris.Server do
   @moduledoc """
   Server Module
   """
-
+  require Logger
   use GenServer
   alias Core.ServiceManager
 
@@ -18,14 +18,10 @@ defmodule Huebris.Server do
   We will init the scheduler service and return the state.
   """
   def init(state) do
-
-
-  	IO.puts "Registering Huebris...."
     #Register the provider
   	Huebris.register_provider
     Huebris.Server.build_state
     Huebris.Scheduler.start_link
-
     #Return state
     {:ok, state}
   end
@@ -97,7 +93,6 @@ defmodule Huebris.Server do
   have been authorzied.
   """
   def build_state() do
-    IO.puts "No bridges. We need to put some in state"
       services = find_enabled_services()
       if services do
         for service <- services do
@@ -111,12 +106,8 @@ defmodule Huebris.Server do
           |> String.replace(" ", "_")
           |> String.to_atom
 
-
           new_service_map = %{load_target => target}
-
           Huebris.Server.load_services(new_service_map)
-
-
         end
       end
   end
@@ -134,8 +125,8 @@ defmodule Huebris.Server do
   """
   def build_bridge(service) do
     service.host
-    |> Huebris.connect(service.api_key)
-    |> Huebris.getlights
+    |> Huebris.Client.connect(service.api_key)
+    |> Huebris.Client.getlights
   end
 
   @doc """

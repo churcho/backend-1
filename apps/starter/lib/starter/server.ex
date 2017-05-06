@@ -3,8 +3,9 @@ defmodule Starter.Server do
   The server module handles all IO for your app. Given that it is based on
   GenServer, it follows the same conventions.
   """
-
+  require Logger
   use GenServer
+  #alias Core.ServiceManager
 
   # alias any commonly used items here #
 
@@ -29,10 +30,8 @@ defmodule Starter.Server do
   the core service manager and kicking off any processes that you want.
   """
   def init(state) do
-    IO.puts "Registering Starter........"
     # Call the register_provider function.
     Starter.register_provider
-
     #Return state
     {:ok, state}
   end

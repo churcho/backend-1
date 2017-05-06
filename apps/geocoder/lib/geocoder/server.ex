@@ -2,6 +2,7 @@ defmodule Geocoder.Server do
   @moduledoc """
   Server
   """
+  require Logger
   use GenServer
 
 
@@ -14,8 +15,6 @@ defmodule Geocoder.Server do
 
 
   def init(state) do
-
-  	IO.puts "Registering Geocoder....."
   	Geocoder.register_provider
   	{:ok, state}
   end

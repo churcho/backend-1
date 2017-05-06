@@ -13,7 +13,7 @@ defmodule Core.AccountManager.Role do
     timestamps()
   end
 
-  def role_changeset(%Role{} = role, attrs) do
+  def changeset(%Role{} = role, attrs) do
     role
     |> cast(attrs, [:name, :description])
     |> validate_required([:name, :description])

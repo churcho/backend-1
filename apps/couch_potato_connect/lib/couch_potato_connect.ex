@@ -1,10 +1,12 @@
 defmodule CouchPotatoConnect do
-
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
   @moduledoc """
   Documentation for CouchPotato.
   """
+
+  require Logger
+  alias Core.ServiceManager
+  alias Core.ServiceManager.Provider
+
 
   @doc """
   Basic Registration Information
@@ -32,7 +34,10 @@ defmodule CouchPotatoConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration()) do
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(CouchPotatoConnect.registration) do
+      Logger.info fn ->
+        "Provider Registered as #{provider.lorp_name}"
+      end
       provider
     end
   end

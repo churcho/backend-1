@@ -2,24 +2,23 @@ defmodule CouchPotatoConnect.EventHandler do
   @moduledoc """
   Handle events for huebris
   """
+  require Logger
 
+  @doc """
+  Parse function takes params and returns a valid LORP Event
+  """
   def parse(params) do
-    IO.puts "parse"
-    parsed =
-    params
-    |> Poison.encode!
-    |> Poison.decode!(keys: :atoms!)
-
-    IO.inspect parsed
-
+    Logger.info fn ->
+      "CouchPotato parsing event"
+    end
+    # Provider struct
     %{
-      service_id: parsed.service_id,
-      message: parsed.message,
+      service_id: params["service_id"],
+      message: params["message"],
       type: "CouchPotatoEvent",
       entity: "Couch Potato Server",
-      payload: parsed,
+      payload: params,
       source: "couchpotato"
     }
   end
-
 end

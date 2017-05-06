@@ -2,7 +2,7 @@ defmodule Core.Web.EventChannel do
   @moduledoc """
   Connect to events channel
   """
-
+  require Logger
   use Core.Web, :channel
 
   def join("events:all", _payload, socket) do
@@ -10,7 +10,6 @@ defmodule Core.Web.EventChannel do
   end
 
   def broadcast_change(event) do
-    IO.puts "Channel Broadcasting........."
     payload = %{
         "links" => %{
           "self" =>  "/api/v1/events/#{event.id}",
@@ -34,6 +33,11 @@ defmodule Core.Web.EventChannel do
     }
 
     Core.Web.Endpoint.broadcast("events:all", "change", payload)
+
+    Logger.info fn ->
+       "Broadcasting event to events:all"
+    end
+
     if event.entity_id do
       target = Core.ServiceManager.get_entity!(event.entity_id)
       state_update = %{
@@ -41,6 +45,9 @@ defmodule Core.Web.EventChannel do
         "state" =>  target.state
       }
       Core.Web.Endpoint.broadcast("events:all", "state_change", state_update)
+      Logger.info fn ->
+         "Broadcasting state_change to events:all"
+      end
     end
   end
 end

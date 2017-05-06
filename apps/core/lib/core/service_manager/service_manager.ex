@@ -523,6 +523,40 @@ defmodule Core.ServiceManager do
   end
 
 
+  # Command and Control
+
+  @doc """
+  Init a remote service
+  """
+  def init_service(service) do
+    backend = Module.concat(service.provider.lorp_name, Server)
+    backend.build_state()
+  end
+
+  @doc """
+  Authorize a service
+  """
+  def authorize_service(service) do
+    backend = Module.concat(service.provider.lorp_name, Auth)
+    backend.start_link(service)
+  end
+
+  @doc """
+  Import service entities
+  """
+  def import_entities(service) do
+    backend = Module.concat(service.provider.lorp_name, Importer)
+    backend.update(service)
+  end
+
+  @doc """
+  Remove a service
+  """
+  def remove_service(service) do
+    backend = Module.concat(service.provider.lorp_name, Server)
+    backend.clear_state()
+  end
+
   defp service_create_action(service) do
 
     {:ok, serv} = service

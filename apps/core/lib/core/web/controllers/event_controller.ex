@@ -11,9 +11,6 @@ defmodule Core.Web.EventController do
   end
 
   def create(conn, event_params) do
-
-
-
     with {:ok, %Event{} = event} <- EventManager.create_event(event_params) do
       EventChannel.broadcast_change(event)
       conn
@@ -22,7 +19,6 @@ defmodule Core.Web.EventController do
       |> render("show.json", event: event)
     end
   end
-
 
   def show(conn, %{"id" => id}) do
     event = EventManager.get_event!(id)

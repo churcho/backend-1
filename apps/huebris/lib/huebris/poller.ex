@@ -52,7 +52,6 @@ defmodule Huebris.Poller do
 
   def build_item(target, value, type) do
   	event = %{
-
         uuid: target.uuid,
     	  value: to_string(value),
     	  date: to_string(Ecto.DateTime.utc),
@@ -63,14 +62,12 @@ defmodule Huebris.Poller do
     	  source_event: "POLL",
     	  message: "Polling for changes",
     	  metadata: %{}
-
   	}
 
   	broadcast_change(event)
   end
 
   def broadcast_change(event) do
-    IO.puts "broadcasting......."
   	{:ok, event} = EventManager.create_event(event)
     EventChannel.broadcast_change(event)
   end

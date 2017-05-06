@@ -1,5 +1,5 @@
 defmodule Darko.Poller do
-
+  require Logger
   alias Core.ServiceManager
   alias Core.EventManager
   alias Core.ServiceManager
@@ -14,7 +14,9 @@ defmodule Darko.Poller do
   Simple function to grab the latest weather and update a corresponding station
   """
   def poll(entity) do
-    IO.puts "Connecting to DarkSky"
+    Logger.info fn ->
+       "Connecting to DarkSky"
+    end
     server_state = fetch_currently(entity.configuration)
 
 
@@ -63,14 +65,15 @@ defmodule Darko.Poller do
   end
 
   def fetch_currently(station) do
-    IO.puts "fetching..........."
-    {:ok, result} = Darko.Server.forecast(station["latitude"], station["longitude"], station["api_key"])
+    {:ok, result} = Darko.Client.forecast(station["latitude"], station["longitude"], station["api_key"])
+    Logger.info fn ->
+      "Fetching current weather"
+    end
     result
   end
 
 
   def update_state(entity, net_state) do
-    IO.puts "updating state........"
     new_state =
     if entity.state != nil do
       %{state: Map.merge(entity.state, net_state)}
@@ -87,28 +90,23 @@ defmodule Darko.Poller do
 
 
   def build_item(target, value, type) do
-    IO.puts "building item........"
     event = %{
-
-        uuid: target.uuid,
-        value: to_string(value),
-        date: to_string(Ecto.DateTime.utc),
-        type: type,
-        source: "Darko",
-        service_id: target.service_id,
-        entity_id: target.id,
-        source_event: "POLL",
-        message: "Polling for changes",
-        metadata: %{}
-
-
+      uuid: target.uuid,
+      value: to_string(value),
+      date: to_string(Ecto.DateTime.utc),
+      type: type,
+      source: "Darko",
+      service_id: target.service_id,
+      entity_id: target.id,
+      source_event: "POLL",
+      message: "Polling for changes",
+      metadata: %{}
     }
 
     broadcast_change(event)
   end
 
   def broadcast_change(event) do
-    IO.puts "broadcasting......."
   	{:ok, new_event} = EventManager.create_event(event)
     new_event
     |> EventChannel.broadcast_change

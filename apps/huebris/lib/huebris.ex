@@ -2,6 +2,8 @@ defmodule Huebris do
   @moduledoc """
   Huebris.
   """
+
+  require Logger
   alias Core.ServiceManager
   alias Core.ServiceManager.Provider
 
@@ -34,23 +36,11 @@ defmodule Huebris do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(registration()) do
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(Huebris.registration) do
+      Logger.info fn ->
+        "Provider Registered as #{provider.lorp_name}"
+      end
       provider
     end
   end
-
-  @doc """
-  Connect to a bridge
-  """
-  def connect(host, api_key) do
-    Huex.connect(host, api_key)
-  end
-
-  @doc """
-  Get the lights payload
-  """
-  def getlights(bridge)  do    
-    Huex.lights(bridge)
-  end
-
 end

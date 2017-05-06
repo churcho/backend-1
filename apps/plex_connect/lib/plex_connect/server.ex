@@ -1,9 +1,11 @@
 defmodule PlexConnect.Server do
   @moduledoc """
-  Server
+  PlexConnect Server
   """
+
   use GenServer
-   @doc """
+
+  @doc """
   Starts the server
   """
   def start_link() do
@@ -12,8 +14,6 @@ defmodule PlexConnect.Server do
 
 
   def init(state) do
-
-  	IO.puts "Registering Sabnzbd...."
   	PlexConnect.register_provider
   	{:ok, state}
   end
@@ -42,5 +42,4 @@ defmodule PlexConnect.Server do
     # Do something on remove
 
   end
-
 end

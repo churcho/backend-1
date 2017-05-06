@@ -52,7 +52,4 @@ defmodule PlexConnect.Client do
     {:ok, resp}=HTTPoison.get(client.url<>"/library/sections/"<>section_id, client.headers)
     Poison.decode!(resp.body)
   end
-
-
-
 end
