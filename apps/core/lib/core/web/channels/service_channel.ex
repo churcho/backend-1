@@ -64,7 +64,7 @@ defmodule Core.Web.ServiceChannel do
     service
     |> ServiceManager.get_service!()
     |> Repo.preload(:provider)
-    |> SeriiceManager.authorize_service()
+    |> ServiceManager.authorize_service()
 
     {:noreply, socket}
   end

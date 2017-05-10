@@ -1,0 +1,34 @@
+LOG:  database system was shut down at 2017-05-07 16:47:48 PDT
+LOG:  MultiXact member wraparound protections are now enabled
+LOG:  database system is ready to accept connections
+LOG:  autovacuum launcher started
+FATAL:  database "jodyalbritton" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+FATAL:  role "postgres" does not exist
+ERROR:  syntax error at or near "ALTER" at character 47
+STATEMENT:  CREATE USER postgres WITH PASSWORD 'postgres'
+	ALTER ROLE postgres WITH SUPERUSER;
+ERROR:  syntax error at or near "ALTER" at character 47
+STATEMENT:  CREATE USER postgres WITH PASSWORD 'postgres'
+	ALTER ROLE postgres WITH SUPERUSER;
+ERROR:  syntax error at or near "ROLE" at character 26
+STATEMENT:  ALTER USER postgres WITH ROLE superuser;
+ERROR:  syntax error at or near "ROLE" at character 26
+STATEMENT:  ALTER USER postgres WITH ROLE superuser;
+ERROR:  role "postgres" already exists
+STATEMENT:  CREATE USER postgres WITH PASSWORD 'postgres';
+ERROR:  syntax error at or near "ROLE" at character 26
+STATEMENT:  ALTER USER postgres WITH ROLE SUPERUSER;
+LOG:  autovacuum launcher shutting down
+LOG:  received smart shutdown request
+LOG:  shutting down
+LOG:  database system is shut down

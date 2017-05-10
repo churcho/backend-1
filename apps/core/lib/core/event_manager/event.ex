@@ -17,8 +17,8 @@ defmodule Core.EventManager.Event do
     field :payload, :map
     field :metadata, :map
 
-    belongs_to :entity, Core.Entity
-    belongs_to :service, Core.Service
+    belongs_to :entity, Core.ServiceManager.Entity
+    belongs_to :service, Core.ServiceManager.Service
 
     field :date, :utc_datetime
     field :expiration, :utc_datetime

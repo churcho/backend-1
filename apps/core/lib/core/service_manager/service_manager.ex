@@ -260,7 +260,6 @@ defmodule Core.ServiceManager do
     %Service{}
     |> Service.changeset(attrs)
     |> Repo.insert()
-    |> service_create_action
   end
 
   @doc """

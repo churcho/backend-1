@@ -26,6 +26,9 @@ defmodule Core.Web.EventView do
           logo: Core.EventManager.logo_url(event),
           icon: Core.EventManager.icon_url(event)
         },
+        included: %{
+          entity: render_one(event.entity |> Core.Repo.preload([:service]) , Core.Web.EntityView, "entity.json")
+        },
         id: event.id,
         attributes: %{
           subject: Core.EventManager.trimmed_title(event.message),
@@ -46,7 +49,7 @@ defmodule Core.Web.EventView do
           metadata: event.metadata,
           inserted_at: event.inserted_at
         }
-        
+
 
       }
 

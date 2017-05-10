@@ -108,7 +108,8 @@ defmodule Darko.Server do
 
   def find_enabled_services() do
     providers = ServiceManager.get_provider_by_lorp_name("Darko")
-  	providers.services
+
+    providers.services
   end
 
   def poll() do

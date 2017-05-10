@@ -36,7 +36,7 @@ defmodule Darko do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(Starter.registration) do
+    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(Darko.registration) do
       Logger.info fn ->
         "Provider Registered as #{provider.lorp_name}"
       end

@@ -2,6 +2,9 @@ defmodule Core.Web.EventChannel do
   @moduledoc """
   Connect to events channel
   """
+
+  use Core.Web, :view
+
   require Logger
   use Core.Web, :channel
 
@@ -9,12 +12,19 @@ defmodule Core.Web.EventChannel do
     {:ok, socket}
   end
 
-  def broadcast_change(event) do
+  def broadcast_change(event_entity) do
+    event =
+      event_entity
+      |> Core.Repo.preload([:entity])
+
     payload = %{
         "links" => %{
           "self" =>  "/api/v1/events/#{event.id}",
           "logo" => Core.EventManager.logo_url(event),
           "icon" => Core.EventManager.icon_url(event)
+        },
+        "included" => %{
+          "entity" => render_one(event.entity |> Core.Repo.preload([:service]) , Core.Web.EntityView, "entity.json")
         },
         "id" => event.id,
         "attributes" => %{

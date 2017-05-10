@@ -4,6 +4,7 @@ defmodule Core.Web.RoomController do
   alias Core.LocationManager
   alias Core.LocationManager.Room
 
+  action_fallback Core.Web.FallbackController
 
   def index(conn, _params) do
     rooms = LocationManager.list_rooms()

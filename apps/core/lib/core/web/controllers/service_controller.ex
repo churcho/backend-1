@@ -4,6 +4,7 @@ defmodule Core.Web.ServiceController do
   alias Core.ServiceManager
   alias Core.ServiceManager.Service
 
+  action_fallback Core.Web.FallbackController
 
   def index(conn, _params) do
     services = ServiceManager.list_services()

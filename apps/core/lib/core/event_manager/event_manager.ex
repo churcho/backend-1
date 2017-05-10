@@ -19,19 +19,23 @@ defmodule Core.EventManager do
 
   """
   def list_events do
-    Repo.all(Event)
+    Event
+    |> Repo.all()
+    |> Repo.preload([:entity, :service])
   end
 
   def list_events_desc do
     query = from(e in Event, order_by: [desc: e.id], limit: 100)
     query
     |> Repo.all
+    |> Repo.preload([:entity, :service])
   end
 
   def list_entity_events_desc(entity_id) do
     query = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
     query
     |> Repo.all
+    |> Repo.preload([:entity, :service])
   end
 
   @doc """
@@ -66,7 +70,6 @@ defmodule Core.EventManager do
     %Event{}
     |> Event.changeset(handle_events(attrs))
     |> Repo.insert()
-
   end
 
   @doc """

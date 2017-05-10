@@ -12,6 +12,7 @@ defmodule SmartThingsConnect.Application do
     children = [
       # Starts a worker by calling: SmartThingsConnect.Worker.start_link(arg1, arg2, arg3)
       # worker(SmartThingsConnect.Worker, [arg1, arg2, arg3]),
+      worker(SmartThingsConnect.Server, [])
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

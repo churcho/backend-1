@@ -4,7 +4,8 @@ defmodule Core.Web.ZoneController do
   alias Core.LocationManager
   alias Core.LocationManager.Zone
 
-
+  action_fallback Core.Web.FallbackController
+  
   def index(conn, _params) do
     zones = LocationManager.list_zones()
     render(conn, "index.json", zones: zones)

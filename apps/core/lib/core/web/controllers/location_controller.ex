@@ -4,6 +4,7 @@ defmodule Core.Web.LocationController do
   alias Core.LocationManager
   alias Core.LocationManager.Location
 
+  action_fallback Core.Web.FallbackController
 
   def index(conn, _params) do
     locations = LocationManager.list_locations()

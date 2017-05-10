@@ -24,6 +24,9 @@ defmodule PlexConnect do
         service_name: "PlexConnect",
         required_fields: ["host", "port"]
       },
+      metadata: %{
+        
+      },
       provides: %{
         services: ["Movies", "TV Shows"]
       }
