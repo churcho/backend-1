@@ -412,3 +412,4 @@ defmodule Core.LocationManager do
   def change_room(%Room{} = room) do
     Room.changeset(room, %{})
   end
+end

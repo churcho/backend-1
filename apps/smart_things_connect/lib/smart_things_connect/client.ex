@@ -7,6 +7,7 @@ defmodule SmartThingsConnect.Client do
   defstruct [
     api_token: "",
     base_url: "",
+    url: "",
     format: "application/json", #Only Json for now
     headers: [] #Headers for request
   ]
@@ -16,7 +17,7 @@ defmodule SmartThingsConnect.Client do
   def new(token) do
     %Client{
       url: @endpoints,
-      token: token,
+      api_token: token,
       headers: [{"Accept", "application/json"}, {"Authorization", "Bearer "<>token}]
     }
   end
