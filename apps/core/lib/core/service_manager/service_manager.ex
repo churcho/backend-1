@@ -549,6 +549,15 @@ defmodule Core.ServiceManager do
   end
 
   @doc """
+  Send a command
+  """
+  def send_command(service, entity_id, command, secondary_command) do
+     entity = get_entity!(entity_id)
+     backend = Module.concat(service.provider.lorp_name, Server)
+     backend.send_command(service, entity, command, secondary_command)
+  end
+
+  @doc """
   Remove a service
   """
   def remove_service(service) do

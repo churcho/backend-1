@@ -20,7 +20,6 @@ defmodule Core.ActionManager do
   def list_actions do
     Repo.all(Action)
   end
-
   @doc """
   Gets a single action.
 

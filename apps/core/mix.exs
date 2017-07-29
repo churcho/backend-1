@@ -6,7 +6,7 @@ defmodule Core.Mixfile do
 
   def project do
     [app: :core,
-     version: "0.0.1",
+     version: "0.1.0",
      build_path: "../../_build",
      config_path: "../../config/config.exs",
      deps_path: "../../deps",
@@ -37,15 +37,16 @@ defmodule Core.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, github: "phoenixframework/phoenix", override: true},
-     {:phoenix_live_reload, "~> 1.0.8"},
      {:phoenix_pubsub, "~> 1.0"},
      {:phoenix_ecto, "~> 3.2"},
+     {:phoenix_live_reload, "~> 1.0", only: :dev},
+     {:phoenix_html, "~> 2.10"},
      {:timex, "~> 3.1.13"},
      {:timex_ecto, "~> 3.1.1"},
      {:guardian, "~> 0.14.2"},
      {:comeonin, "~> 3.0.2"},
      {:postgrex, "~> 0.13.2"},
-     {:gettext, "~> 0.13.1"},
+     {:gettext, "~> 0.11"},
      {:cors_plug, "~> 1.2.1"},
      {:poison, "~> 3.0"},
      {:httpoison, "~> 0.11.2"},

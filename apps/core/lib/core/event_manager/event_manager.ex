@@ -7,7 +7,7 @@ defmodule Core.EventManager do
   alias Core.Repo
   alias Core.EventManager.Event
   alias Core.ServiceManager.Service
-  alias Core.Web.EventChannel
+  alias CoreWeb.EventChannel
 
   @doc """
   Returns the list of events.
@@ -71,6 +71,7 @@ defmodule Core.EventManager do
     |> Event.changeset(handle_events(attrs))
     |> Repo.insert()
   end
+
 
   @doc """
   Broadcast an event to the events channel

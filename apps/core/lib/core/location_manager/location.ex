@@ -1,4 +1,4 @@
-defmodule Core.LocationManager.Location do
+ defmodule Core.LocationManager.Location do
   @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
@@ -6,8 +6,6 @@ defmodule Core.LocationManager.Location do
 
   schema "location_manager_locations" do
     field :name, :string
-    field :state, :map
-    field :metadata, :map
     field :address_one, :string
     field :address_two, :string
     field :address_city, :string
@@ -18,6 +16,22 @@ defmodule Core.LocationManager.Location do
     field :latitude, :float
     field :longitude, :float
 
+
+    embeds_one :metadata, MetaData do
+      field :send_emails, :boolean
+    end
+
+    embeds_one :state, State do
+      field :indoor_temperature, :float
+      field :outdoor_temperature, :float
+      field :indoor_humidity, :float
+      field :outdoor_humidity, :float
+      field :outdoor_windspeed, :float
+      field :outdoor_airpressure, :float
+      field :outdoor_ozone, :float
+      field :outdoor_dewpoint, :float
+    end
+
     belongs_to :location_type, Core.LocationManager.LocationType
     has_many :zones, Core.LocationManager.Zone
     has_many :zone_rooms, through: [:zones, :room]
@@ -26,9 +40,37 @@ defmodule Core.LocationManager.Location do
 
   def changeset(%Location{} = location, attrs) do
     location
-    |> cast(attrs, [:name, :state, :address_state, :address_one, :address_two, :address_city, :address_zip, :latitude, :longitude])
+    |> cast(attrs, [:name,
+                    :address_state,
+                    :address_one,
+                    :address_two,
+                    :address_city,
+                    :address_zip,
+                    :latitude,
+                    :longitude])
+    |> cast_embed(:state,  with: &state_changeset/2)
+    |> cast_embed(:metadata,  with: &metadata_changeset/2)
     |> validate_required([:name])
     |> update_zip
+  end
+
+  defp state_changeset(schema, params) do
+     schema
+     |> cast(params, [
+       :indoor_temperature,
+       :outdoor_temperature,
+       :indoor_humidity,
+       :outdoor_humidity,
+       :outdoor_windspeed,
+       :outdoor_airpressure,
+       :outdoor_ozone,
+       :outdoor_dewpoint
+       ])
+  end
+
+  defp metadata_changeset(schema, params) do
+     schema
+     |> cast(params, [:send_emails])
   end
 
   defp update_zip(changeset) do
