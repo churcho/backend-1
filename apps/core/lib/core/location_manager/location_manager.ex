@@ -68,7 +68,7 @@ defmodule Core.LocationManager do
   def list_rooms do
     Room
     |> Repo.all()
-    |> Repo.preload([:zone, :zone_location])
+    |> Repo.preload([:zone, :zone_location, :light_entities])
   end
 
   @doc """
@@ -147,7 +147,7 @@ defmodule Core.LocationManager do
   def get_room!(id) do
     Room
     |> Repo.get!(id)
-  	|> Repo.preload([:zone, :zone_location])
+  	|> Repo.preload([:zone, :zone_location, :lights, :light_entities])
   end
 
   @doc """
@@ -412,5 +412,3 @@ defmodule Core.LocationManager do
   def change_room(%Room{} = room) do
     Room.changeset(room, %{})
   end
-
-end

@@ -4,13 +4,15 @@ defmodule Core.ServiceManager.EntityType do
   """
   use Ecto.Schema
   import Ecto.Changeset
+
+  alias Core.ServiceManager.Entity
   alias Core.ServiceManager.EntityType
 
   schema "service_manager_entity_types" do
     field :description, :string
     field :name, :string
 
-    has_many :entities, Core.ServiceManager.Entity
+    has_many :entities, Entity
     timestamps()
   end
 

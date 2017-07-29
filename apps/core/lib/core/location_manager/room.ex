@@ -9,6 +9,8 @@ defmodule Core.LocationManager.Room do
     field :description, :string
     belongs_to :zone, Core.LocationManager.Zone
     has_one :zone_location, through: [:zone, :location]
+    has_many :lights, Core.ConnectionManager.Light
+    has_many :light_entities, through: [:lights, :entity]
     timestamps()
   end
 
