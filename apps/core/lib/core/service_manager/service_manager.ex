@@ -379,6 +379,22 @@ defmodule Core.ServiceManager do
     |> Repo.update()
   end
 
+  def update_entity_state(%Entity{} = entity, attrs) do
+    old_state =
+    if entity.state do
+      entity.state
+    else
+      %{}
+    end
+
+    new_state = attrs["state"]
+    updated_state = %{state: Map.merge(old_state, new_state)}
+
+    entity
+    |> Entity.changeset(updated_state)
+    |> Repo.update()
+  end
+
   @doc """
   Updates a entity_type.
 

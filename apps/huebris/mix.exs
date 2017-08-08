@@ -39,7 +39,7 @@ defmodule Huebris.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [{:core, in_umbrella: true},
-     {:huex, "~> 0.6", override: true},
+     {:exhue, "~> 0.1.6"},
      {:oauth2, "~> 0.7"},
      {:httpoison, "~> 0.11.0"},
      {:poison, "~> 3.0"}]

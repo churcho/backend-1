@@ -13,26 +13,27 @@ defmodule Zedwave.Importer do
   def update(service) do
     entities = Zedwave.Client.get_entities(service.host)
 
-    IO.puts "Entities"
-
-
-
   	for entity <- entities do
-
-      IO.puts entity["_id"]
-      IO.inspect entity
-
+      new_state =
+        if entity["lorpState"] do
+          entity["lorpState"]
+        else
+          %{}
+        end
 
   		target = %{
   			uuid:  entity["_id"],
   			service_id: service.id,
-
+        configuration: %{
+          commands: get_command_set(entity),
+        },
   			name: name_it(entity),
+        capabilities: set_capabilities(entity),
+        state: new_state,
   			metadata: %{
           manufacturer: entity["manufacturer"]
   			}
   		}
-      IO.inspect target
   		import_entity(target)
   	end
   end
@@ -73,12 +74,55 @@ defmodule Zedwave.Importer do
     end
   end
 
+  defp get_command_set(entity) do
+    name = name_it(entity)
+    case name do
+      "PIR Motion Sensor" ->
+        [%{command: "poll", name: "Poll"}]
+      "Door/Window Sensor" ->
+        [%{command: "poll", name: "Poll"}]
+      "ZW120 Door Window Sensor Gen5" ->
+        [%{command: "poll", name: "Poll"}]
+      "ZW090 Z-Stick Gen5" ->
+        [%{command: "poll", name: "Poll"},
+         %{command: "add", name: "Inclusion Mode"},
+         %{command: "remove", name: "Exclusion Mode"}]
+      _ ->
+        []
+    end
+  end
+
+  defp set_capabilities(entity) do
+    name = name_it(entity)
+    case name do
+      "PIR Motion Sensor" ->
+        ["MOTION_DETECTION"]
+      "Door/Window Sensor" ->
+        ["CONTACT_SENSOR"]
+      "ZW120 Door Window Sensor Gen5" ->
+        ["CONTACT_SENSOR"]
+      "ZW090 Z-Stick Gen5" ->
+        ["CONTROLLER"]
+      "ZW096 Smart Switch 6" ->
+        ["SWITCH"]
+      _ ->
+        []
+    end
+  end
 
   defp name_it(entity) do
-    if entity["name"] != "" do
-      entity["name"]
-    else
-      entity["product"]
+    if entity do
+      if entity["name"] == "" or entity["name"] == nil do
+        if entity["product"] do
+          if entity["product"] != "" or entity["product"] != nil do
+            entity["product"]
+          else
+            "default"
+          end
+        else
+          "default"
+        end
+      end
     end
   end
 end

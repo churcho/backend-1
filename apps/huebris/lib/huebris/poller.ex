@@ -4,9 +4,9 @@ defmodule Huebris.Poller do
   """
 
   alias Core.EventManager
-  alias Core.Web.EventChannel
+  alias CoreWeb.EventChannel
   alias Core.ServiceManager
-
+  alias Huebris.Client
   @doc """
   Poll a bridge entity for changes
   """
@@ -18,10 +18,12 @@ defmodule Huebris.Poller do
       state_match = Huebris.Server.state_check(value, current_bridge[key])
 
       if state_match == false do
+        IO.puts "states need a sync"
         target = ServiceManager.get_entity_by_uuid(value["uniqueid"])
         net_state = %{
-         "level" => value["state"]["bri"],
-         "switch" => convert_bools(value["state"]["on"])
+         "level" => Client.get_brightness(value["state"]["bri"]),
+         "switch" => Client.convert_bools(value["state"]["on"]),
+         "color" => Client.get_colors_in_rgb(value["state"]["xy"], value["state"]["bri"])
         }
 
         update_state(target, net_state)
@@ -53,7 +55,7 @@ defmodule Huebris.Poller do
   def build_item(target, value, type) do
   	event = %{
         uuid: target.uuid,
-    	  value: to_string(value),
+    	  value: parse_value(value),
     	  date: to_string(Ecto.DateTime.utc),
     	  type: type,
     	  source: "Huebris",
@@ -63,7 +65,7 @@ defmodule Huebris.Poller do
     	  message: "Polling for changes",
     	  metadata: %{}
   	}
-
+    IO.puts "BROADCAST!!!!!"
   	broadcast_change(event)
   end
 
@@ -72,15 +74,14 @@ defmodule Huebris.Poller do
     EventChannel.broadcast_change(event)
   end
 
-
-  defp convert_bools(bool) do
-  	case bool do
-  		true ->
-  			"on"
-  		false ->
-  			"off"
-  		_ ->
-  			"Unknow"
-   	end
+  defp parse_value(value) do
+    if is_list(value) do
+      "changed"
+    else
+      to_string(value)
+    end
   end
+
+
+
 end

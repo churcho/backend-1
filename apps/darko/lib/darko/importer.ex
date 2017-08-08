@@ -17,6 +17,7 @@ defmodule Darko.Importer do
         display_name: "Weather Station",
         source: "Darko",
         configuration: %{
+          commands: [],
           location_id: location.id,
           longitude: location.longitude,
           latitude: location.latitude,

@@ -34,7 +34,9 @@ defmodule CoreWeb.EntityView do
         configuration: entity.configuration,
         label: entity.label,
         metadata: entity.metadata,
+        capabilities: entity.capabilities ,
         state: entity.state}
+
       }
   end
 end

@@ -5,7 +5,7 @@ defmodule Huebris.Server do
   require Logger
   use GenServer
   alias Core.ServiceManager
-
+  alias Huebris.Client
   @doc """
   Starts the server
   """
@@ -133,9 +133,12 @@ defmodule Huebris.Server do
   Function that takes two entities and compares the states.
   """
   def state_check(entity_a, entity_b) do
+
     if entity_a == entity_b do
       true
     else
+      IO.inspect entity_a
+      IO.inspect entity_b
       false
     end
   end
@@ -158,6 +161,32 @@ defmodule Huebris.Server do
   end
 
   #handle calls/casts
+  def send_command(service, entity, command, secondary_command) do
+
+    host = service.host
+    api_key = entity.service.api_key
+    hue_id = entity.metadata["hue_id"]
+    level = round(Client.set_brightness(entity.state["level"]))
+
+    IO.inspect level
+    IO.puts "sending commands"
+    if command == "on" do
+      Huebris.Client.turn_on(host, api_key, hue_id, level)
+    end
+
+    if command == "off" do
+      Huebris.Client.turn_off(host, api_key, hue_id)
+    end
+
+    if command == "set_level" do
+      Huebris.Client.set_level(host, api_key, hue_id, secondary_command)
+    end
+
+    if command == "set_color" do
+      Huebris.Client.set_color(host, api_key, hue_id, secondary_command)
+    end
+
+  end
 
   def handle_call(:fetch_services, _from, state) do
     {:reply, state.services, state}

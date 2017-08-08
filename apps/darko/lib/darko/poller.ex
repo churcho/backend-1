@@ -4,7 +4,7 @@ defmodule Darko.Poller do
   alias Core.EventManager
   alias Core.ServiceManager
   alias Core.ServiceManager.Entity
-  alias Core.Web.EventChannel
+  alias CoreWeb.EventChannel
 
   @moduledoc """
   Polling the darksky service to update your virutal weather stations.

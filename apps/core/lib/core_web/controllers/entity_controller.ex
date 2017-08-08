@@ -38,7 +38,7 @@ defmodule CoreWeb.EntityController do
     IO.inspect entity_params
     entity = ServiceManager.get_entity_by_uuid(entity_params["uuid"])
 
-    with {:ok, %Entity{} = entity} <- ServiceManager.update_entity(entity, entity_params) do
+    with {:ok, %Entity{} = entity} <- ServiceManager.update_entity_state(entity, entity_params) do
       render(conn, "show.json", entity: entity |> Repo.preload([:service]))
     end
   end

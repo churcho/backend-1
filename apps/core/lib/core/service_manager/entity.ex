@@ -13,12 +13,16 @@ defmodule Core.ServiceManager.Entity do
     field :label, :string
     field :slug, :string
     field :description, :string
+    field :source, :string
+    field :uuid, :string
+
+    field :capabilities, {:array, :string}
     field :metadata, :map
     field :state, :map
     field :configuration, :map
-    field :source, :string
-    field :uuid, :string
-    has_many :events, Core.EventManager.Event
+
+
+    has_many :events, Core.EventManager.Event,  on_delete: :delete_all
     belongs_to :service, Core.ServiceManager.Service
     belongs_to :entity_type, Core.ServiceManager.EntityType
     timestamps()
@@ -31,6 +35,7 @@ defmodule Core.ServiceManager.Entity do
   	                 :description,
   	                 :label,
   	                 :metadata,
+                     :capabilities,
   	                 :state,
   	                 :display_name,
   	                 :slug,
