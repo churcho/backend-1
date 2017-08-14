@@ -137,7 +137,8 @@ defmodule Core.EventManager do
   Handle events
   """
   def handle_events(params) do
-
+    IO.puts "Parsing Event Params"
+    IO.inspect params
     if params["service_id"] do
       target =
       Service

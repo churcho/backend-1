@@ -39,6 +39,8 @@ defmodule Zedwave.Importer do
   end
 
   def build_item(target) do
+    IO.puts "Notify of import"
+    IO.inspect target
   	event = %{
         uuid: target.uuid,
     	  value: "IMPORT",
@@ -48,7 +50,7 @@ defmodule Zedwave.Importer do
     	  service_id: target.service_id,
     	  entity_id: target.id,
     	  source_event: "IMPORT",
-    	  message: "Service Imported",
+    	  message: "Entity Imported",
     	  metadata: %{}
   	}
 
@@ -63,6 +65,7 @@ defmodule Zedwave.Importer do
   Imports the service entity created by the update function
   """
   def import_entity(target) do
+
     {:ok, entity} =
     ServiceManager.create_or_update_entity(target)
     Logger.info fn ->
@@ -70,7 +73,9 @@ defmodule Zedwave.Importer do
     end
 
     if entity do
-      #build_item(entity)
+      target = entity |> Core.Repo.preload([:service])
+      Zedwave.Client.update_imported_entity(target.service.host, target)
+      build_item(entity)
     end
   end
 
@@ -101,7 +106,7 @@ defmodule Zedwave.Importer do
         ["CONTACT_SENSOR"]
       "ZW120 Door Window Sensor Gen5" ->
         ["CONTACT_SENSOR"]
-      "ZW090 Z-Stick Gen5" ->
+      "ZW090 Z-Stick Gen5 US" ->
         ["CONTROLLER"]
       "ZW096 Smart Switch 6" ->
         ["SWITCH"]

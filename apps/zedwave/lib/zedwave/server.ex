@@ -70,15 +70,13 @@ defmodule Zedwave.Server do
 
   def send_command(service, entity, command, secondary_command) do
     IO.puts "EXECUTING ZEDWAVE COMMAND"
-    if entity.name == "ZW090 Z-Stick Gen5" do
+    if entity.name == "ZW090 Z-Stick Gen5 US" do
       IO.puts "CONTROLLER COMMAND"
       Zedwave.Client.send_controller_command(service.host, command)
     end
 
     if entity.name == "ZW096 Smart Switch 6" do
       IO.puts "NODE COMMAND"
-      IO.inspect entity
-      IO.inspect command
       Zedwave.Client.send_node_command(service.host, entity.uuid, command)
     end
 

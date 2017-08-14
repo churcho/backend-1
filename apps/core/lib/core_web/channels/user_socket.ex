@@ -7,6 +7,7 @@ defmodule CoreWeb.UserSocket do
   channel "events:*", CoreWeb.EventChannel
   channel "users:*", CoreWeb.UserChannel
   channel "services:*", CoreWeb.ServiceChannel
+  channel "entity_messages:*", CoreWeb.EntityMessageChannel
 
   # Transports
   transport :websocket, Phoenix.Transports.WebSocket

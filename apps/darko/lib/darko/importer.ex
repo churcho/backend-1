@@ -15,6 +15,7 @@ defmodule Darko.Importer do
         name: "Weather Station for " <> location.name,
         service_id: service.id,
         display_name: "Weather Station",
+        source_event: "IMPORT",
         source: "Darko",
         configuration: %{
           commands: [],

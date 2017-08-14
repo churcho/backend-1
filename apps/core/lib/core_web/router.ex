@@ -19,7 +19,10 @@ defmodule CoreWeb.Router do
       resources "/entities", EntityController do
         get  "/events", EntityController, :entity_events
         post "/events", EntityController, :create_event
+        resources "/messages", MessageController, except: [:new, :edit]
       end
+
+      resources "/messages", MessageController, except: [:new, :edit]
       resources "/zones", ZoneController, except: [:new, :edit]
       resources "/rooms", RoomController do
         resources "/lights", LightController, except: [:new, :edit]

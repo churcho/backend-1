@@ -1,6 +1,6 @@
 defmodule CoreWeb.RoomController do
   use CoreWeb, :controller
-
+  alias Core.Repo
   alias Core.LocationManager
   alias Core.LocationManager.Room
 
@@ -16,10 +16,9 @@ defmodule CoreWeb.RoomController do
       conn
       |> put_status(:created)
       |> put_resp_header("room", room_path(conn, :show, room))
-      |> render("show.json", room: room |> Core.Repo.preload([:zone, :zone_location]))
+      |> render("show.json", room: room |> Repo.preload([:zone, :zone_location, :light_entities]))
     end
   end
-
 
   def show(conn, %{"id" => id}) do
     room = LocationManager.get_room!(id)
@@ -30,7 +29,7 @@ defmodule CoreWeb.RoomController do
     room = LocationManager.get_room!(id)
 
     with {:ok, %Room{} = room} <- LocationManager.update_room(room, room_params) do
-      render(conn, "show.json", room: room |> Core.Repo.preload([:zone, :zone_location]))
+      render(conn, "show.json", room: room |> Core.Repo.preload([:zone, :zone_location, :light_entities]))
     end
   end
 

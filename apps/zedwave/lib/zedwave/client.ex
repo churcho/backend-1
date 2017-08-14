@@ -23,6 +23,16 @@ defmodule Zedwave.Client do
     end
   end
 
+
+  def update_imported_entity(host, entity) do
+    headers = [{"Content-type", "application/json"}]
+
+    body = '{"lorpEntityId":#{entity.id}, "lorpServiceId":#{entity.service.id}}'
+    {:ok, response} =
+      Zedwave.put("http://#{host}:3000#{@url}/nodes/#{entity.uuid}", body, headers, [])
+    IO.inspect response
+  end
+
   def send_controller_command(host, command) do
     {:ok, response} =
     Zedwave.post("http://" <> host <>":3000"<> @url <> "/commands/"<> command, [])
