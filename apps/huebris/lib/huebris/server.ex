@@ -4,7 +4,7 @@ defmodule Huebris.Server do
   """
   require Logger
   use GenServer
-  alias Core.ServiceManager
+  alias Core.ProviderManager
   alias Huebris.Client
   @doc """
   Starts the server
@@ -116,7 +116,7 @@ defmodule Huebris.Server do
   Retreieve a list of enabled services from Core/Data
   """
   def find_enabled_services() do
-  	providers = ServiceManager.get_provider_by_lorp_name("Huebris")
+  	providers = ProviderManager.get_provider_by_lorp_name("Huebris")
   	providers.services
   end
 
@@ -168,8 +168,6 @@ defmodule Huebris.Server do
     hue_id = entity.metadata["hue_id"]
     level = round(Client.set_brightness(entity.state["level"]))
 
-    IO.inspect level
-    IO.puts "sending commands"
     if command == "on" do
       Huebris.Client.turn_on(host, api_key, hue_id, level)
     end

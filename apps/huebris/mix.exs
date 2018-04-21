@@ -3,16 +3,18 @@ defmodule Huebris.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :huebris,
-     version: "0.1.0",
-     build_path: "../../_build",
-     config_path: "../../config/config.exs",
-     deps_path: "../../deps",
-     lockfile: "../../mix.lock",
-     elixir: "~> 1.4",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :huebris,
+      version: "0.1.0",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
+      elixir: "~> 1.4",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -20,8 +22,7 @@ defmodule Huebris.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger],
-     mod: {Huebris.Application, []}]
+    [extra_applications: [:logger], mod: {Huebris.Application, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -38,10 +39,12 @@ defmodule Huebris.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:core, in_umbrella: true},
-     {:exhue, "~> 0.1.6"},
-     {:oauth2, "~> 0.7"},
-     {:httpoison, "~> 0.11.0"},
-     {:poison, "~> 3.0"}]
+    [
+      {:core, in_umbrella: true},
+      {:poison, "~> 3.1"},
+      {:httpoison, "~> 1.0"},
+      {:oauth2, "~> 0.7"},
+      {:exhue, "~> 0.1.7"}
+    ]
   end
 end

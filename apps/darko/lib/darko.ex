@@ -7,8 +7,8 @@ defmodule Darko do
   """
 
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
 
 
   @doc """
@@ -26,9 +26,9 @@ defmodule Darko do
       configuration: %{
         service_name: "Darko"
       },
-      provides: %{
-        services: ["WeatherStation"]
-      }
+      provides: [
+        %{service: "weather"}
+      ]
     }
   end
 
@@ -36,7 +36,7 @@ defmodule Darko do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(Darko.registration) do
+    with {:ok, %Provider{} = provider} <- ProviderManager.create_or_update_provider(Darko.registration) do
       Logger.info fn ->
         "Provider Registered as #{provider.lorp_name}"
       end

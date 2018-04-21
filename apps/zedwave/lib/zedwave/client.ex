@@ -1,11 +1,13 @@
 defmodule Zedwave.Client do
   @moduledoc false
 
+  alias Poison.Parser
+
   @doc """
   Connect to a bri
   """
-  def connect(host) do
-    IO.puts "Connected"
+  def connect(_host) do
+    IO.puts("Connected")
   end
 
   @url "/api"
@@ -13,43 +15,31 @@ defmodule Zedwave.Client do
   @doc """
   list entities
   """
-  def get_entities(host) do
-    {:ok, response} =
-    Zedwave.get("http://" <> host <>":3000"<> @url <> "/nodes")
+  def get_entities(service) do
+    {:ok, response} = Zedwave.get("http://#{service.host}:#{service.port}/api/nodes")
 
-    if {:ok, response} do
+    if response != nil do
       response.body
-      |> Poison.Parser.parse!()
+      |> Parser.parse!()
     end
   end
-
 
   def update_imported_entity(host, entity) do
     headers = [{"Content-type", "application/json"}]
 
     body = '{"lorpEntityId":#{entity.id}, "lorpServiceId":#{entity.service.id}}'
-    {:ok, response} =
+
+    {:ok, _response} =
       Zedwave.put("http://#{host}:3000#{@url}/nodes/#{entity.uuid}", body, headers, [])
-    IO.inspect response
   end
 
   def send_controller_command(host, command) do
-    {:ok, response} =
-    Zedwave.post("http://" <> host <>":3000"<> @url <> "/commands/"<> command, [])
-
-    if {:ok, response} do
-      IO.inspect response.body
-    end
+    {:ok, _response} =
+      Zedwave.post("http://" <> host <> ":3000" <> @url <> "/commands/" <> command, [])
   end
 
   def send_node_command(host, entity, command) do
-    {:ok, response} =
-    Zedwave.post("http://#{host}:3000#{@url}/nodes/#{entity}/send-command/#{command}", [])
-
-    if {:ok, response} do
-      IO.inspect response.body
-    end
+    {:ok, _response} =
+      Zedwave.post("http://#{host}:3000#{@url}/nodes/#{entity}/send-command/#{command}", [])
   end
-
-
 end

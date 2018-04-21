@@ -5,7 +5,7 @@ defmodule Zedwave.EventHandler do
 
   def parse(params) do
     if params["source_event"] do
-        entity = Core.ServiceManager.get_entity_by_uuid(params["uuid"])
+        entity = Core.EntityManager.get_entity_by_uuid(params["uuid"])
         rez =
         params
         |> Map.put("entity_id", entity.id)
@@ -17,7 +17,7 @@ defmodule Zedwave.EventHandler do
       if params.source_event == "IMPORT" do
         params
       else
-        entity = Core.ServiceManager.get_entity_by_uuid(params["uuid"])
+        entity = Core.EntityManager.get_entity_by_uuid(params["uuid"])
         rez =
         params
         |> Map.put("entity_id", entity.id)

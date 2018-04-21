@@ -2,16 +2,18 @@ defmodule Darko.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :darko,
-     version: "0.1.0",
-     build_path: "../../_build",
-     config_path: "../../config/config.exs",
-     deps_path: "../../deps",
-     lockfile: "../../mix.lock",
-     elixir: "~> 1.4",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     deps: deps()]
+    [
+      app: :darko,
+      version: "0.1.0",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
+      elixir: "~> 1.6",
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application
@@ -19,11 +21,7 @@ defmodule Darko.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     # Specify extra applications you'll use from Erlang/Elixir
-    [extra_applications: [:logger,
-                          :httpoison,
-                          :poison
-                        ],
-     mod: {Darko.Application, []}]
+    [extra_applications: [:logger, :httpoison, :poison], mod: {Darko.Application, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -40,10 +38,11 @@ defmodule Darko.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:core, in_umbrella: true},
-     {:oauth2, "~> 0.7"},
-     {:httpoison, "~> 0.11.0"},
-     {:poison, "~> 3.0"}
+    [
+      {:core, in_umbrella: true},
+      {:poison, "~> 3.1"},
+      {:httpoison, "~> 1.0"},
+      {:oauth2, "~> 0.7"}
     ]
   end
 end

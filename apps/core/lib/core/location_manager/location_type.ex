@@ -5,11 +5,10 @@ defmodule Core.LocationManager.LocationType do
   alias Core.LocationManager.LocationType
 
   schema "location_manager_location_types" do
-    field :description, :string
-    field :name, :string
+    field(:description, :string)
+    field(:name, :string)
 
-
-    has_many :locations, Core.LocationManager.Location
+    has_many(:locations, Core.LocationManager.Location)
     timestamps()
   end
 

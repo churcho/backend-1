@@ -6,28 +6,11 @@ defmodule Core.ServiceManager do
   import Ecto.{Query, Changeset}, warn: false
   alias Core.Repo
 
-  alias Core.ServiceManager.Provider
   alias Core.ServiceManager.Service
-  alias Core.ServiceManager.Entity
-  alias Core.ServiceManager.EntityType
-  alias Core.ServiceManager.Message
-  alias CoreWeb.EntityMessageChannel
-
-  @doc """
-  Returns the list of providers.
-
-  ## Examples
-
-    iex> list_providers()
-    [%Provider{}, ...]
-
-  """
-  def list_providers do
-    Provider
-    |> Repo.all()
-    |> Repo.preload([:services])
-  end
-
+  alias Core.ServiceManager.PropertyType
+  alias Core.ServiceManager.EventType
+  alias Core.ServiceManager.ActionType
+  alias Core.EntityManager.Entity
 
   @doc """
   Returns the list of services.
@@ -41,98 +24,56 @@ defmodule Core.ServiceManager do
   def list_services do
     Service
     |> Repo.all()
-    |> Repo.preload([:provider, :entities])
+    |> Repo.preload([
+      :provider,
+      :entities,
+      :property_types,
+      :service_properties,
+      :action_types,
+      :service_actions,
+      :event_types,
+      :service_events
+      ])
   end
 
   @doc """
-  Returns the list of entities.
+  Returns the list of property_types.
 
   ## Examples
 
-    iex> list_entities()
-    [%Entity{}, ...]
+      iex> list_property_types()
+      [%PropertyType{}, ...]
 
   """
-  def list_entities do
-    query = from(e in Entity, order_by: [asc: e.name])
-    query
-    |> Repo.all
-    |> Repo.preload([:service])
+  def list_property_types do
+    Repo.all(PropertyType)
   end
 
   @doc """
-  Returns the list of entity_types.
+  Returns the list of event_types.
 
   ## Examples
 
-    iex> list_entity_types()
-    [%EntityType{}, ...]
+      iex> list_event_types()
+      [%EventType{}, ...]
 
   """
-  def list_entity_types do
-    EntityType
-    |> Repo.all()
+  def list_event_types do
+    Repo.all(EventType)
   end
 
-
   @doc """
-  Returns the list of messages.
+  Returns the list of action_types.
 
   ## Examples
 
-      iex> list_messages()
-      [%Message{}, ...]
+      iex> list_action_types()
+      [%ActionType{}, ...]
 
   """
-  def list_messages do
-    Repo.all(Message)
+  def list_action_types do
+    Repo.all(ActionType)
   end
-
-
-
-
-  @doc """
-  Gets a single Provider.
-
-  Raises `Ecto.NoResultsError` if the Provider does not exist.
-
-    ## Examples
-
-      iex> get_provider!(123)
-      %Provider{}
-
-      iex> get_provider!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-
-  def get_provider!(id) do
-    Provider
-    |> Repo.get!(id)
-    |> Repo.preload([:services])
-  end
-
-  @doc """
-  Gets a single Provider by its LORP name.
-
-  Raises `Ecto.NoResultsError` if the Provider does not exist.
-
-    ## Examples
-
-      iex> get_provider_by_lorp_name("lorp_name")
-      %Provider{}
-
-      iex> get_provider_lorp_name(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_provider_by_lorp_name(lorp_name) do
-    Provider
-    |> Repo.get_by(lorp_name: lorp_name)
-    |> Repo.preload([:services])
-  end
-
-
 
   @doc """
   Gets a single Service.
@@ -140,19 +81,26 @@ defmodule Core.ServiceManager do
   Raises `Ecto.NoResultsError` if the Service does not exist.
 
   ## Examples
-
   	iex> get_service!(123)
   	%Service{}
 
   	iex> get_service!(456)
   	** (Ecto.NoResultsError)
 
-  	"""
+  """
   def get_service!(id) do
     Service
     |> Repo.get!(id)
-    |> Repo.preload([:provider])
-    |> Repo.preload entities: from(e in Entity, order_by: e.name)
+    |> Repo.preload([
+      :provider,
+      :property_types,
+      :service_properties,
+      :action_types,
+      :service_actions,
+      :event_types,
+      :service_events
+      ])
+    |> Repo.preload(entities: from(e in Entity, order_by: e.name))
   end
 
   @doc """
@@ -168,117 +116,78 @@ defmodule Core.ServiceManager do
   	iex> get_service_by_name(456)
   	** (Ecto.NoResultsError)
 
-  	"""
+  """
   def get_service_by_name(name) do
     Service
     |> Repo.get_by(name: name)
-    |> Repo.preload([:provider, :entities])
-  end
-
-  	@doc """
-  	Gets a single Entity.
-
-  	Raises `Ecto.NoResultsError` if the Entity does not exist.
-
-  	## Examples
-
-      iex> get_entity!(123)
-      %Entity{}
-
-      iex> get_entity!(456)
-      ** (Ecto.NoResultsError)
-
-  	"""
-  def get_entity!(id) do
-    Entity
-    |> Repo.get!(id)
-    |> Repo.preload([:service])
+    |> Repo.preload([
+      :provider,
+      :entities,
+      :property_types,
+      :service_properties,
+      :action_types,
+      :service_actions,
+      :event_types,
+      :service_events
+      ])
   end
 
   @doc """
-  Get entity by uuid
-
-  ## Examples
-
+  Get a service property
   """
-  def get_entity_by_uuid(uuid) do
-  	Repo.get_by(Entity, uuid: uuid)
+  def get_service_property(service, property_name) do
+    service.property_types
+    |> Enum.find(fn v -> v.property.name == property_name end)
   end
 
-  @doc """
-  Gets a single entity_type.
+   @doc """
+  Gets a single event_type.
 
-  Raises `Ecto.NoResultsError` if the Entity type does not exist.
-
-  ## Examples
-
-    iex> get_entity_type!(123)
-    %EntityType{}
-
-    iex> get_entity_type!(456)
-    ** (Ecto.NoResultsError)
-
-  """
-  def get_entity_type!(id), do: Repo.get!(EntityType, id)
-
-
-
-
-  @doc """
-  Gets a single message.
-
-  Raises `Ecto.NoResultsError` if the Message does not exist.
+  Raises `Ecto.NoResultsError` if the Event type does not exist.
 
   ## Examples
 
-      iex> get_message!(123)
-      %Message{}
+      iex> get_event_type!(123)
+      %EventType{}
 
-      iex> get_message!(456)
+      iex> get_event_type!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_message!(id), do: Repo.get!(Message, id)
+  def get_event_type!(id), do: Repo.get!(EventType, id)
 
   @doc """
-  Creates a Provider.
+  Gets a single property_type.
+
+  Raises `Ecto.NoResultsError` if the Property type does not exist.
 
   ## Examples
 
-    iex> create_provider(%{field: value})
-    {:ok, %Provider{}}
+      iex> get_property_type!(123)
+      %PropertyType{}
 
-    iex> create_provider(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
+      iex> get_property_type!(456)
+      ** (Ecto.NoResultsError)
 
   """
-  def create_provider(attrs \\ %{}) do
-    %Provider{}
-    |> Provider.changeset(attrs)
-    |> Repo.insert()
-  end
+  def get_property_type!(id), do: Repo.get!(PropertyType, id)
 
   @doc """
-  Creates OR updates a Provider if none exists.
+  Gets a single action_type.
+
+  Raises `Ecto.NoResultsError` if the Action type does not exist.
 
   ## Examples
 
-    iex> create_or_update_provider(%{field: value})
-    {:ok, %Provider{}}
+      iex> get_action_type!(123)
+      %ActionType{}
 
-    iex> create_or_update_provider(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
+      iex> get_action_type!(456)
+      ** (Ecto.NoResultsError)
 
   """
-  def create_or_update_provider(target) do
-    result =
-  	case Repo.get_by(Provider, lorp_name: target.lorp_name) do
-      nil -> Provider.changeset(%Provider{}, target)
-      provider -> Provider.changeset(provider, target)
-  	end
-    result
-  	|> Repo.insert_or_update
-  end
+  def get_action_type!(id), do: Repo.get!(ActionType, id)
+
 
   @doc """
   Creates a Service.
@@ -298,108 +207,86 @@ defmodule Core.ServiceManager do
     |> Repo.insert()
   end
 
-  @doc """
-  Creates a Entity.
+    @doc """
+  Creates a action_type.
 
   ## Examples
 
-    iex> create_entity(%{field: value})
-    {:ok, %Entity{}}
+      iex> create_action_type(%{field: value})
+      {:ok, %ActionType{}}
 
-    iex> create_entity(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-  """
-  def create_entity(attrs \\ %{}) do
-    %Entity{}
-    |> Entity.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Creates or updates an Entity if none exists.
-
-  ## Examples
-
-    iex> create_or_update_entity(%{field: value})
-    {:ok, %Entity{}}
-
-    iex> create_or_update_entity(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-  """
-  def create_or_update_entity(target) do
-    result =
-  	case Repo.get_by(Entity, uuid: target.uuid) do
-  		nil -> Entity.changeset(%Entity{}, target)
-  		entity -> Entity.changeset(entity, target)
-  	end
-
-    result
-  	|> Repo.insert_or_update
-  end
-
-  @doc """
-  	Creates a entity_type.
-
-  ## Examples
-
-    iex> create_entity_type(%{field: value})
-    {:ok, %EntityType{}}
-
-    iex> create_entity_type(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-  """
-  def create_entity_type(attrs \\ %{}) do
-  	%EntityType{}
-  	|> EntityType.changeset(attrs)
-  	|> Repo.insert()
-  end
-
-
-  @doc """
-  Creates a message.
-
-  ## Examples
-
-      iex> create_message(%{field: value})
-      {:ok, %Message{}}
-
-      iex> create_message(%{field: bad_value})
+      iex> create_action_type(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_message(attrs \\ %{}) do
-    {:ok, message} =
-    %Message{}
-    |> Message.changeset(attrs)
+  def create_action_type(attrs \\ %{}) do
+    %ActionType{}
+    |> ActionType.changeset(attrs)
     |> Repo.insert()
-
-    if message do
-      IO.inspect message
-      EntityMessageChannel.broadcast_change(message)
-    end
-    {:ok, message}
   end
 
   @doc """
-  Updates a Provider.
+  Creates a property_type.
 
   ## Examples
 
-    iex> update_provider(Provider, %{field: new_value})
-    {:ok, %Provider{}}
+      iex> create_property_type(%{field: value})
+      {:ok, %PropertyType{}}
 
-    iex> update_provider(Provider, %{field: bad_value})
+      iex> create_property_type(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_property_type(attrs \\ %{}) do
+    %PropertyType{}
+    |> PropertyType.changeset(attrs)
+    |> Repo.insert()
+  end
+
+
+  @doc """
+  Creates a event_type.
+
+  ## Examples
+
+      iex> create_event_type(%{field: value})
+      {:ok, %EventType{}}
+
+      iex> create_event_type(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_event_type(attrs \\ %{}) do
+    %EventType{}
+    |> EventType.changeset(attrs)
+    |> Repo.insert()
+  end
+
+
+  @doc """
+  Creates OR updates a PropertyType if none exists.
+
+  ## Examples
+
+    iex> create_or_update_property_types(%{field: value})
+    {:ok, %PropertyType{}}
+
+    iex> create_or_update_property_types(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
   """
-  def update_provider(%Provider{} = provider, attrs) do
-    provider
-    |> Provider.changeset(attrs)
-    |> Repo.update()
+  def create_or_update_property_type(target) do
+    result =
+      case Repo.get_by(PropertyType, name: target.name) do
+        nil -> PropertyType.changeset(%PropertyType{}, target)
+        property_type -> PropertyType.changeset(property_type, target)
+      end
+
+    result
+    |> Repo.insert_or_update()
   end
+
+
 
 
   @doc """
@@ -418,95 +305,63 @@ defmodule Core.ServiceManager do
     service
     |> Service.changeset(attrs)
     |> Repo.update()
-    |> service_update_action()
   end
 
   @doc """
-  Updates a Entity.
+  Updates a property_type.
 
   ## Examples
 
-    iex> update_entity(Entity, %{field: new_value})
-    {:ok, %Entity{}}
+      iex> update_property_type(property_type, %{field: new_value})
+      {:ok, %PropertyType{}}
 
-    iex> update_entity(Entity, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-  """
-  def update_entity(%Entity{} = entity, attrs) do
-    entity
-    |> Entity.changeset(attrs)
-    |> Repo.update()
-  end
-
-  def update_entity_state(%Entity{} = entity, attrs) do
-    old_state =
-    if entity.state do
-      entity.state
-    else
-      %{}
-    end
-
-    new_state = attrs["state"]
-    updated_state = %{state: Map.merge(old_state, new_state)}
-
-    entity
-    |> Entity.changeset(updated_state)
-    |> Repo.update()
-  end
-
-  @doc """
-  Updates a entity_type.
-
-    ## Examples
-
-        iex> update_entity_type(entity_type, %{field: new_value})
-        {:ok, %EntityType{}}
-
-        iex> update_entity_type(entity_type, %{field: bad_value})
-        {:error, %Ecto.Changeset{}}
-
-   """
-  def update_entity_type(%EntityType{} = entity_type, attrs) do
-  	entity_type
-  	|> EntityType.changeset(attrs)
-  	|> Repo.update()
-  end
-
-  @doc """
-  Updates a message.
-
-  ## Examples
-
-      iex> update_message(message, %{field: new_value})
-      {:ok, %Message{}}
-
-      iex> update_message(message, %{field: bad_value})
+      iex> update_property_type(property_type, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_message(%Message{} = message, attrs) do
-    message
-    |> Message.changeset(attrs)
+  def update_property_type(%PropertyType{} = property_type, attrs) do
+    property_type
+    |> PropertyType.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Deletes a Provider.
+  Updates an action_type.
 
   ## Examples
 
-    iex> delete_provider(Provider)
-    {:ok, %Provider{}}
+      iex> update_action_type(action_type, %{field: new_value})
+      {:ok, %PropertyType{}}
 
-    iex> delete_provider(Provider)
-    {:error, %Ecto.Changeset{}}
+      iex> update_action_type(action_type, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
 
   """
-  def delete_provider(%Provider{} = provider) do
-    provider
-    |> Repo.delete()
+  def update_action_type(%ActionType{} = action_type, attrs) do
+    action_type
+    |> ActionType.changeset(attrs)
+    |> Repo.update()
   end
+
+  @doc """
+  Updates a event_type.
+
+  ## Examples
+
+      iex> update_event_type(event_type, %{field: new_value})
+      {:ok, %EventType{}}
+
+      iex> update_event_type(event_type, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_event_type(%EventType{} = event_type, attrs) do
+    event_type
+    |> EventType.changeset(attrs)
+    |> Repo.update()
+  end
+
+
 
   @doc """
   Deletes a Service.
@@ -523,71 +378,54 @@ defmodule Core.ServiceManager do
   def delete_service(%Service{} = service) do
     service
     |> Repo.delete()
-    |> service_delete_action()
   end
 
   @doc """
-  Deletes a Entity.
+  Deletes a ActionType.
 
   ## Examples
 
-    iex> delete_entity(Entity)
-    {:ok, %Entity{}}
+      iex> delete_action_type(action_type)
+      {:ok, %ActionType{}}
 
-    iex> delete_entity(Entity)
-    {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_entity(%Entity{} = entity) do
-    entity
-    |> Repo.delete()
-
-  end
-
-    @doc """
-    Deletes a EntityType.
-
-    ## Examples
-
-        iex> delete_entity_type(entity_type)
-        {:ok, %EntityType{}}
-
-        iex> delete_entity_type(entity_type)
-        {:error, %Ecto.Changeset{}}
-
-    """
-  def delete_entity_type(%EntityType{} = entity_type) do
-    entity_type
-    |> Repo.delete()
-  end
-
-  @doc """
-  Deletes a Message.
-
-  ## Examples
-
-      iex> delete_message(message)
-      {:ok, %Message{}}
-
-      iex> delete_message(message)
+      iex> delete_action_type(action_type)
       {:error, %Ecto.Changeset{}}
 
   """
-  def delete_message(%Message{} = message) do
-    Repo.delete(message)
+  def delete_action_type(%ActionType{} = action_type) do
+    Repo.delete(action_type)
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking Provider changes.
+  Deletes a PropertyType.
 
   ## Examples
 
-    iex> change_provider(Provider)
-    %Ecto.Changeset{source: %Provider{}}
+      iex> delete_property_type(property_type)
+      {:ok, %PropertyType{}}
+
+      iex> delete_property_type(property_type)
+      {:error, %Ecto.Changeset{}}
 
   """
-  def change_provider(%Provider{} = provider) do
-    Provider.changeset(provider, %{})
+  def delete_property_type(%PropertyType{} = property_type) do
+    Repo.delete(property_type)
+  end
+
+  @doc """
+  Deletes a EventType.
+
+  ## Examples
+
+      iex> delete_event_type(event_type)
+      {:ok, %EventType{}}
+
+      iex> delete_event_type(event_type)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_event_type(%EventType{} = event_type) do
+    Repo.delete(event_type)
   end
 
 
@@ -604,46 +442,80 @@ defmodule Core.ServiceManager do
     Service.changeset(service, %{})
   end
 
+
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking Entity changes.
+  Returns an `%Ecto.Changeset{}` for tracking event_type changes.
 
   ## Examples
 
-    iex> change_entity(Entity)
-    %Ecto.Changeset{source: %Entity}}
+      iex> change_event_type(event_type)
+      %Ecto.Changeset{source: %EventType{}}
 
   """
-  def change_entity(%Entity{} = entity) do
-    Entity.changeset(entity, %{})
+  def change_event_type(%EventType{} = event_type) do
+    EventType.changeset(event_type, %{})
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking entity_type changes.
+  Returns an `%Ecto.Changeset{}` for tracking property_type changes.
 
   ## Examples
 
-    iex> change_entity_type(entity_type)
-    %Ecto.Changeset{source: %EntityType{}}
+      iex> change_property_type(property_type)
+      %Ecto.Changeset{source: %PropertyType{}}
 
   """
-  def change_entity_type(%EntityType{} = entity_type) do
-  	EntityType.changeset(entity_type, %{})
+  def change_property_type(%PropertyType{} = property_type) do
+    PropertyType.changeset(property_type, %{})
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking message changes.
+  Returns an `%Ecto.Changeset{}` for tracking action_type changes.
 
   ## Examples
 
-      iex> change_message(message)
-      %Ecto.Changeset{source: %Message{}}
+      iex> change_action_type(action_type)
+      %Ecto.Changeset{source: %ActionType{}}
 
   """
-  def change_message(%Message{} = message) do
-    Message.changeset(message, %{})
+  def change_action_type(%ActionType{} = action_type) do
+    ActionType.changeset(action_type, %{})
   end
+
 
   # Command and Control
+
+  @doc """
+  Get an entity property state
+  """
+  def get_service_property_state(_service, property_id) do
+    result =
+      PropertyType
+      |> Repo.get(property_id)
+
+    if result do
+      result.state
+    else
+      %{}
+    end
+  end
+
+
+  @doc """
+  Set an entitiy property state
+  """
+  def set_service_property_state(_service, property_id, value) do
+    result =
+      PropertyType
+      |> Repo.get(property_id)
+
+    if result do
+      state = %{"value" => value}
+      update_property_type(result, %{state: state})
+    else
+      %{}
+    end
+  end
 
   @doc """
   Init a remote service
@@ -670,48 +542,10 @@ defmodule Core.ServiceManager do
   end
 
   @doc """
-  Send a command
-  """
-  def send_command(service, entity_id, command, secondary_command) do
-     entity = get_entity!(entity_id)
-     backend = Module.concat(service.provider.lorp_name, Server)
-     backend.send_command(service, entity, command, secondary_command)
-  end
-
-  @doc """
   Remove a service
   """
   def remove_service(service) do
     backend = Module.concat(service.provider.lorp_name, Server)
     backend.clear_state()
   end
-
-  defp service_create_action(service) do
-
-    {:ok, serv} = service
-    target = serv |> Repo.preload([:provider])
-    backend = Module.concat(target.provider.configuration["service_name"], Server)
-    backend.service_installed()
-    service
-  end
-
-  defp service_delete_action(service) do
-    {:ok, serv} = service
-    backend = Module.concat(serv.provider.configuration["service_name"], Server)
-    backend.service_removed()
-    service
-  end
-
-  defp service_update_action(service) do
-    {:ok, serv} = service
-    backend = Module.concat(serv.provider.configuration["service_name"], Server)
-    backend.service_updated()
-    service
-  end
-
-
-
-
-
-
 end

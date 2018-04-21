@@ -1,0 +1,13 @@
+{application,entity_type_org,
+             [{applications,[kernel,stdlib,elixir,logger,core]},
+              {description,"entity_type_org"},
+              {modules,['Elixir.EntityTypeOrg',
+                        'Elixir.EntityTypeOrg.Application',
+                        'Elixir.EntityTypeOrg.DefaultType',
+                        'Elixir.EntityTypeOrg.ExternalDoor',
+                        'Elixir.EntityTypeOrg.InteriorDoor',
+                        'Elixir.EntityTypeOrg.Server']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {extra_applications,[logger]},
+              {mod,{'Elixir.EntityTypeOrg.Application',[]}}]}.

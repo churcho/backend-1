@@ -6,8 +6,8 @@ defmodule Starter do
   # Aliases for Core Service Manager
   # These will provide shortcuts to commonly used modules.
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
 
 
   @doc """
@@ -39,7 +39,7 @@ defmodule Starter do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(Starter.registration) do
+    with {:ok, %Provider{} = provider} <- ProviderManager.create_or_update_provider(Starter.registration) do
       Logger.info fn ->
         "Provider Registered as #{provider.lorp_name}"
       end

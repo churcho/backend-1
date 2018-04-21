@@ -5,7 +5,7 @@ defmodule Huebris.Poller do
 
   alias Core.EventManager
   alias CoreWeb.EventChannel
-  alias Core.ServiceManager
+  alias Core.EntityManager
   alias Huebris.Client
   @doc """
   Poll a bridge entity for changes
@@ -19,7 +19,7 @@ defmodule Huebris.Poller do
 
       if state_match == false do
         IO.puts "states need a sync"
-        target = ServiceManager.get_entity_by_uuid(value["uniqueid"])
+        target = EntityManager.get_entity_by_uuid(value["uniqueid"])
         net_state = %{
          "level" => Client.get_brightness(value["state"]["bri"]),
          "switch" => Client.convert_bools(value["state"]["on"]),
@@ -47,7 +47,7 @@ defmodule Huebris.Poller do
   	end
 
   	if new_state != nil do
-  		ServiceManager.update_entity(target, new_state)
+  		EntityManager.update_entity(target, new_state)
   	end
 
   end

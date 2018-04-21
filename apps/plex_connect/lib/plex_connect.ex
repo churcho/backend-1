@@ -4,8 +4,8 @@ defmodule PlexConnect do
   """
 
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
 
 
   @doc """
@@ -25,11 +25,11 @@ defmodule PlexConnect do
         required_fields: ["host", "port"]
       },
       metadata: %{
-        
+
       },
-      provides: %{
-        services: ["Movies", "TV Shows"]
-      }
+      provides: [
+        %{service: "movie_playback"}
+      ]
     }
   end
 
@@ -37,7 +37,7 @@ defmodule PlexConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(PlexConnect.registration) do
+    with {:ok, %Provider{} = provider} <- ProviderManager.create_or_update_provider(PlexConnect.registration) do
       Logger.info fn ->
         "Provider Registered as #{provider.lorp_name}"
       end

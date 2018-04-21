@@ -2,7 +2,7 @@ defmodule Darko.Importer do
   @moduledoc """
   Importer Module
   """
-  alias Core.ServiceManager
+  alias Core.EntityManager
   alias Core.LocationManager
 
   def update(service) do
@@ -31,6 +31,6 @@ defmodule Darko.Importer do
   end
 
   def import_entity(target) do
-      ServiceManager.create_or_update_entity(target)
+      EntityManager.create_or_update_entity(target)
   end
 end

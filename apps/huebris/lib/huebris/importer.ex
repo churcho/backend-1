@@ -3,7 +3,7 @@ defmodule Huebris.Importer do
   Manages import of Hue devices.
   """
   require Logger
-  alias Core.ServiceManager
+  alias Core.EntityManager
   alias Huebris.Client
   @doc """
   Update funcntion takes a services and builds a service import object
@@ -45,7 +45,7 @@ defmodule Huebris.Importer do
   Imports the service entity created by the update function
   """
   def import_entity(target) do
-     ServiceManager.create_or_update_entity(target)
+     EntityManager.create_or_update_entity(target)
       Logger.info fn ->
         "Entity imported by hue"
       end

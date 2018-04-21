@@ -4,9 +4,8 @@ defmodule CouchPotatoConnect do
   """
 
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
-
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
 
   @doc """
   Basic Registration Information
@@ -24,9 +23,10 @@ defmodule CouchPotatoConnect do
         service_name: "CouchPotatoConnect",
         required_fields: ["host", "port"]
       },
-      provides: %{
-        services: ["Movies", "TV Shows"]
-      }
+      provides: [
+        %{name: "movies"},
+        %{name: "tv_shows"}
+      ]
     }
   end
 
@@ -34,13 +34,13 @@ defmodule CouchPotatoConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(CouchPotatoConnect.registration) do
-      Logger.info fn ->
+    with {:ok, %Provider{} = provider} <-
+           ProviderManager.create_or_update_provider(CouchPotatoConnect.registration()) do
+      Logger.info(fn ->
         "Provider Registered as #{provider.lorp_name}"
-      end
+      end)
+
       provider
     end
   end
-
-
 end

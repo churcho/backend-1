@@ -4,8 +4,8 @@ defmodule SabnzbdConnect do
   """
 
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
 
 
   @doc """
@@ -24,9 +24,9 @@ defmodule SabnzbdConnect do
         service_name: "Sabnzbd",
         required_fields: ["host", "port"]
       },
-      provides: %{
-        services: ["NZB"]
-      }
+      provides: [
+        %{service: "nzb_downloaderx"}
+      ]
     }
   end
 
@@ -34,7 +34,7 @@ defmodule SabnzbdConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(SabnzbdConnect.registration) do
+    with {:ok, %Provider{} = provider} <- ProviderManager.create_or_update_provider(SabnzbdConnect.registration) do
       Logger.info fn ->
         "Provider Registered as #{provider.lorp_name}"
       end

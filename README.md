@@ -1,4 +1,4 @@
-# Lorp Backend
+# Lorp Umbrella Backend
 
 Provides the backend services for a simple home automation platform. This software is experimental and not intended for production use.
 

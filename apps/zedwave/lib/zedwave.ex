@@ -6,8 +6,8 @@ defmodule Zedwave do
   # Aliases for Core Service Manager
   # These will provide shortcuts to commonly used modules.
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
   use HTTPoison.Base
 
   @doc """
@@ -22,15 +22,14 @@ defmodule Zedwave do
       lorp_name: "Zedwave",
       auth_method: "",
       max_services: 5,
+      enabled: true,
       version: "0.0.1",
+      allows_import: true,
       configuration: %{
         service_name: "Zedwave",
         service_atom: "zedwave",
         required_fields: ["host"],
         requires_authorization: false
-      },
-      provides: %{
-        services: ["zwave-control"]
       }
     }
   end
@@ -39,10 +38,12 @@ defmodule Zedwave do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(Zedwave.registration) do
-      Logger.info fn ->
+    with {:ok, %Provider{} = provider} <-
+           ProviderManager.create_or_update_provider(Zedwave.registration()) do
+      Logger.info(fn ->
         "Provider Registered as #{provider.lorp_name}"
-      end
+      end)
+
       provider
     end
   end

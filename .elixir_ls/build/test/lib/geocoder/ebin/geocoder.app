@@ -1,0 +1,10 @@
+{application,geocoder,
+             [{applications,[kernel,stdlib,elixir,logger,poison,httpoison,
+                             oauth2,core]},
+              {description,"geocoder"},
+              {modules,['Elixir.Geocoder','Elixir.Geocoder.Application',
+                        'Elixir.Geocoder.Server']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {extra_applications,[logger]},
+              {mod,{'Elixir.Geocoder.Application',[]}}]}.

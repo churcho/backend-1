@@ -30,7 +30,7 @@ defmodule Huebris.Auth do
   			"type" => "error",
   			"body" =>  bridge.error["description"]
   		}
-  		Core.Web.ServiceChannel.broadcast_service_message(payload, state.id)
+  		CoreWeb.ServiceChannel.broadcast_service_message(payload)
   		# While the loop recieves errors it will continue.
   		schedule_work(state)
   	end
@@ -56,7 +56,6 @@ defmodule Huebris.Auth do
   """
   def try_fetch(bridge, device) do
     bridge
-    |> Huex.connect()
-    |> Huex.authorize(device)
+    |> Exhue.connect(device)
   end
 end

@@ -5,19 +5,19 @@ defmodule Core.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :core,
-     version: "0.1.0",
-     build_path: "../../_build",
-     config_path: "../../config/config.exs",
-     deps_path: "../../deps",
-     lockfile: "../../mix.lock",
-     elixir: "~> 1.4",
-     elixirc_paths: elixirc_paths(Mix.env),
-     compilers: [:phoenix, :gettext] ++ Mix.compilers,
-     start_permanent: Mix.env == :prod,
-     test_coverage: [tool: Coverex.Task],
-     aliases: aliases(),
-     deps: deps()]
+    [
+      app: :core,
+      version: "0.1.0",
+      build_path: "../../_build",
+      config_path: "../../config/config.exs",
+      deps_path: "../../deps",
+      lockfile: "../../mix.lock",
+      elixir: "~> 1.6.1",
+      elixirc_paths: elixirc_paths(Mix.env),
+      start_permanent: Mix.env == :prod,
+      aliases: aliases(),
+      deps: deps()
+    ]
   end
 
   # Configuration for the OTP application.
@@ -36,22 +36,14 @@ defmodule Core.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.3", override: true},
-     {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.2"},
-     {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:phoenix_html, "~> 2.10"},
-     {:timex, "~> 3.1.13"},
-     {:timex_ecto, "~> 3.1.1"},
-     {:guardian, "~> 0.14.2"},
-     {:comeonin, "~> 3.0.2"},
-     {:postgrex, "~> 0.13.2"},
-     {:gettext, "~> 0.11"},
-     {:cors_plug, "~> 1.2.1"},
-     {:poison, "~> 3.0"},
-     {:httpoison, "~> 0.11.2"},
-     {:cowboy, "~> 1.1.2"},
-     {:distillery, "~> 1.0"}]
+    [
+     {:timex, "~> 3.2.1"},
+     {:timex_ecto, "~> 3.2.1"},
+     {:postgrex, "~> 0.13.0"},
+     {:ecto, "~> 2.2.8"},
+     {:poison, "~> 3.1"},
+     {:httpoison, "~> 1.0"},
+    ]
 
   end
 

@@ -66,26 +66,4 @@ defmodule Zedwave.Server do
   def poll() do
       # if your app supports polling, handle that here.
   end
-
-
-  def send_command(service, entity, command, secondary_command) do
-    IO.puts "EXECUTING ZEDWAVE COMMAND"
-    if entity.name == "ZW090 Z-Stick Gen5 US" do
-      IO.puts "CONTROLLER COMMAND"
-      Zedwave.Client.send_controller_command(service.host, command)
-    end
-
-    if entity.name == "ZW096 Smart Switch 6" do
-      IO.puts "NODE COMMAND"
-      Zedwave.Client.send_node_command(service.host, entity.uuid, command)
-    end
-
-
-  end
-
-
-  # handle all of your calls/casts here #
-
-
-
 end

@@ -26,15 +26,17 @@ defmodule Core.EventManager do
 
   def list_events_desc do
     query = from(e in Event, order_by: [desc: e.id], limit: 100)
+
     query
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:entity, :service])
   end
 
   def list_entity_events_desc(entity_id) do
     query = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
+
     query
-    |> Repo.all
+    |> Repo.all()
     |> Repo.preload([:entity, :service])
   end
 
@@ -72,7 +74,6 @@ defmodule Core.EventManager do
     |> Repo.insert()
   end
 
-
   @doc """
   Broadcast an event to the events channel
   """
@@ -81,9 +82,9 @@ defmodule Core.EventManager do
     event
     |> EventChannel.broadcast_change()
 
-    Logger.info fn ->
+    Logger.info(fn ->
       "Broadcasting event #{inspect(event)}"
-    end
+    end)
   end
 
   @doc """
@@ -137,32 +138,33 @@ defmodule Core.EventManager do
   Handle events
   """
   def handle_events(params) do
-    IO.puts "Parsing Event Params"
-    IO.inspect params
     if params["service_id"] do
       target =
-      Service
-      |> Repo.get(params["service_id"])
-      |> Repo.preload([:provider])
+        Service
+        |> Repo.get(params["service_id"])
+        |> Repo.preload([:provider])
 
       backend = Module.concat(target.provider.lorp_name, EventHandler)
-      Logger.info fn ->
-         "Handling events for #{target.provider.name}"
-      end
+
+      Logger.info(fn ->
+        "Handling events for #{target.provider.name}"
+      end)
+
       backend.parse(params)
     else
       target =
-      Service
-      |> Repo.get(params.service_id)
-      |> Repo.preload([:provider])
+        Service
+        |> Repo.get(params.service_id)
+        |> Repo.preload([:provider])
 
       backend = Module.concat(target.provider.lorp_name, EventHandler)
-      Logger.info fn ->
+
+      Logger.info(fn ->
         "Handling events for #{target.provider.name}"
-      end
+      end)
+
       backend.parse(params)
     end
-
   end
 
   @doc """

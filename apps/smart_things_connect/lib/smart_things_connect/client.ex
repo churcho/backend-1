@@ -4,13 +4,13 @@ defmodule SmartThingsConnect.Client do
   """
   alias SmartThingsConnect.Client
 
-  defstruct [
-    api_token: "",
-    base_url: "",
-    url: "",
-    format: "application/json", #Only Json for now
-    headers: [] #Headers for request
-  ]
+  defstruct api_token: "",
+            base_url: "",
+            url: "",
+            # Only Json for now
+            format: "application/json",
+            # Headers for request
+            headers: []
 
   @endpoints "https://graph.api.smartthings.com/api/smartapps/endpoints"
 
@@ -18,14 +18,15 @@ defmodule SmartThingsConnect.Client do
     %Client{
       url: @endpoints,
       api_token: token,
-      headers: [{"Accept", "application/json"}, {"Authorization", "Bearer "<>token}]
+      headers: [
+        {"Accept", "application/json"},
+        {"Authorization", "Bearer " <> token}
+      ]
     }
   end
 
   def get_endpoints(client) do
-    {:ok, resp}=HTTPoison.get(client.url, client.headers)
+    {:ok, resp} = HTTPoison.get(client.url, client.headers)
     Poison.decode!(resp.body)
   end
-
-
 end

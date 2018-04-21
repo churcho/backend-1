@@ -1,0 +1,11 @@
+{application,plex_connect,
+             [{applications,[kernel,stdlib,elixir,logger,core]},
+              {description,"plex_connect"},
+              {modules,['Elixir.PlexConnect','Elixir.PlexConnect.Application',
+                        'Elixir.PlexConnect.Client',
+                        'Elixir.PlexConnect.EventHandler',
+                        'Elixir.PlexConnect.Server']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {extra_applications,[logger]},
+              {mod,{'Elixir.PlexConnect.Application',[]}}]}.

@@ -1,0 +1,9 @@
+{application,starter,
+             [{applications,[kernel,stdlib,elixir,logger]},
+              {description,"starter"},
+              {modules,['Elixir.Starter','Elixir.Starter.Application',
+                        'Elixir.Starter.Server']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {extra_applications,[logger]},
+              {mod,{'Elixir.Starter.Application',[]}}]}.

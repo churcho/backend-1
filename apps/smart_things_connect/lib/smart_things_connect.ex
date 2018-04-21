@@ -1,12 +1,11 @@
 defmodule SmartThingsConnect do
   @moduledoc """
-  Documentation for Plex.
+  Documentation for SmartThings Connector.
   """
 
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
-
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
 
   @doc """
   Basic Registration Information
@@ -24,12 +23,10 @@ defmodule SmartThingsConnect do
         service_name: "",
         required_fields: ["host"]
       },
-      metadata: %{
-
-      },
-      provides: %{
-        services: ["lights", "sensors"]
-      }
+      metadata: %{},
+      provides: [
+        %{service: "smartthings"}
+      ]
     }
   end
 
@@ -37,12 +34,13 @@ defmodule SmartThingsConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(SmartThingsConnect.registration) do
-      Logger.info fn ->
+    with {:ok, %Provider{} = provider} <-
+           ProviderManager.create_or_update_provider(SmartThingsConnect.registration()) do
+      Logger.info(fn ->
         "Provider Registered as #{provider.lorp_name}"
-      end
+      end)
+
       provider
     end
   end
-
 end

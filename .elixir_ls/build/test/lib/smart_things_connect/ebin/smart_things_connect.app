@@ -1,0 +1,11 @@
+{application,smart_things_connect,
+             [{applications,[kernel,stdlib,elixir,logger]},
+              {description,"smart_things_connect"},
+              {modules,['Elixir.SmartThingsConnect',
+                        'Elixir.SmartThingsConnect.Application',
+                        'Elixir.SmartThingsConnect.Client',
+                        'Elixir.SmartThingsConnect.Server']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {extra_applications,[logger]},
+              {mod,{'Elixir.SmartThingsConnect.Application',[]}}]}.

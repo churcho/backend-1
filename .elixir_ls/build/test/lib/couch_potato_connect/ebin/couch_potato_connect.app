@@ -1,0 +1,11 @@
+{application,couch_potato_connect,
+             [{applications,[kernel,stdlib,elixir,logger,core]},
+              {description,"couch_potato_connect"},
+              {modules,['Elixir.CouchPotatoConnect',
+                        'Elixir.CouchPotatoConnect.Application',
+                        'Elixir.CouchPotatoConnect.EventHandler',
+                        'Elixir.CouchPotatoConnect.Server']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {extra_applications,[logger]},
+              {mod,{'Elixir.CouchPotatoConnect.Application',[]}}]}.

@@ -5,7 +5,6 @@ defmodule Core.AccountManager.User do
   alias Core.AccountManager.User
 
 
-  @derive {Poison.Encoder, only: [:id, :first_name, :last_name, :email]}
 
   schema "users" do
     field :first_name, :string
@@ -17,6 +16,7 @@ defmodule Core.AccountManager.User do
     field :enabled, :boolean
     field :encrypted_password, :string
     field :password, :string, virtual: true
+    field :password_confirmation, :string, virtual: true
 
     belongs_to :role, Core.AccountManager.Role
     has_many :settings, Core.AccountManager.Setting
@@ -30,11 +30,11 @@ defmodule Core.AccountManager.User do
     |> cast(attrs, [:role_id], [])
   end
 
-  @user_required_fields ~w(first_name last_name email password)
-  @user_optional_fields ~w(encrypted_password)
   def changeset(%User{} = user, attrs) do
+    IO.inspect user
     user
-    |> cast(attrs, @user_required_fields, @user_optional_fields)
+    |> cast(attrs, [:first_name, :last_name, :email, :password, :password_confirmation])
+    |> validate_required([:first_name, :last_name, :email, :password, :password_confirmation])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 5)
     |> validate_confirmation(:password, message: "Password does not match")

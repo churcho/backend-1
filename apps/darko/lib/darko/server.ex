@@ -4,31 +4,39 @@ defmodule Darko.Server do
   """
   require Logger
   use GenServer
-  alias Core.ServiceManager
+  alias Core.{ProviderManager, Repo}
+  alias Darko.{Server, Scheduler, Poller}
 
   @doc """
     Starts the server
   """
-  def start_link() do
-     GenServer.start_link(__MODULE__, %{services: %{}, stations: %{}}, name: __MODULE__)
+  def start_link do
+    GenServer.start_link(
+      __MODULE__,
+      %{
+        services: %{},
+        stations: %{}
+      },
+      name: __MODULE__
+    )
   end
 
   @doc """
   Initialize the Server
   """
   def init(state) do
-    Darko.register_provider
-    Darko.Server.build_state()
-    Darko.Scheduler.start_link
-  	{:ok, state}
+    Darko.register_provider()
+    Server.build_state()
+    Scheduler.start_link()
+    {:ok, state}
   end
 
-  #Server Callbacks for Service Life Cycle
+  # Server Callbacks for Service Life Cycle
 
   @doc """
   Callback on install
   """
-  def service_installed() do
+  def service_installed do
     # Do something on install
     build_state()
   end
@@ -36,7 +44,7 @@ defmodule Darko.Server do
   @doc """
   Callback on update
   """
-  def service_updated() do
+  def service_updated do
     # Do something on update
     build_state()
   end
@@ -44,7 +52,7 @@ defmodule Darko.Server do
   @doc """
   Callback on service removal
   """
-  def service_removed() do
+  def service_removed do
     # Do something on remove
     clear_state()
   end
@@ -59,7 +67,7 @@ defmodule Darko.Server do
   @doc """
   Fetches the services from state
   """
-  def fetch_services() do
+  def fetch_services do
     GenServer.call(__MODULE__, :fetch_services)
   end
 
@@ -73,54 +81,55 @@ defmodule Darko.Server do
   @doc """
   Fetches the station from state
   """
-  def fetch_stations() do
+  def fetch_stations do
     GenServer.call(__MODULE__, :fetch_stations)
   end
 
   @doc """
   Build the state
   """
-  def build_state() do
+  def build_state do
     services = find_enabled_services()
+
     if services do
       for service <- services do
         target =
-        service
-        |> Core.Repo.preload(:entities)
+          service
+          |> Repo.preload(:entities)
 
         load_target =
-        target.name
-        |> String.downcase
-        |> String.to_atom
+          target.name
+          |> String.downcase()
+          |> String.to_atom()
 
         new_service_map = %{load_target => target}
 
-        Darko.Server.load_services(new_service_map)
-        Darko.Server.load_stations(target.entities)
+        Server.load_services(new_service_map)
+        Server.load_stations(target.entities)
       end
     end
   end
 
-  def clear_state() do
-    Darko.Server.load_services(%{})
-    Darko.Server.load_stations(%{})
+  def clear_state do
+    Server.load_services(%{})
+    Server.load_stations(%{})
   end
 
-  def find_enabled_services() do
-    providers = ServiceManager.get_provider_by_lorp_name("Darko")
-
+  def find_enabled_services do
+    providers = ProviderManager.get_provider_by_lorp_name("Darko")
     providers.services
   end
 
-  def poll() do
-    stations = Darko.Server.fetch_stations()
+  def poll do
+    stations = Server.fetch_stations()
+
     for entity <- stations do
-      Darko.Poller.poll(entity)
+      Poller.poll(entity)
     end
   end
 
-  #GenServer Implementation
-  #handle calls/casts
+  # GenServer Implementation
+  # handle calls/casts
   def handle_call(:stop, _from, status) do
     {:stop, :normal, status}
   end
@@ -139,7 +148,6 @@ defmodule Darko.Server do
   end
 
   def handle_cast({:load_stations, loaded_stations}, state) do
-
     {:noreply, %{state | stations: loaded_stations}}
   end
 end

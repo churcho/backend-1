@@ -1,9 +1,8 @@
 defmodule Darko.Poller do
   require Logger
-  alias Core.ServiceManager
+  alias Core.EntityManager
   alias Core.EventManager
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Entity
+  alias Core.EntityManager.Entity
   alias CoreWeb.EventChannel
 
   @moduledoc """
@@ -40,7 +39,7 @@ defmodule Darko.Poller do
     }
 
 
-     target = ServiceManager.get_entity_by_uuid(entity.uuid)
+     target = EntityManager.get_entity_by_uuid(entity.uuid)
 
 
 
@@ -82,7 +81,7 @@ defmodule Darko.Poller do
     end
 
 
-    with {:ok, %Entity{} = entity} <- ServiceManager.update_entity(entity, new_state) do
+    with {:ok, %Entity{} = entity} <- EntityManager.update_entity(entity, new_state) do
       entity
     end
   end

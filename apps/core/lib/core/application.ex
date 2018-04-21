@@ -1,35 +1,20 @@
 defmodule Core.Application do
-  @moduledoc """
-  The root is on fire
+ @moduledoc """
+  The Wonka Application Service.
+
+  The wonka system business domain lives in this application.
+
+  Exposes API to clients such as the `WonkaWeb` application
+  for use in channels, controllers, and elsewhere.
   """
   use Application
 
-  # See http://elixir-lang.org/docs/stable/elixir/Application.html
-  # for more information on OTP Applications
   def start(_type, _args) do
-    import Supervisor.Spec
+    import Supervisor.Spec, warn: false
 
-    # Define workers and child supervisors to be supervised
-    children = [
-      # Start the Ecto repository
+    Supervisor.start_link([
       supervisor(Core.Repo, []),
-      # Start the endpoint when the application starts
-      supervisor(CoreWeb.Endpoint, []),
-      # Start your own worker by calling: Core.Worker.start_link(arg1, arg2, arg3)
-      # worker(Core.Worker, [arg1, arg2, arg3]),
-    ]
-
-    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
-    # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: Core.Supervisor]
-    Supervisor.start_link(children, opts)
-  end
-
-  # Tell Phoenix to update the endpoint configuration
-  # whenever the application is updated.
-  def config_change(changed, _new, removed) do
-    CoreWeb.Endpoint.config_change(changed, removed)
-    :ok
+    ], strategy: :one_for_one, name: Core.Supervisor)
   end
 
 end

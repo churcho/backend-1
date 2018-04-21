@@ -8,38 +8,34 @@ defmodule SmartThingsConnect.Server do
   @doc """
   Starts the server
   """
-  def start_link() do
-  	 GenServer.start_link(__MODULE__, {})
+  def start_link do
+    GenServer.start_link(__MODULE__, {})
   end
-
 
   def init(state) do
-  	SmartThingsConnect.register_provider
-  	{:ok, state}
+    SmartThingsConnect.register_provider()
+    {:ok, state}
   end
 
-  #Server Callbacks for Service Life Cycle
+  # Server Callbacks for Service Life Cycle
 
   @doc """
   Callback on install
   """
-  def service_installed() do
-
+  def service_installed do
   end
 
   @doc """
   Callback on update
   """
-  def service_updated() do
+  def service_updated do
     # Do something on update
-
   end
 
   @doc """
   Callback on service removal
   """
-  def service_removed() do
+  def service_removed do
     # Do something on remove
-
   end
 end

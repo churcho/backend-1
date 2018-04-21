@@ -1,8 +1,8 @@
 defmodule SonarrConnect do
 
   require Logger
-  alias Core.ServiceManager
-  alias Core.ServiceManager.Provider
+  alias Core.ProviderManager
+  alias Core.ProviderManager.Provider
   @moduledoc """
   Documentation for Sonarr.
   """
@@ -23,9 +23,9 @@ defmodule SonarrConnect do
         service_name: "SonarrConnect",
         required_fields: ["host", "port"]
       },
-      provides: %{
-        services: ["TV"]
-      }
+      provides: [
+        %{service: "tv_show_management"}
+      ]
     }
   end
 
@@ -33,7 +33,7 @@ defmodule SonarrConnect do
   Register the provider
   """
   def register_provider do
-    with {:ok, %Provider{} = provider} <- ServiceManager.create_or_update_provider(SonarrConnect.registration) do
+    with {:ok, %Provider{} = provider} <- ProviderManager.create_or_update_provider(SonarrConnect.registration) do
       Logger.info fn ->
         "Provider Registered as #{provider.lorp_name}"
       end

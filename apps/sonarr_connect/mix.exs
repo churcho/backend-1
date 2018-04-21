@@ -37,9 +37,11 @@ defmodule SonarrConnect.Mixfile do
   #
   # Type "mix help deps" for more examples and options
   defp deps do
-    [{:core, in_umbrella: true},
-     {:oauth2, "~> 0.7"},
-     {:httpoison, "~> 0.11.0"},
-     {:poison, "~> 3.0"}]
+    [
+      {:core, in_umbrella: true},
+      {:poison, "~> 3.1"},
+      {:httpoison, "~> 1.0"},
+      {:oauth2, "~> 0.7"},
+    ]
   end
 end
