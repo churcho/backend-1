@@ -10,38 +10,25 @@ defmodule PropertyOrg.IlluminanceSensor do
       name: "illuminance_sensor",
       description: "A sensor that measures illuminance",
       type: "range",
-      readOnly: false
-    }
-  end
-
-  def unit_description do
-    %{
-      name: "lux",
-      symbols: [
-        "lux"
-      ],
-      description: "Illumation value in measured in lux"
-    }
-  end
-
-  def value_description do
-    %{
-      type: "range",
-      min: 0,
-      max: 100_000
+      readOnly: false,
+      value: %{
+        min: 0,
+        max: 100_000
+       },
+       unit: %{
+         name: "Illuminance",
+         symbols: [
+           "lux"
+         ]
+       }
     }
   end
 
   @doc """
-  Register the provider
+  Register the property
   """
-
-
   def register_property do
     registration_info = IlluminanceSensor.registration()
-    unit_description = IlluminanceSensor.unit_description()
-    value_description = IlluminanceSensor.value_description()
-
-    PropertyOrg.create_registration(registration_info, unit_description, value_description)
+    PropertyOrg.create_registration(registration_info)
   end
 end

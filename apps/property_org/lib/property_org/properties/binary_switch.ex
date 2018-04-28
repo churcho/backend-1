@@ -10,42 +10,21 @@ defmodule PropertyOrg.BinarySwitch do
       name: "binary_switch",
       description: "A swtich that has two states: On or Off",
       type: "boolean",
-      readOnly: false
+      readOnly: false,
+      value: %{
+        enum_type: [
+          true,
+          false
+        ]
+      }
     }
   end
 
   @doc """
-  Register the provider
+  Register the property
   """
-  def unit_description do
-    %{
-      name: "none",
-      symbols: [
-      ],
-      description: "none"
-    }
-  end
-
-  def value_description do
-    %{
-      type: "bool",
-      values: [
-        true,
-        false
-      ]
-    }
-  end
-
-  @doc """
-  Register the provider
-  """
-
-
   def register_property do
     registration_info = BinarySwitch.registration()
-    unit_description = BinarySwitch.unit_description()
-    value_description = BinarySwitch.value_description()
-
-    PropertyOrg.create_registration(registration_info, unit_description, value_description)
+    PropertyOrg.create_registration(registration_info)
   end
 end

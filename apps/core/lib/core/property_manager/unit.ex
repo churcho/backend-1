@@ -1,24 +1,17 @@
 defmodule Core.PropertyManager.Unit do
-  @moduledoc false
+  @moduledoc """
+  Schema for Boolean Values
+  """
   use Ecto.Schema
-  import Ecto.Changeset
-  alias Core.PropertyManager.Property
 
-
-  schema "units" do
-    field :symbol, :string
-    field :description, :string
+  # embedded_schema is short for:
+  #
+  #   @primary_key {:id, :binary_id, autogenerate: true}
+  #   schema "embedded Item" do
+  #
+  embedded_schema do
     field :name, :string
     field :symbols, {:array, :string}
-    belongs_to :property, Property
-
-    timestamps()
-  end
-
-  @doc false
-  def changeset(unit, attrs) do
-    unit
-    |> cast(attrs, [:property_id, :name, :description, :symbol, :symbols])
-    |> validate_required([:name, :description])
+    field :description, :string
   end
 end

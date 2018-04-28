@@ -16,7 +16,7 @@ defmodule CoreWeb.Schema do
     field :properties, list_of(:property) do
       arg :type, :string
       arg :order, :string
-      resolve &Resolvers.Properties.filter_properties/3
+      resolve &Resolvers.Properties.list_properties/3
     end
 
     @desc "Get a property by id"

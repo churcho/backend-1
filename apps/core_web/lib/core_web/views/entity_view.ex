@@ -3,6 +3,7 @@ defmodule CoreWeb.EntityView do
 
   alias CoreWeb.EntityTypeView
   alias CoreWeb.ServiceView
+  alias Core.Repo
 
   def render("index.json", %{entities: entities}) do
     %{
@@ -123,7 +124,7 @@ defmodule CoreWeb.EntityView do
         entity_type: render_one(entity.entity_type, EntityTypeView, "entity_type.json"),
         service:
           render_one(
-            entity.service |> Core.Repo.preload([
+            entity.service |> Repo.preload([
               :provider,
               :property_types,
               :action_types,

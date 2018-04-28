@@ -5,8 +5,7 @@ defmodule Core.LocationManager.Location do
   alias Core.LocationManager.Location
   alias Core.LocationManager.LocationType
   alias Core.ZoneManager.Zone
-  alias Core.ServiceManager
-  alias Core.Geocoder
+  alias Core.LocationManager.PropertyType
 
   schema "locations" do
     field(:name, :string)
@@ -21,6 +20,17 @@ defmodule Core.LocationManager.Location do
     field(:longitude, :float)
     field(:state, :map)
     field(:metadata, :map)
+
+    has_many(
+      :property_types,
+      PropertyType,
+      on_delete: :delete_all
+    )
+
+    has_many(
+      :location_properties,
+      through: [:property_types, :property]
+    )
 
     belongs_to(:location_type, LocationType)
     has_many(:zones, Zone)
@@ -43,33 +53,5 @@ defmodule Core.LocationManager.Location do
       :metadata
     ])
     |> validate_required([:name])
-    |> update_zip
-  end
-
-  defp update_zip(changeset) do
-    service = ServiceManager.get_service_by_name("Gecode")
-
-    location = %{
-      address_one: get_change(changeset, :address_one),
-      address_city: get_change(changeset, :address_city),
-      address_state: get_change(changeset, :address_state),
-      address_zip: get_change(changeset, :address_zip)
-    }
-
-    if service != nil do
-      address = Geocoder.compose_address(location)
-
-      if address != nil do
-        coords = Geocoder.get_coords(address, service.api_key)
-
-        changeset
-        |> put_change(:latitude, coords.lat)
-        |> put_change(:longitude, coords.lng)
-      else
-        changeset
-      end
-    else
-      changeset
-    end
   end
 end

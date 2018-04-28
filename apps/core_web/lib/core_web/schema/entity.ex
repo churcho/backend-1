@@ -5,7 +5,6 @@ defmodule CoreWeb.Schema.Entity do
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Core.Repo
 
-
   @desc "An Entity"
   object :entity do
     field :id, :id

@@ -6,287 +6,178 @@ defmodule Core.PropertyManager do
   import Ecto.Query, warn: false
   alias Core.Repo
 
-  alias Core.PropertyManager.Property
-  alias Core.PropertyManager.RangeValue
-  alias Core.PropertyManager.Unit
-  alias Core.PropertyManager.BoolValue
+  alias Core.PropertyManager.BooleanProperty
+  alias Core.PropertyManager.RangeProperty
+
 
   @doc """
-  Returns the list of properties.
+  Returns the list of all properties.
 
   ## Examples
 
       iex> list_properties()
-      [%Property{}, ...]
+      [%BooleanProperty{}, ...]
 
   """
   def list_properties do
-    Repo.all(Property)
-    |> Repo.preload([:range_value, :bool_value, :unit])
+    bools = Repo.all(BooleanProperty)
+    ranges = Repo.all(RangeProperty)
+
+    properties =
+    bools ++ ranges
+
+    properties
   end
 
   @doc """
-  Returns the list of range_values.
+  Returns the list of boolean properties.
 
   ## Examples
 
-      iex> list_range_values()
-      [%RangeValue{}, ...]
+      iex> list_boolean_properties()
+      [%BooleanProperty{}, ...]
 
   """
-  def list_range_values do
-    Repo.all(RangeValue)
+  def list_boolean_properties do
+    Repo.all(BooleanProperty)
   end
 
   @doc """
-  Returns the list of bool_values.
+  Returns the list of range properties.
 
   ## Examples
 
-      iex> list_bool_values()
-      [%BoolValue{}, ...]
+      iex> list_range_properties()
+      [%RangeProperty{}, ...]
 
   """
-  def list_bool_values do
-    Repo.all(BoolValue)
+  def list_range_properties do
+    Repo.all(RangeProperty)
   end
 
   @doc """
-  Returns the list of units.
+  Gets a single BooleanProperty.
+
+  Raises `Ecto.NoResultsError` if the BooleanProperty does not exist.
 
   ## Examples
 
-      iex> list_units()
-      [%Unit{}, ...]
+      iex> get_boolean_property!(123)
+      %BooleanProperty{}
 
-  """
-  def list_units do
-    Repo.all(Unit)
-  end
-
-  @doc """
-  Gets a single property.
-
-  Raises `Ecto.NoResultsError` if the Property does not exist.
-
-  ## Examples
-
-      iex> get_property!(123)
-      %Property{}
-
-      iex> get_property!(456)
+      iex> get_boolean_property!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_property!(id), do: Repo.get!(Property, id) |> Repo.preload([:range_value, :bool_value, :unit])
+  def get_boolean_property!(id), do: Repo.get!(BooleanProperty, id)
 
   @doc """
-  Gets a single range_value.
+  Gets a single RangeProperty.
 
-  Raises `Ecto.NoResultsError` if the Range value does not exist.
+  Raises `Ecto.NoResultsError` if the RangeProperty does not exist.
 
   ## Examples
 
-      iex> get_range_value!(123)
-      %RangeValue{}
+      iex> get_range_property!(123)
+      %BooleanProperty{}
 
-      iex> get_range_value!(456)
+      iex> get_range_property!(456)
       ** (Ecto.NoResultsError)
 
   """
-  def get_range_value!(id), do: Repo.get!(RangeValue, id)
+  def get_range_property!(id), do: Repo.get!(RangeProperty, id)
 
   @doc """
-  Gets a single bool_value.
+  Gets a single BooleanProperty by its namne.
 
-  Raises `Ecto.NoResultsError` if the Bool value does not exist.
+  Raises `Ecto.NoResultsError` if the BooleanProperty does not exist.
 
   ## Examples
 
-      iex> get_bool_value!(123)
-      %BoolValue{}
+  	iex> get_boolean_property_by_name("howdy")
+  	%BooleanProperty{}
 
-      iex> get_bool_value!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_bool_value!(id), do: Repo.get!(BoolValue, id)
-
-
-  @doc """
-  Gets a single unit.
-
-  Raises `Ecto.NoResultsError` if the Unit does not exist.
-
-  ## Examples
-
-      iex> get_unit!(123)
-      %Unit{}
-
-      iex> get_unit!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_unit!(id), do: Repo.get!(Unit, id)
-
-  @doc """
-  Gets a single Service by its namne.
-
-  Raises `Ecto.NoResultsError` if the Service does not exist.
-
-  ## Examples
-
-  	iex> get_service_by_name("howdy")
-  	%Service{}
-
-  	iex> get_service_by_name(456)
+  	iex> get_boolean_property_by_name(456)
   	** (Ecto.NoResultsError)
-
   """
-  def get_property_by_name(name) do
-    Property
+  def get_boolean_property_by_name(name) do
+    BooleanProperty
     |> Repo.get_by(name: name)
-    |> Repo.preload([:range_value])
+    |> Repo.preload([:unit])
   end
-
-
-  def filter_properties(%{type: type, order: order}) do
-     new_order = String.to_atom(order) || :desc
-     Repo.all(
-        from p in Property,
-        where: p.type == ^type,
-        order_by: [{^new_order, p.name}],
-        select: p
-      )
-      |> Repo.preload([:range_value, :bool_value, :unit])
-  end
-
-  def filter_properties(%{order: order}) do
-    new_order = String.to_atom(order) || :desc
-    Repo.all(
-       from p in Property,
-       order_by: [{^new_order, p.name}],
-       select: p
-     )
-     |> Repo.preload([:range_value, :bool_value, :unit])
- end
-
-  def filter_properties(%{type: type}) do
-    Repo.all(
-       from p in Property,
-       where: p.type == ^type,
-       order_by: [{:desc, p.name}],
-       select: p
-     )
-     |> Repo.preload([:range_value, :bool_value, :unit])
- end
-
- def filter_properties(%{}) do
-  Repo.all(
-     from p in Property,
-     order_by: [{:desc, p.name}],
-     select: p
-   )
-   |> Repo.preload([:range_value, :bool_value, :unit])
-end
 
   @doc """
-  Creates a property.
+  Gets a single RangeProperty by its namne.
+
+  Raises `Ecto.NoResultsError` if the RangeProperty does not exist.
 
   ## Examples
 
-      iex> create_property(%{field: value})
-      {:ok, %Property{}}
+  	iex> get_range_property_by_name("howdy")
+  	%BooleanProperty{}
 
-      iex> create_property(%{field: bad_value})
+  	iex> get_range_property_by_name(456)
+  	** (Ecto.NoResultsError)
+  """
+  def get_range_property_by_name(name) do
+    RangeProperty
+    |> Repo.get_by(name: name)
+    |> Repo.preload([:unit])
+  end
+
+  @doc """
+  Creates a BooleanProperty.
+
+  ## Examples
+
+      iex> create_boolean_property(%{field: value})
+      {:ok, %BooleanProperty{}}
+
+      iex> create_boolean_property(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_property(attrs \\ %{}) do
-    %Property{}
-    |> Property.changeset(attrs)
+  def create_boolean_property(attrs \\ %{}) do
+    %BooleanProperty{}
+    |> BooleanProperty.changeset(attrs)
     |> Repo.insert()
   end
 
-  def preload_property_assoc(property) do
-    property
-    |> Repo.preload([:unit, :range_value, :bool_value])
-  end
-
   @doc """
-  Creates a range_value.
+  Creates a RangeProperty.
 
   ## Examples
 
-      iex> create_range_value(%{field: value})
-      {:ok, %RangeValue{}}
+      iex> create_range_property(%{field: value})
+      {:ok, %RangeProperty{}}
 
-      iex> create_range_value(%{field: bad_value})
+      iex> create_range_property(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_range_value(attrs \\ %{}) do
-    %RangeValue{}
-    |> RangeValue.changeset(attrs)
+  def create_range_property(attrs \\ %{}) do
+    %RangeProperty{}
+    |> RangeProperty.changeset(attrs)
     |> Repo.insert()
   end
 
-
   @doc """
-  Creates a bool_value.
+  Creates OR updates a BooleanProperty if none exists.
 
   ## Examples
 
-      iex> create_bool_value(%{field: value})
-      {:ok, %BoolValue{}}
-
-      iex> create_bool_value(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_bool_value(attrs \\ %{}) do
-    %BoolValue{}
-    |> BoolValue.changeset(attrs)
-    |> Repo.insert()
-  end
-
-
-  @doc """
-  Creates a unit.
-
-  ## Examples
-
-      iex> create_unit(%{field: value})
-      {:ok, %Unit{}}
-
-      iex> create_unit(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_unit(attrs \\ %{}) do
-    %Unit{}
-    |> Unit.changeset(attrs)
-    |> Repo.insert()
-
-  end
-
-  @doc """
-  Creates OR updates a Property if none exists.
-
-  ## Examples
-
-    iex> create_or_update_property(%{field: value})
+    iex> create_or_update_boolean_property(%{field: value})
     {:ok, %Provider{}}
 
-    iex> create_or_update_property(%{field: bad_value})
+    iex> create_or_update_boolean_property(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_unit(target) do
+  def create_or_update_boolean_property(target) do
     result =
-      case Repo.get_by(Unit, id: target.id) do
-        nil -> Unit.changeset(%Unit{}, target)
-        unit -> Unit.changeset(unit, target)
+      case Repo.get_by(BooleanProperty, name: target.name) do
+        nil -> BooleanProperty.changeset(%BooleanProperty{}, target)
+        boolean_property -> BooleanProperty.changeset(boolean_property, target)
       end
 
     result
@@ -294,22 +185,24 @@ end
   end
 
   @doc """
-  Creates OR updates a Property if none exists.
+  Creates OR updates a RangeProperty if none exists.
 
   ## Examples
 
-    iex> create_or_update_property(%{field: value})
+    iex> create_or_update_boolean_property(%{field: value})
     {:ok, %Provider{}}
 
-    iex> create_or_update_property(%{field: bad_value})
+    iex> create_or_update_boolean_property(%{field: bad_value})
     {:error, %Ecto.Changeset{}}
 
   """
-  def create_or_update_property(target) do
+  def create_or_update_range_property(target) do
+    IO.inspect target
+    IO.puts "debug"
     result =
-      case Repo.get_by(Property, name: target.name) do
-        nil -> Property.changeset(%Property{}, target)
-        property -> Property.changeset(property, target)
+      case Repo.get_by(RangeProperty, name: target.name) do
+        nil -> RangeProperty.changeset(%RangeProperty{}, target)
+        range_property -> RangeProperty.changeset(range_property, target)
       end
 
     result
@@ -317,196 +210,96 @@ end
   end
 
   @doc """
-  Updates a property.
+  Updates a BooleanProperty.
 
   ## Examples
 
-      iex> update_property(property, %{field: new_value})
-      {:ok, %Property{}}
+      iex> update_boolean_property(BooleanProperty, %{field: new_value})
+      {:ok, %BooleanProperty{}}
 
-      iex> update_property(property, %{field: bad_value})
+      iex> update_boolean_property(BooleanProperty, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_property(%Property{} = property, attrs) do
-    property
-    |> Property.changeset(attrs)
+  def update_boolean_property(%BooleanProperty{} = boolean_property, attrs) do
+    boolean_property
+    |> BooleanProperty.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Updates a range_value.
+  Updates a RangeProperty.
 
   ## Examples
 
-      iex> update_range_value(range_value, %{field: new_value})
-      {:ok, %RangeValue{}}
+      iex> updaterange_property(RangeProperty, %{field: new_value})
+      {:ok, %BooleanProperty{}}
 
-      iex> update_range_value(range_value, %{field: bad_value})
+      iex> updaterange_property(RangeProperty, %{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_range_value(%RangeValue{} = range_value, attrs) do
-    range_value
-    |> RangeValue.changeset(attrs)
+  def update_range_property(%RangeProperty{} = range_property, attrs) do
+  range_property
+    |> RangeProperty.changeset(attrs)
     |> Repo.update()
   end
 
   @doc """
-  Updates a bool_value.
+  Deletes a BooleanProperty.
 
   ## Examples
 
-      iex> update_bool_value(bool_value, %{field: new_value})
-      {:ok, %BoolValue{}}
+      iex> delete_boolean_property(BooleanProperty)
+      {:ok, %BooleanProperty{}}
 
-      iex> update_bool_value(bool_value, %{field: bad_value})
+      iex> delete_boolean_property(BooleanProperty)
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_bool_value(%BoolValue{} = bool_value, attrs) do
-    bool_value
-    |> BoolValue.changeset(attrs)
-    |> Repo.update()
+  def delete_boolean_property(%BooleanProperty{} = boolean_property) do
+    Repo.delete(boolean_property)
   end
 
   @doc """
-  Updates a unit.
+  Deletes a RangeProperty.
 
   ## Examples
 
-      iex> update_unit(unit, %{field: new_value})
-      {:ok, %Unit{}}
+      iex> delete_range_property(RangeProperty)
+      {:ok, %RangeProperty{}}
 
-      iex> update_unit(unit, %{field: bad_value})
+      iex> delete_range_property(RangeProperty)
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_unit(%Unit{} = unit, attrs) do
-    unit
-    |> Unit.changeset(attrs)
-    |> Repo.update()
-  end
-
-
-  @doc """
-  Deletes a Property.
-
-  ## Examples
-
-      iex> delete_property(property)
-      {:ok, %Property{}}
-
-      iex> delete_property(property)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_property(%Property{} = property) do
-    Repo.delete(property)
+  def delete_range_property(%RangeProperty{} = range_property) do
+    Repo.delete(range_property)
   end
 
   @doc """
-  Deletes a RangeValue.
+  Returns an `%Ecto.Changeset{}` for tracking BooleanProperty changes.
 
   ## Examples
 
-      iex> delete_range_value(range_value)
-      {:ok, %RangeValue{}}
-
-      iex> delete_range_value(range_value)
-      {:error, %Ecto.Changeset{}}
+      iex> change_boolean_property(BooleanProperty)
+      %Ecto.Changeset{source: %BooleanProperty{}}
 
   """
-  def delete_range_value(%RangeValue{} = range_value) do
-    Repo.delete(range_value)
+  def change_boolean_property(%BooleanProperty{} = boolean_property) do
+    BooleanProperty.changeset(boolean_property, %{})
   end
 
   @doc """
-  Deletes a BoolValue.
+  Returns an `%Ecto.Changeset{}` for tracking RangeProperty changes.
 
   ## Examples
 
-      iex> delete_bool_value(bool_value)
-      {:ok, %BoolValue{}}
-
-      iex> delete_bool_value(bool_value)
-      {:error, %Ecto.Changeset{}}
+      iex> change_range_property(RangeProperty)
+      %Ecto.Changeset{source: %RangeProperty{}}
 
   """
-  def delete_bool_value(%BoolValue{} = bool_value) do
-    Repo.delete(bool_value)
-  end
-
-
-
-  @doc """
-  Deletes a Unit.
-
-  ## Examples
-
-      iex> delete_unit(unit)
-      {:ok, %Unit{}}
-
-      iex> delete_unit(unit)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_unit(%Unit{} = unit) do
-    Repo.delete(unit)
-  end
-
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking property changes.
-
-  ## Examples
-
-      iex> change_property(property)
-      %Ecto.Changeset{source: %Property{}}
-
-  """
-  def change_property(%Property{} = property) do
-    Property.changeset(property, %{})
-  end
-
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking range_value changes.
-
-  ## Examples
-
-      iex> change_range_value(range_value)
-      %Ecto.Changeset{source: %RangeValue{}}
-
-  """
-  def change_range_value(%RangeValue{} = range_value) do
-    RangeValue.changeset(range_value, %{})
-  end
-
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking unit changes.
-
-  ## Examples
-
-      iex> change_unit(unit)
-      %Ecto.Changeset{source: %Unit{}}
-
-  """
-  def change_unit(%Unit{} = unit) do
-    Unit.changeset(unit, %{})
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking bool_value changes.
-
-  ## Examples
-
-      iex> change_bool_value(bool_value)
-      %Ecto.Changeset{source: %BoolValue{}}
-
-  """
-  def change_bool_value(%BoolValue{} = bool_value) do
-    BoolValue.changeset(bool_value, %{})
+  def change_range_property(%RangeProperty{} = range_property) do
+    RangeProperty.changeset(range_property, %{})
   end
 end

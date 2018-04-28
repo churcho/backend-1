@@ -6,7 +6,6 @@ defmodule Core.EventManager do
   import Ecto.{Query, Changeset}, warn: false
   alias Core.Repo
   alias Core.EventManager.Event
-  alias Core.ServiceManager.Service
   alias CoreWeb.EventChannel
 
   @doc """
@@ -21,7 +20,6 @@ defmodule Core.EventManager do
   def list_events do
     Event
     |> Repo.all()
-    |> Repo.preload([:entity, :service])
   end
 
   def list_events_desc do
@@ -29,15 +27,6 @@ defmodule Core.EventManager do
 
     query
     |> Repo.all()
-    |> Repo.preload([:entity, :service])
-  end
-
-  def list_entity_events_desc(entity_id) do
-    query = from(e in Event, where: [entity_id: ^entity_id], order_by: [desc: e.id], limit: 100)
-
-    query
-    |> Repo.all()
-    |> Repo.preload([:entity, :service])
   end
 
   @doc """
@@ -70,7 +59,7 @@ defmodule Core.EventManager do
   """
   def create_event(attrs \\ %{}) do
     %Event{}
-    |> Event.changeset(handle_events(attrs))
+    |> Event.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -101,7 +90,7 @@ defmodule Core.EventManager do
   """
   def update_event(%Event{} = event, attrs) do
     event
-    |> Event.changeset(handle_events(attrs))
+    |> Event.changeset(attrs)
     |> Repo.update()
   end
 
@@ -132,58 +121,6 @@ defmodule Core.EventManager do
   """
   def change_event(%Event{} = event) do
     Event.changeset(event, %{})
-  end
-
-  @doc """
-  Handle events
-  """
-  def handle_events(params) do
-    if params["service_id"] do
-      target =
-        Service
-        |> Repo.get(params["service_id"])
-        |> Repo.preload([:provider])
-
-      backend = Module.concat(target.provider.lorp_name, EventHandler)
-
-      Logger.info(fn ->
-        "Handling events for #{target.provider.name}"
-      end)
-
-      backend.parse(params)
-    else
-      target =
-        Service
-        |> Repo.get(params.service_id)
-        |> Repo.preload([:provider])
-
-      backend = Module.concat(target.provider.lorp_name, EventHandler)
-
-      Logger.info(fn ->
-        "Handling events for #{target.provider.name}"
-      end)
-
-      backend.parse(params)
-    end
-  end
-
-  @doc """
-  We will assemble the logo url using the event source field.
-  """
-  def logo_url(event) do
-    if event.source do
-      "/images/" <> event.source <> ".png"
-    else
-      "/images/generic.png"
-    end
-  end
-
-  def icon_url(event) do
-    if event.source do
-      "/images/" <> event.source <> "_icon.png"
-    else
-      "/images/generic_icon.png"
-    end
   end
 
   @doc """

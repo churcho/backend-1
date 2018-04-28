@@ -10,27 +10,19 @@ defmodule PropertyOrg.TemperatureSensor do
       name: "temperature_sensor",
       description: "A sensor that measures ambient temperature",
       type: "range",
-      readOnly: true
-    }
-  end
-
-  def unit_description do
-    %{
-      name: "temperature",
-      symbols: [
-        "F",
-        "C",
-        "K"
-      ],
-      description: "Temperature Standard"
-    }
-  end
-
-  def value_description do
-    %{
-      type: "range",
-      min: -1000,
-      max:  2000
+      readOnly: true,
+      value: %{
+        min: 0,
+        max: 100
+       },
+       unit: %{
+         name: "Temperature",
+         symbols: [
+           "F",
+           "C",
+           "K"
+         ]
+       }
     }
   end
 
@@ -38,12 +30,8 @@ defmodule PropertyOrg.TemperatureSensor do
   Register the provider
   """
 
-
   def register_property do
     registration_info = TemperatureSensor.registration()
-    unit_description = TemperatureSensor.unit_description()
-    value_description = TemperatureSensor.value_description()
-
-    PropertyOrg.create_registration(registration_info, unit_description, value_description)
+    PropertyOrg.create_registration(registration_info)
   end
 end

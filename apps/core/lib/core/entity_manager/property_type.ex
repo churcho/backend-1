@@ -3,7 +3,7 @@ defmodule Core.EntityManager.PropertyType do
   use Ecto.Schema
   import Ecto.Changeset
   alias Core.EntityManager.PropertyType
-  alias Core.PropertyManager.Property
+  alias Core.PropertyManager.BooleanProperty
   alias Core.EntityManager.Entity
 
   schema "property_types" do
@@ -11,7 +11,7 @@ defmodule Core.EntityManager.PropertyType do
     field(:label, :string)
     field(:name, :string)
     field(:enabled, :boolean)
-    belongs_to(:property, Property)
+    belongs_to(:boolean_property, BooleanProperty)
     belongs_to(:entity, Entity)
 
     timestamps()

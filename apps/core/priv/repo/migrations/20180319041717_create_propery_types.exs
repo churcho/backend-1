@@ -11,7 +11,7 @@ defmodule Core.Repo.Migrations.CreatePropertyTypes do
       add(:zone_id, references(:zones, on_delete: :nothing))
       add(:room_id, references(:rooms, on_delete: :nothing))
       add(:action_id, references(:actions, on_delete: :nothing))
-      add(:property_id, references(:properties, on_delete: :nothing))
+      add(:boolean_property_id, references(:boolean_properties, on_delete: :nothing))
       add(:label, :string)
       add(:name, :string)
       add(:enabled, :boolean)
@@ -25,6 +25,6 @@ defmodule Core.Repo.Migrations.CreatePropertyTypes do
     create(index(:property_types, [:location_id]))
     create(index(:property_types, [:zone_id]))
     create(index(:property_types, [:room_id]))
-    create(index(:property_types, [:property_id]))
+    create(index(:property_types, [:boolean_property_id]))
   end
 end

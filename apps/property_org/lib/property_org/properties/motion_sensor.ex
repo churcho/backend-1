@@ -10,42 +10,21 @@ defmodule PropertyOrg.MotionSensor do
       name: "motion_sensor",
       description: "A sensor that measures two states of a motion sensor",
       type: "boolean",
-      readOnly: true
+      readOnly: true,
+      value: %{
+        enum_type: [
+          true,
+          false
+        ]
+      }
     }
   end
 
   @doc """
   Register the provider
   """
-  def unit_description do
-    %{
-      name: "none",
-      symbols: [
-      ],
-      description: "none"
-    }
-  end
-
-  def value_description do
-    %{
-      type: "bool",
-      values: [
-        true,
-        false
-      ]
-    }
-  end
-
-  @doc """
-  Register the provider
-  """
-
-
   def register_property do
     registration_info = MotionSensor.registration()
-    unit_description = MotionSensor.unit_description()
-    value_description = MotionSensor.value_description()
-
-    PropertyOrg.create_registration(registration_info, unit_description, value_description)
+    PropertyOrg.create_registration(registration_info)
   end
 end

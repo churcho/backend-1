@@ -26,7 +26,7 @@ defmodule CoreWeb.Router do
         get("/events", EntityController, :get_entity_events, as: :event)
         post("/events", EntityController, :create_event, as: :event)
         get("/properties", EntityController, :get_entity_properties, as: :properties)
-        get("/properties/:property_id", EntityController, :show_entity_property, as: :properties )
+        get("/properties/:property_id", EntityController, :show_entity_property, as: :properties)
         put("/properties/:property_id", EntityController, :set_entity_property, as: :properties)
         get("/actions", EntityController, :get_entity_actions, as: :actions)
       end
@@ -40,11 +40,7 @@ defmodule CoreWeb.Router do
       # Route to actions
       resources("/actions", ActionController, except: [:new, :edit])
       # Route to properties
-      resources "/properties", PropertyController do
-        resources("/range_values", RangeValueController, except: [:new, :edit],  as: :range_value)
-        resources "/bool_values", BoolValueController, except: [:new, :edit]
-        resources("/units", UnitController, except: [:new, :edit],  as: :unit)
-      end
+      resources("/boolean_properties", BooleanPropertyController, except: [:new, :edit])
 
       # Route to services
       resources "/services", ServiceController do

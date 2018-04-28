@@ -10,31 +10,16 @@ defmodule PropertyOrg.TamperSensor do
       name: "tamper_sensor",
       description: "A sensor that measures two states of a tamper control sensor",
       type: "boolean",
-      readOnly: true
+      readOnly: true,
+      value: %{
+        enum_type: [
+          true,
+          false
+        ]
+      }
     }
   end
 
-  @doc """
-  Register the provider
-  """
-  def unit_description do
-    %{
-      name: "none",
-      symbols: [
-      ],
-      description: "none"
-    }
-  end
-
-  def value_description do
-    %{
-      type: "bool",
-      values: [
-        true,
-        false
-      ]
-    }
-  end
 
   @doc """
   Register the provider
@@ -43,9 +28,6 @@ defmodule PropertyOrg.TamperSensor do
 
   def register_property do
     registration_info = TamperSensor.registration()
-    unit_description = TamperSensor.unit_description()
-    value_description = TamperSensor.value_description()
-
-    PropertyOrg.create_registration(registration_info, unit_description, value_description)
+    PropertyOrg.create_registration(registration_info)
   end
 end
