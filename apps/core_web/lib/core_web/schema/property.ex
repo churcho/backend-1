@@ -4,6 +4,7 @@ defmodule CoreWeb.Schema.Property do
   """
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Core.Repo
+  alias CoreWeb.Resolvers.Properties
 
   @desc "A property"
   union :property do
@@ -18,11 +19,13 @@ defmodule CoreWeb.Schema.Property do
 
   object :boolean_property do
     field :name, :string
+    field :type, :string
     field :value, :bool_value
   end
 
   object :range_property do
     field :name, :string
+    field :type, :string
     field :value, :range_value
   end
 
@@ -33,5 +36,14 @@ defmodule CoreWeb.Schema.Property do
 
   object :bool_value do
     field :enum_type, list_of(:boolean)
+  end
+
+  object :property_queries do
+    @desc "List all properites"
+    field :properties, list_of(:property) do
+      arg :type, :string
+      arg :order, :string
+      resolve &Properties.list_properties/3
+    end
   end
 end

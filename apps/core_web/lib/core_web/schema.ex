@@ -6,30 +6,22 @@ defmodule CoreWeb.Schema do
 
   import_types CoreWeb.Schema.Property
   import_types CoreWeb.Schema.Entity
-
-  alias CoreWeb.Resolvers
-
-
+  import_types CoreWeb.Schema.EntityType
+  import_types CoreWeb.Schema.LocationType
+  import_types CoreWeb.Schema.Location
 
   query do
-    @desc "Get all properites"
-    field :properties, list_of(:property) do
-      arg :type, :string
-      arg :order, :string
-      resolve &Resolvers.Properties.list_properties/3
-    end
+    import_fields :property_queries
+    import_fields :entity_queries
+    import_fields :entity_type_queries
+    import_fields :location_type_queries
+    import_fields :location_queries
+  end
 
-    @desc "Get a property by id"
-    field :property, :property do
-      arg :id, non_null(:id)
-      resolve &Resolvers.Properties.get_property/3
-    end
-
-    @desc "Get all entities"
-    field :entities, list_of(:entity) do
-      resolve &Resolvers.Entities.list_entities/3
-    end
-
+  mutation do
+    import_fields :entity_type_mutations
+    import_fields :location_type_mutations
+    import_fields :location_mutations
   end
 
 end

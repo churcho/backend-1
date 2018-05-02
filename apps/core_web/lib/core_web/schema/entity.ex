@@ -4,6 +4,7 @@ defmodule CoreWeb.Schema.Entity do
   """
   use Absinthe.Schema.Notation
   use Absinthe.Ecto, repo: Core.Repo
+  alias CoreWeb.Resolvers.Entities
 
   @desc "An Entity"
   object :entity do
@@ -22,6 +23,13 @@ defmodule CoreWeb.Schema.Entity do
     field :enabled, :boolean
     field :property, :property do
       resolve assoc(:property)
+    end
+  end
+
+  object :entity_queries do
+    @desc "List all entities"
+    field :entities, list_of(:entity) do
+      resolve &Entities.list/3
     end
   end
 end

@@ -3,8 +3,7 @@ defmodule Core.AccountManager.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias Core.AccountManager.User
-
-
+  alias Comeonin.Bcrypt
 
   schema "users" do
     field :first_name, :string
@@ -24,17 +23,27 @@ defmodule Core.AccountManager.User do
     timestamps()
   end
 
-
   def profile_changeset(%User{} = user, attrs) do
     user
     |> cast(attrs, [:role_id], [])
   end
 
   def changeset(%User{} = user, attrs) do
-    IO.inspect user
     user
-    |> cast(attrs, [:first_name, :last_name, :email, :password, :password_confirmation])
-    |> validate_required([:first_name, :last_name, :email, :password, :password_confirmation])
+    |> cast(attrs, [
+      :first_name,
+      :last_name,
+      :email,
+      :password,
+      :password_confirmation
+      ])
+    |> validate_required([
+      :first_name,
+      :last_name,
+      :email,
+      :password,
+      :password_confirmation
+      ])
     |> validate_format(:email, ~r/@/)
     |> validate_length(:password, min: 5)
     |> validate_confirmation(:password, message: "Password does not match")
@@ -42,11 +51,14 @@ defmodule Core.AccountManager.User do
     |> generate_encrypted_password
   end
 
-
   defp generate_encrypted_password(current_changeset) do
     case current_changeset do
       %Ecto.Changeset{valid?: true, changes: %{password: password}} ->
-        put_change(current_changeset, :encrypted_password, Comeonin.Bcrypt.hashpwsalt(password))
+        put_change(
+          current_changeset,
+          :encrypted_password,
+          Bcrypt.hashpwsalt(password)
+          )
       _ ->
         current_changeset
     end

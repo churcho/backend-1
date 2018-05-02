@@ -1,13 +1,14 @@
 defmodule Core.Repo.Migrations.CreateCore.LocationManager.LocationType do
+  @moduledoc false
   use Ecto.Migration
 
   def change do
     create table(:location_types) do
       add :name, :string
+      add :label, :string
       add :description, :string
-
       timestamps()
     end
-
+    create(unique_index(:location_types, [:name]))
   end
 end

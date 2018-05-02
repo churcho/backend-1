@@ -4,7 +4,6 @@ defmodule Core.AccountManager.Role do
   import Ecto.Changeset
   alias Core.AccountManager.Role
 
-
   schema "roles" do
     field :name, :string
     field :description, :string

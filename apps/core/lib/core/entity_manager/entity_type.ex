@@ -19,6 +19,6 @@ defmodule Core.EntityManager.EntityType do
   def changeset(%EntityType{} = entity_type, attrs) do
     entity_type
     |> cast(attrs, [:name, :label, :description])
-    |> validate_required([:name, :description, :label])
+    |> validate_required([:name, :description])
   end
 end

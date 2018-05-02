@@ -9,7 +9,6 @@ defmodule Core.PropertyManager do
   alias Core.PropertyManager.BooleanProperty
   alias Core.PropertyManager.RangeProperty
 
-
   @doc """
   Returns the list of all properties.
 
@@ -197,8 +196,6 @@ defmodule Core.PropertyManager do
 
   """
   def create_or_update_range_property(target) do
-    IO.inspect target
-    IO.puts "debug"
     result =
       case Repo.get_by(RangeProperty, name: target.name) do
         nil -> RangeProperty.changeset(%RangeProperty{}, target)

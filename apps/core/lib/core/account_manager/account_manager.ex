@@ -313,7 +313,6 @@ defmodule Core.AccountManager do
     Repo.delete(setting)
   end
 
-
   def grant_role(user) do
     #Automatic role grant on user creation. If there is only one user,
     #Make it an admin
