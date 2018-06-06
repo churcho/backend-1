@@ -12,9 +12,16 @@ defmodule Core.Application do
   def start(_type, _args) do
     import Supervisor.Spec, warn: false
 
-    Supervisor.start_link([
+    children = [
       supervisor(Core.Repo, []),
-    ], strategy: :one_for_one, name: Core.Supervisor)
+      supervisor(Core.People.Supervisor, []),
+      supervisor(Core.Places.Supervisor, []),
+      worker(Core.Support.Unique, []),
+    ]
+
+    opts = [strategy: :one_for_one, name: Core.Supervisor]
+    Supervisor.start_link(children, opts)
+
   end
 
 end

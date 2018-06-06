@@ -28,7 +28,7 @@ defmodule CoreWeb do
 
   def view do
     quote do
-      use Phoenix.View, root: "lib/hello_web/templates",
+      use Phoenix.View, root: "lib/core_web/templates",
                         namespace: CoreWeb
 
       # Import convenience functions from controllers

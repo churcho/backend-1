@@ -17,15 +17,12 @@ defmodule CoreWeb.RoleView do
   def render("role.json", %{role: role}) do
     %{
       links: %{
-        self:  "/api/v1/roles/#{role.id}"
+        self:  "/api/v1/roles/#{role.uuid}"
       },
       type: "roles",
-      id: role.id,
-      attributes:
-      %{
-        name: role.name,
-        description: role.description
-      }
+      uuid: role.uuid,
+      name: role.name,
+      description: role.description
     }
 
   end

@@ -23,6 +23,8 @@ defmodule Core.Umbrella.Mixfile do
   # Dependencies listed here are available only for this project
   # and cannot be accessed from applications inside the apps folder
   defp deps do
-    [{:credo, git: "https://github.com/rrrene/credo"}]
+    [
+      {:credo, git: "https://github.com/rrrene/credo"}
+    ]
   end
 end

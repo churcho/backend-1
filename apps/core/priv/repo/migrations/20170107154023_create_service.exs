@@ -3,7 +3,8 @@ defmodule Core.Repo.Migrations.CreateService do
   use Ecto.Migration
 
   def change do
-    create table(:services) do
+    create table(:services, primary_key: false) do
+      add :uuid, :uuid, primary_key: true
       add(:name, :string)
       add(:description, :text)
       add(:client_id, :string)
@@ -11,19 +12,15 @@ defmodule Core.Repo.Migrations.CreateService do
       add(:access_token, :binary)
       add(:api_key, :string)
       add(:enabled, :boolean, default: true)
-      add(:state, :map)
-      add(:configuration, :map)
-      add(:metadata, :map)
       add(:authorized, :boolean, default: false)
       add(:host, :string)
       add(:port, :string)
-      add(:imported_at, :utc_datetime)
-      add(:provider_id, references(:providers, on_delete: :delete_all))
+      add(:provider_uuid, :uuid)
       add(:slug, :string)
       timestamps()
     end
 
-    create(index(:services, [:provider_id]))
-    create(unique_index(:services, [:slug]))
+    create(index(:services, [:provider_uuid]))
+    create(unique_index(:services, [:slug, :name]))
   end
 end

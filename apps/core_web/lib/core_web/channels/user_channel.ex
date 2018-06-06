@@ -7,7 +7,7 @@ defmodule CoreWeb.UserChannel do
   def join("users:" <> user_id, _params, socket) do
     current_user = socket.assigns.current_user
 
-    if String.to_integer(user_id) == current_user.id do
+    if user_id == current_user.uuid do
       {:ok, socket}
     else
       {:error, %{reason: "Invalid user"}}

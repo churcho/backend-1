@@ -6,11 +6,11 @@ defmodule CoreWeb.SessionView do
       jwt: jwt,
       user:  %{
          type: "user",
-         id: user.id,
+         uuid: user.uuid,
+         username: user.username,
          first_name: user.first_name,
          last_name: user.last_name,
-         email: user.email,
-         role: render_one(user.role, CoreWeb.RoleView, "role.json")
+         email: user.email
        }
     }
   end

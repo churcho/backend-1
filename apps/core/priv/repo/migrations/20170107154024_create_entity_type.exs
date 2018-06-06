@@ -3,10 +3,11 @@ defmodule Core.Repo.Migrations.CreateEntityType do
   use Ecto.Migration
 
   def change do
-    create table(:entity_types) do
+    create table(:entity_types, primary_key: false) do
+      add :uuid, :uuid, primary_key: true
       add(:name, :string)
       add(:label, :string)
-      add(:description, :string)
+      add(:description, :text)
       timestamps()
     end
     create(unique_index(:entity_types, [:name]))
