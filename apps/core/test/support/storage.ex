@@ -1,6 +1,9 @@
 defmodule Core.Storage do
   @moduledoc false
 
+  alias EventStore.Config
+  alias EventStore.Storage.Initializer
+
   @doc """
   Clear the event store and read store databases
   """
@@ -18,11 +21,11 @@ defmodule Core.Storage do
   defp reset_eventstore do
     {:ok, conn} =
       EventStore.configuration()
-      |> EventStore.Config.parse()
-      |> EventStore.Config.default_postgrex_opts()
+      |> Config.parse()
+      |> Config.default_postgrex_opts()
       |> Postgrex.start_link()
 
-    EventStore.Storage.Initializer.reset!(conn)
+    Initializer.reset!(conn)
   end
 
   defp reset_readstore do

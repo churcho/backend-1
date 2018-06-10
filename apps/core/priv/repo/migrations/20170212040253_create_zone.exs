@@ -4,8 +4,9 @@ defmodule Core.Repo.Migrations.CreateZone do
 
   def change do
     create table(:zones, primary_key: false) do
+      add :uuid, :uuid, primary_key: true
       add :name, :string
-      add :description, :string
+      add :description, :text
       add :location_uuid, :uuid
       add :slug, :string
       add :rooms, {:array, :binary_id}

@@ -2,14 +2,14 @@ defmodule Core.Factory do
   @moduledoc false
   use ExMachina
 
-  alias Core.People.Commands.RegisterUser
+  alias Core.Accounts.Commands.RegisterUser
 
   def user_factory do
     %{
-      email: "jake@jake.jake",
-      username: "jake",
-      password: "jakejake",
-      hashed_password: "jakejake"
+      email: "jody@jody.me",
+      username: "jody",
+      password: "jodyjody",
+      hashed_password: "jodyjody"
     }
   end
 

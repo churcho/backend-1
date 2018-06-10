@@ -14,6 +14,7 @@ defmodule Core.Application do
 
     children = [
       supervisor(Core.Repo, []),
+      supervisor(Core.Accounts.Supervisor, []),
       supervisor(Core.People.Supervisor, []),
       supervisor(Core.Places.Supervisor, []),
       worker(Core.Support.Unique, []),

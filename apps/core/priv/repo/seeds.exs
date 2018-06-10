@@ -10,19 +10,19 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-alias Core.People
+alias Core.Accounts
 
-People.create_role(%{
+Accounts.create_role(%{
   name: "admin",
   label: "Administrator",
   description: "Administrator of the system"
 })
-People.create_role(%{
+Accounts.create_role(%{
   name: "user",
   label: "User",
   description: "User of the system"
 })
-People.create_role(%{
+Accounts.create_role(%{
   name: "guest",
   label: "Guest",
   description: "Guest of the system"

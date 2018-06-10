@@ -10,7 +10,9 @@ defmodule Core.Places.Supervisor do
 
   def init(_arg) do
     Supervisor.init([
-      Places.Projectors.Location
+      Places.Projectors.Location,
+      Places.Projectors.Zone,
+      Places.Projectors.Room
     ], strategy: :one_for_one)
   end
 

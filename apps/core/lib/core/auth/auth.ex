@@ -6,8 +6,8 @@ defmodule Core.Auth do
 
   alias Comeonin.Bcrypt
 
-  alias Core.People
-  alias Core.People.Projections.User
+  alias Core.Accounts
+  alias Core.Accounts.Projections.User
 
   def authenticate(email, password) do
     with {:ok, user} <- user_by_email(email) do
@@ -21,7 +21,7 @@ defmodule Core.Auth do
   def validate_password(password, hash), do: Bcrypt.checkpw(password, hash)
 
   defp user_by_email(email) do
-    case People.user_by_email(email) do
+    case Accounts.user_by_email(email) do
       nil -> {:error, :unauthenticated}
       user -> {:ok, user}
     end

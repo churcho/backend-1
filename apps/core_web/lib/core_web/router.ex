@@ -12,9 +12,6 @@ defmodule CoreWeb.Router do
     pipe_through(:api)
 
     scope "/v1" do
-      # Resources
-      resources("/users", UserController, except: [:new, :edit])
-      resources("/roles", RoleController, except: [:new, :edit])
       # Route to register a new user
       post("/registrations", RegistrationController, :create)
       # Routes to log in and log out
@@ -26,6 +23,17 @@ defmodule CoreWeb.Router do
 
       scope "/places" do
         resources("/locations", LocationController, except: [:new, :edit])
+        resources("/zones", ZoneController, except: [:new, :edit])
+        resources("/rooms", RoomController, except: [:new, :edit])
+      end
+
+      scope "/accounts" do
+        resources("/roles", RoleController, except: [:new, :edit])
+      end
+
+      scope "/people" do
+
+        resources("/profiles", ProfileController, except: [:new, :edit])
       end
     end
   end

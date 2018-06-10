@@ -1,24 +1,40 @@
 defmodule Core.Router do
   use Commanded.Commands.Router
 
-  alias Core.People.Aggregates.{
+  alias Core.Accounts.Aggregates.{
     User,
     Role
   }
 
-  alias Core.Places.Aggregates.{
-    Location
+  alias Core.People.Aggregates.{
+    Profile
   }
-  alias Core.People.Commands.{
+
+  alias Core.Places.Aggregates.{
+    Location,
+    Zone,
+    Room
+  }
+  alias Core.Accounts.Commands.{
     RegisterUser,
     UpdateUser,
     CreateRole
   }
 
+  alias Core.People.Commands.{
+    CreateProfile
+  }
+
   alias Core.Places.Commands.{
     CreateLocation,
     DeleteLocation,
-    UpdateLocation
+    UpdateLocation,
+    CreateZone,
+    DeleteZone,
+    UpdateZone,
+    CreateRoom,
+    DeleteRoom,
+    UpdateRoom
   }
 
   alias Core.Support.Middleware.{Uniqueness, Validate}
@@ -27,13 +43,20 @@ defmodule Core.Router do
   middleware Uniqueness
 
   identify User, by: :user_uuid, prefix: "user-"
+  identify Profile, by: :profile_uuid, prefix: "profile-"
   identify Role, by: :role_uuid, prefix: "role-"
   identify Location, by: :location_uuid, prefix: "location-"
+  identify Zone, by: :zone_uuid, prefix: "zone-"
+  identify Room, by: :room_uuid, prefix: "room-"
 
   dispatch [
     RegisterUser,
     UpdateUser,
   ], to: User
+
+  dispatch [
+    CreateProfile,
+  ], to: Profile
 
   dispatch [
     CreateRole
@@ -44,4 +67,16 @@ defmodule Core.Router do
     DeleteLocation,
     UpdateLocation,
   ], to: Location
+
+  dispatch [
+    CreateZone,
+    DeleteZone,
+    UpdateZone,
+  ], to: Zone
+
+  dispatch [
+    CreateRoom,
+    DeleteRoom,
+    UpdateRoom,
+  ], to: Room
 end

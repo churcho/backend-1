@@ -58,6 +58,7 @@ defmodule Core.Mixfile do
      {:uuid, "~> 1.1.8"},
      {:slugger, "~> 0.2"},
      {:ex_machina, "~> 2.2"},
+     {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
      {:vex, "~> 0.6"}
     ]
 

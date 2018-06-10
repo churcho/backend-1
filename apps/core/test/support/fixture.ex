@@ -2,7 +2,7 @@ defmodule Core.Fixture do
   @moduledoc false
   import Core.Factory
 
-  alias Core.{People}
+  alias Core.{Accounts}
 
   def register_user(_context) do
     {:ok, user} = fixture(:user)
@@ -14,7 +14,7 @@ defmodule Core.Fixture do
 
   def fixture(resource, attrs \\ [])
   def fixture(:user, attrs) do
-    build(:user, attrs) |> People.register_user()
+    build(:user, attrs) |> Accounts.register_user()
   end
 
 end

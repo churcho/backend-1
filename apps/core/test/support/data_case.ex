@@ -1,7 +1,7 @@
 defmodule Core.DataCase do
   @moduledoc false
   use ExUnit.CaseTemplate
-
+  alias Core.Storage
   using do
     quote do
       alias Core.Repo
@@ -16,7 +16,7 @@ defmodule Core.DataCase do
   end
 
   setup do
-    Core.Storage.reset!()
+    Storage.reset!()
 
     :ok
   end

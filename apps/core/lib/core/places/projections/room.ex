@@ -7,6 +7,7 @@ defmodule Core.Places.Projections.Room do
   schema "rooms" do
     field :name, :string
     field :description, :string
+    field :zone_uuid, :binary_id
     timestamps()
   end
 end

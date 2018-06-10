@@ -10,8 +10,8 @@ defmodule Core.People.Supervisor do
 
   def init(_arg) do
     Supervisor.init([
-      People.Projectors.User,
-      People.Projectors.Role
+      People.Projectors.Profile,
+      People.Workflows.CreateProfileFromUser,
     ], strategy: :one_for_one)
   end
 
