@@ -7,7 +7,6 @@ defmodule CoreWeb.SessionView do
       user:  %{
          type: "user",
          uuid: user.uuid,
-         username: user.username,
          email: user.email
        }
     }

@@ -85,8 +85,6 @@ defmodule Core.Accounts do
     end
   end
 
-
-
   @doc """
   Get an existing user by their email address, or return `nil` if not registered
   """
@@ -130,6 +128,7 @@ defmodule Core.Accounts do
     ListRoles.new() |> Repo.all()
   end
 
+  # Private Functions
   defp get(schema, uuid) do
     case Repo.get(schema, uuid) do
       nil -> {:error, :not_found}

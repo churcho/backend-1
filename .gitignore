@@ -1,6 +1,12 @@
 # The directory Mix will write compiled artifacts to.
 /_build
 
+# The build directory for elixir linter 
+/.elixir_ls 
+
+# The config directory for VS Code
+/.vscode
+
 # If you run "mix test --cover", coverage assets end up here.
 /cover
 

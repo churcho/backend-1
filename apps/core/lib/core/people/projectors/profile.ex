@@ -55,6 +55,6 @@ defmodule Core.People.Projectors.Profile do
   end
 
   defp profile_query(profile_uuid) do
-    from(r in Profile, where: r.uuid == ^profile_uuid)
+    from(p in Profile, where: p.uuid == ^profile_uuid)
   end
 end
