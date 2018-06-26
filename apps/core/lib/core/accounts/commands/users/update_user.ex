@@ -2,7 +2,6 @@ defmodule Core.Accounts.Commands.UpdateUser do
   @moduledoc false
   defstruct [
     user_uuid: "",
-    username: "",
     email: "",
     password: "",
     hashed_password: "",
@@ -14,16 +13,10 @@ defmodule Core.Accounts.Commands.UpdateUser do
 
   alias Core.Accounts.Commands.UpdateUser
   alias Core.Accounts.Projections.User
-  alias Core.Accounts.Validators.{UniqueEmail, UniqueUsername}
+  alias Core.Accounts.Validators.{UniqueEmail}
   alias Core.Auth
 
   validates :user_uuid, uuid: true
-
-  validates :username,
-    presence: [message: "can't be empty"],
-    format: [with: ~r/^[a-z0-9]+$/, allow_nil: true, allow_blank: true, message: "is invalid"],
-    string: true,
-    by: &UniqueUsername.validate/2
 
   validates :email,
     presence: [message: "can't be empty"],
@@ -38,13 +31,6 @@ defmodule Core.Accounts.Commands.UpdateUser do
   """
   def assign_user(%UpdateUser{} = update_user, %User{uuid: user_uuid}) do
     %UpdateUser{update_user | user_uuid: user_uuid}
-  end
-
-  @doc """
-  Convert username to lowercase characters
-  """
-  def downcase_username(%UpdateUser{username: username} = update_user) do
-    %UpdateUser{update_user | username: String.downcase(username)}
   end
 
   @doc """
@@ -71,6 +57,5 @@ defimpl Core.Support.Middleware.Uniqueness.UniqueFields,
 do
   def unique(%Core.Accounts.Commands.UpdateUser{user_uuid: user_uuid}), do: [
     {:email, "has already been taken", user_uuid},
-    {:username, "has already been taken", user_uuid},
   ]
 end

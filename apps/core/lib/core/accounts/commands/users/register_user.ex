@@ -5,7 +5,6 @@ Register User Command
 
   defstruct [
     user_uuid: "",
-    username: "",
     email: "",
     password: "",
     hashed_password: "",
@@ -16,19 +15,11 @@ Register User Command
   use Vex.Struct
 
   alias Core.Accounts.Commands.RegisterUser
-  alias Core.Accounts.Validators.{UniqueEmail, UniqueUsername}
+  alias Core.Accounts.Validators.{UniqueEmail}
   alias Core.Accounts
   alias Core.Auth
 
   validates :user_uuid, uuid: true
-
-  validates :username,
-      presence: [message: "can't be empty"],
-      format: [
-        with: ~r/^[a-z0-9]+$/, allow_nil: true, allow_blank: true, message: "is invalid"
-        ],
-      string: true,
-      by: &UniqueUsername.validate/2
 
   validates :email,
       presence: [message: "can't be empty"],
@@ -45,13 +36,6 @@ Register User Command
   """
   def assign_uuid(%RegisterUser{} = register_user, uuid) do
     %RegisterUser{register_user | user_uuid: uuid}
-  end
-
-  @doc """
-  Convert username to lowercase characters
-  """
-  def downcase_username(%RegisterUser{username: username} = register_user) do
-    %RegisterUser{register_user | username: String.downcase(username)}
   end
 
   @doc """
@@ -91,7 +75,6 @@ Register User Command
   do
     def unique(%Core.Accounts.Commands.RegisterUser{user_uuid: user_uuid}), do: [
       {:email, "has already been taken", user_uuid},
-      {:username, "has already been taken", user_uuid},
     ]
   end
 end

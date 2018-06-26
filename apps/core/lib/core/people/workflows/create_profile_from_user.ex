@@ -7,9 +7,9 @@ defmodule Core.People.Workflows.CreateProfileFromUser do
   alias Core.Accounts.Events.UserRegistered
   alias Core.People
 
-  def handle(%UserRegistered{user_uuid: user_uuid, username: username}, _metadata) do
+  def handle(%UserRegistered{user_uuid: user_uuid}, _metadata) do
     with {:ok, _profile} <-
-      People.create_profile(%{user_uuid: user_uuid, username: username})
+      People.create_profile(%{user_uuid: user_uuid})
     do
       :ok
     else

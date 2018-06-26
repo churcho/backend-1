@@ -15,6 +15,11 @@ defmodule Core.Router do
     Zone,
     Room
   }
+
+  alias Core.Services.Aggregates.{
+    Provider
+  }
+
   alias Core.Accounts.Commands.{
     RegisterUser,
     UpdateUser,
@@ -37,6 +42,10 @@ defmodule Core.Router do
     UpdateRoom
   }
 
+  alias Core.Services.Commands.{
+    RegisterProvider
+  }
+
   alias Core.Support.Middleware.{Uniqueness, Validate}
 
   middleware Validate
@@ -48,6 +57,7 @@ defmodule Core.Router do
   identify Location, by: :location_uuid, prefix: "location-"
   identify Zone, by: :zone_uuid, prefix: "zone-"
   identify Room, by: :room_uuid, prefix: "room-"
+  identify Provider, by: :provider_uuid, prefix: "provider-"
 
   dispatch [
     RegisterUser,
@@ -79,4 +89,8 @@ defmodule Core.Router do
     DeleteRoom,
     UpdateRoom,
   ], to: Room
+
+  dispatch [
+    RegisterProvider,
+  ], to: Provider
 end

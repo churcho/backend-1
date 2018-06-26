@@ -13,7 +13,8 @@ defmodule Core.People do
   }
 
   alias Core.People.Queries.{
-    ListProfiles
+    ListProfiles,
+    ProfileByUsername
   }
 
   alias Core.People.Projections.Profile
@@ -30,6 +31,16 @@ defmodule Core.People do
   """
   def profile_by_uuid(uuid) when is_binary(uuid) do
     Repo.get(Profile, uuid)
+  end
+
+  @doc """
+  Get an existing user by their username, or return `nil` if not registered
+  """
+  def profile_by_username(username) when is_binary(username) do
+    username
+    |> String.downcase()
+    |> ProfileByUsername.new()
+    |> Repo.one()
   end
 
   @doc """

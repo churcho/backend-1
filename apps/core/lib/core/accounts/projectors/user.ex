@@ -6,7 +6,6 @@ defmodule Core.Accounts.Projectors.User do
 
   alias Core.Accounts.Events.{
     UserEmailChanged,
-    UserUsernameChanged,
     UserRoleChanged,
     UserPasswordChanged,
     UserRegistered,
@@ -17,16 +16,12 @@ defmodule Core.Accounts.Projectors.User do
   project %UserRegistered{} = registered do
     Multi.insert(multi, :user, %User{
       uuid: registered.user_uuid,
-      username: registered.username,
       email: registered.email,
       role_uuid: registered.role_uuid,
       hashed_password: registered.hashed_password,
     })
   end
 
-  project %UserUsernameChanged{user_uuid: user_uuid, username: username} do
-    update_user(multi, user_uuid, username: username)
-  end
 
   project %UserEmailChanged{user_uuid: user_uuid, email: email} do
     update_user(multi, user_uuid, email: email)

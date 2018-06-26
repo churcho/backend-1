@@ -17,6 +17,7 @@ defmodule Core.Application do
       supervisor(Core.Accounts.Supervisor, []),
       supervisor(Core.People.Supervisor, []),
       supervisor(Core.Places.Supervisor, []),
+      supervisor(Core.Services.Supervisor, []),
       worker(Core.Support.Unique, []),
     ]
 

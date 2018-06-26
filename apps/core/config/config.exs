@@ -22,6 +22,7 @@ repo: Core.Repo
 config :vex,
   sources: [
     Core.Accounts.Validators,
+    Core.People.Validators,
     Core.Support.Validators,
     Vex.Validators
   ]
