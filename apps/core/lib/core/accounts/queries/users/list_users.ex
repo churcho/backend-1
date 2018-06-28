@@ -8,6 +8,6 @@ defmodule Core.Accounts.Queries.ListUsers do
 
   def new do
     from u in User,
-    order_by: u.username
+    order_by: u.uuid
   end
 end

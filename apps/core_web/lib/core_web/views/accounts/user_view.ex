@@ -22,7 +22,6 @@ defmodule CoreWeb.UserView do
         self: "/api/v1/users/#{user.uuid}"
       },
       uuid: user.uuid,
-      username: user.username,
       email: user.email,
       role: user.role_uuid
     }

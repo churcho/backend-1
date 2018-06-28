@@ -8,6 +8,7 @@ defmodule Core.Places.Projections.Location do
     field(:address_one, :string)
     field(:address_two, :string)
     field(:address_city, :string)
+    field(:address_country, :string)
     field(:address_state, :string)
     field(:address_zip, :string)
     field(:slug, :string)

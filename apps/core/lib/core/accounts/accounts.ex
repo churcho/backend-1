@@ -1,6 +1,6 @@
 defmodule Core.Accounts do
   @moduledoc """
-  Accounts Manager
+  Accounts Manager Context Boundary
   """
 
   alias Core.Accounts.Commands.{
@@ -13,6 +13,7 @@ defmodule Core.Accounts do
     Role
   }
   alias Core.Accounts.Queries.{
+    UserByUsername,
     UserByEmail,
     RoleByName,
     ListRoles,
@@ -37,6 +38,7 @@ defmodule Core.Accounts do
       attrs
       |> RegisterUser.new()
       |> RegisterUser.assign_uuid(uuid)
+      |> RegisterUser.downcase_username()
       |> RegisterUser.downcase_email()
       |> RegisterUser.hash_password()
       |> RegisterUser.grant_role()
@@ -75,6 +77,7 @@ defmodule Core.Accounts do
       attrs
       |> UpdateUser.new()
       |> UpdateUser.assign_user(user)
+      |> UpdateUser.downcase_username()
       |> UpdateUser.downcase_email()
       |> UpdateUser.hash_password()
 
@@ -83,6 +86,16 @@ defmodule Core.Accounts do
     else
       reply -> reply
     end
+  end
+
+  @doc """
+  Get an existing user by their username, or return `nil` if not registered
+  """
+  def user_by_username(username) when is_binary(username) do
+    username
+    |> String.downcase()
+    |> UserByUsername.new()
+    |> Repo.one()
   end
 
   @doc """

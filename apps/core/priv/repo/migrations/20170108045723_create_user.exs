@@ -7,6 +7,7 @@ defmodule Core.Repo.Migrations.CreateUser do
     create table(:users, primary_key: false) do
       add :uuid, :uuid, primary_key: true
       add :email, :string
+      add :username, :string
       add :role_uuid, :uuid
       add :last_seen, :utc_datetime
       add :enabled, :boolean, default: false, null: false
@@ -14,6 +15,7 @@ defmodule Core.Repo.Migrations.CreateUser do
       timestamps()
     end
     create unique_index(:users, [:email])
+    create unique_index(:users, [:username])
     create index(:users, [:role_uuid])
   end
 end

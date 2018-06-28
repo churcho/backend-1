@@ -9,6 +9,7 @@ defmodule Core.Repo.Migrations.CreateLocation do
       add(:address_one, :string)
       add(:address_two, :string)
       add(:address_city, :string)
+      add(:address_country, :string)
       add(:address_state, :string)
       add(:address_zip, :string)
       add(:latitude, :float)

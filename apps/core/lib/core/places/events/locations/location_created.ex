@@ -7,6 +7,7 @@ defmodule Core.Places.Events.LocationCreated do
     :address_one,
     :address_two,
     :address_city,
+    :address_country,
     :address_state,
     :address_zip,
     :slug,

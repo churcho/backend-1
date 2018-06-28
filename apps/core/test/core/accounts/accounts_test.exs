@@ -4,7 +4,6 @@ defmodule Core.AccountsTest do
 
   alias Core.Accounts
   alias Core.Accounts.Projections.User
-  alias Core.Auth
 
   describe "register user" do
     @tag :integration

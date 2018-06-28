@@ -12,6 +12,7 @@ defmodule Core.Places.Projectors.Location do
     LocationAddressOneChanged,
     LocationAddressTwoChanged,
     LocationAddressCityChanged,
+    LocationAddressCountryChanged,
     LocationAddressStateChanged,
     LocationAddressZipChanged,
 
@@ -27,6 +28,7 @@ defmodule Core.Places.Projectors.Location do
       address_one: created.address_one,
       address_two: created.address_two,
       address_city: created.address_city,
+      address_country: created.address_country,
       address_state: created.address_state,
       address_zip: created.address_zip,
     })
@@ -59,11 +61,19 @@ defmodule Core.Places.Projectors.Location do
   do
     update_location(multi, location_uuid, address_city: address_city)
   end
+
+  project %LocationAddressCountryChanged{
+    location_uuid: location_uuid, address_country: address_country}
+  do
+    update_location(multi, location_uuid, address_country: address_country)
+  end
+
   project %LocationAddressStateChanged{
     location_uuid: location_uuid, address_state: address_state}
   do
     update_location(multi, location_uuid, address_state: address_state)
   end
+
   project %LocationAddressZipChanged{
     location_uuid: location_uuid, address_zip: address_zip}
   do

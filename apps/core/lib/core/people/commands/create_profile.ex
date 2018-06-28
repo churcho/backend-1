@@ -20,13 +20,6 @@ defmodule Core.People.Commands.CreateProfile do
     validates :profile_uuid, uuid: true
     validates :user_uuid, uuid: true
 
-    validates :username,
-    presence: [message: "can't be empty"],
-    format: [
-      with: ~r/^[a-z0-9]+$/, allow_nil: true, allow_blank: true, message: "is invalid"
-      ],
-    string: true
-
     @doc """
     Assign a unique identity for the profile
     """

@@ -4,6 +4,7 @@ defmodule Core.Accounts.Aggregates.User do
     :uuid,
     :role_uuid,
     :email,
+    :username,
     :hashed_password
   ]
 
@@ -14,6 +15,7 @@ defmodule Core.Accounts.Aggregates.User do
   }
   alias Core.Accounts.Events.{
     UserEmailChanged,
+    UserUsernameChanged,
     UserRoleChanged,
     UserPasswordChanged,
     UserRegistered
@@ -27,6 +29,7 @@ defmodule Core.Accounts.Aggregates.User do
       user_uuid: register.user_uuid,
       role_uuid: register.role_uuid,
       email: register.email,
+      username: register.username,
       hashed_password: register.hashed_password,
     }
   end
@@ -37,6 +40,7 @@ defmodule Core.Accounts.Aggregates.User do
   def execute(%User{} = user, %UpdateUser{} = update) do
     Enum.reduce([
       &email_changed/2,
+      &username_changed/2,
       &role_uuid_changed/2,
       &password_changed/2,
       ], [], fn (change, events) ->
@@ -54,12 +58,17 @@ defmodule Core.Accounts.Aggregates.User do
       uuid: registered.user_uuid,
       role_uuid: registered.role_uuid,
       email: registered.email,
+      username: registered.username,
       hashed_password: registered.hashed_password,
     }
   end
 
   def apply(%User{} = user, %UserEmailChanged{email: email}) do
     %User{user | email: email}
+  end
+
+  def apply(%User{} = user, %UserUsernameChanged{username: username}) do
+    %User{user | username: username}
   end
 
   def apply(%User{} = user, %UserRoleChanged{role_uuid: role_uuid}) do
@@ -78,6 +87,15 @@ defmodule Core.Accounts.Aggregates.User do
     %UserEmailChanged{
       user_uuid: user_uuid,
       email: email,
+    }
+  end
+
+  defp username_changed(%User{}, %UpdateUser{username: ""}), do: nil
+  defp username_changed(%User{username: username}, %UpdateUser{username: username}), do: nil
+  defp username_changed(%User{uuid: user_uuid}, %UpdateUser{username: username}) do
+    %UserUsernameChanged{
+      user_uuid: user_uuid,
+      username: username,
     }
   end
 

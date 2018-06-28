@@ -9,6 +9,7 @@ defmodule Core.Places.Commands.CreateLocation do
       address_one: "",
       address_two: "",
       address_city: "",
+      address_country: "",
       address_state: "",
       address_zip: "",
       slug: "",

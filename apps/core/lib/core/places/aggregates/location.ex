@@ -6,6 +6,7 @@ defmodule Core.Places.Aggregates.Location do
     address_one: nil,
     address_two: nil,
     address_city: nil,
+    address_country: nil,
     address_state: nil,
     address_zip: nil,
     slug: nil,
@@ -32,6 +33,7 @@ defmodule Core.Places.Aggregates.Location do
     LocationAddressOneChanged,
     LocationAddressTwoChanged,
     LocationAddressCityChanged,
+    LocationAddressCountryChanged,
     LocationAddressStateChanged,
     LocationAddressZipChanged
   }
@@ -47,6 +49,7 @@ defmodule Core.Places.Aggregates.Location do
       address_one: create.address_one,
       address_two: create.address_two,
       address_city: create.address_city,
+      address_country: create.address_country,
       address_state: create.address_state,
       address_zip: create.address_zip
     }
@@ -62,6 +65,7 @@ defmodule Core.Places.Aggregates.Location do
       &address_one_changed/2,
       &address_two_changed/2,
       &address_city_changed/2,
+      &address_country_changed/2,
       &address_state_changed/2,
       &address_zip_changed/2
       ], [], fn (change, events) ->
@@ -122,6 +126,10 @@ defmodule Core.Places.Aggregates.Location do
     %Location{location | address_city: address_city}
   end
 
+  def apply(%Location{} = location, %LocationAddressCountryChanged{address_country: address_country}) do
+    %Location{location | address_country: address_country}
+  end
+
   def apply(%Location{} = location, %LocationAddressStateChanged{address_state: address_state}) do
     %Location{location | address_state: address_state}
   end
@@ -174,6 +182,15 @@ defmodule Core.Places.Aggregates.Location do
     %LocationAddressCityChanged{
       location_uuid: location_uuid,
       address_city: address_city,
+    }
+  end
+
+  defp address_country_changed(%Location{}, %UpdateLocation{address_country: ""}), do: nil
+  defp address_country_changed(%Location{address_country: address_country}, %UpdateLocation{address_country: address_country}), do: nil
+  defp address_country_changed(%Location{uuid: location_uuid}, %UpdateLocation{address_country: address_country}) do
+    %LocationAddressCountryChanged{
+      location_uuid: location_uuid,
+      address_country: address_country,
     }
   end
 
