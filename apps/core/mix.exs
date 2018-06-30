@@ -12,7 +12,7 @@ defmodule Core.Mixfile do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.6.1",
+      elixir: "~> 1.6.5",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
@@ -25,7 +25,13 @@ defmodule Core.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {Core.Application, []},
-     extra_applications: [:logger, :runtime_tools]]
+     extra_applications: [
+       :logger,
+       :ex_machina,
+       :eventstore,
+       :runtime_tools
+      ]
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -39,10 +45,21 @@ defmodule Core.Mixfile do
     [
      {:timex, "~> 3.2.1"},
      {:timex_ecto, "~> 3.2.1"},
+     {:bcrypt_elixir, "~> 1.0"},
+     {:comeonin, "~> 4.0"},
+     {:commanded, "~> 0.16"},
+     {:commanded_ecto_projections, "~> 0.6"},
+     {:commanded_eventstore_adapter, "0.4.0"},
      {:postgrex, "~> 0.13.0"},
      {:ecto, "~> 2.2.8"},
      {:poison, "~> 3.1"},
      {:httpoison, "~> 1.0"},
+     {:exconstructor, "~> 1.1"},
+     {:uuid, "~> 1.1.8"},
+     {:slugger, "~> 0.2"},
+     {:ex_machina, "~> 2.2"},
+     {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
+     {:vex, "~> 0.6"}
     ]
 
   end
@@ -54,7 +71,9 @@ defmodule Core.Mixfile do
   #
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
-    ["ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
+    [
+     "event_store.reset": ["event_store.drop", "event_store.create", "event_store.init"],
+     "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.setup"],
      "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
   end

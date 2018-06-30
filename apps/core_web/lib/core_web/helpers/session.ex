@@ -2,10 +2,11 @@ defmodule CoreWeb.Session do
   @moduledoc """
   Session Helper
   """
-  alias Core.AccountManager
+  alias Core.Accounts
+  alias Comeonin.Bcrypt
 
   def authenticate(%{"email" => email, "password" => password}) do
-    user = AccountManager.get_user_by_email(email)
+    user = Accounts.user_by_email(email)
 
     case check_password(user, password) do
       true -> {:ok, user}
@@ -15,12 +16,8 @@ defmodule CoreWeb.Session do
 
   defp check_password(user, password) do
     case user do
-      nil -> Comeonin.Bcrypt.dummy_checkpw()
-      _ -> Comeonin.Bcrypt.checkpw(password, user.encrypted_password)
+      nil -> Bcrypt.dummy_checkpw()
+      _ -> Bcrypt.checkpw(password, user.hashed_password)
     end
-  end
-
-  def test() do
-    IO.puts "hello world"
   end
 end

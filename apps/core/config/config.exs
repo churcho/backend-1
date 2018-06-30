@@ -8,4 +8,24 @@ use Mix.Config
 # General application configuration
 config :core, ecto_repos: [Core.Repo]
 
+config :commanded,
+event_store_adapter: Commanded.EventStore.Adapters.EventStore
+
+config :eventstore, column_data_type: "jsonb"
+config :eventstore, EventStore.Storage,
+  serializer: EventStore.JsonbSerializer,
+  types: EventStore.PostgresTypes
+
+config :commanded_ecto_projections,
+repo: Core.Repo
+
+config :vex,
+  sources: [
+    Core.Accounts.Validators,
+    Core.People.Validators,
+    Core.Support.Validators,
+    Vex.Validators
+  ]
+
 import_config "#{Mix.env}.exs"
+import_config "#{Mix.env}.secret.exs"

@@ -1,5 +1,12 @@
 use Mix.Config
 
+# Print only warnings and errors during test
+config :logger, level: :warn
+
+config :ex_unit,
+  capture_log: true
+
+
 # Configure your database
 config :core, Core.Repo,
   adapter: Ecto.Adapters.Postgres,
@@ -7,4 +14,16 @@ config :core, Core.Repo,
   password: "postgres",
   database: "core_test",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool_size: 10
+
+
+# Configure the event store database
+config :eventstore, EventStore.Storage,
+  serializer: Commanded.Serialization.JsonSerializer,
+  username: "postgres",
+  password: "postgres",
+  database: "core_eventstore_test",
+  hostname: "localhost",
+  pool_size: 10
+
+

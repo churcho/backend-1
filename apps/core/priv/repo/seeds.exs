@@ -10,10 +10,20 @@
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
 
-Core.Repo.insert!(%Core.AccountManager.Role{
-  name: "Admin",
+alias Core.Accounts
+
+Accounts.create_role(%{
+  name: "admin",
+  label: "Administrator",
   description: "Administrator of the system"
 })
-
-Core.Repo.insert!(%Core.AccountManager.Role{name: "User", description: "User of the system"})
-Core.Repo.insert!(%Core.AccountManager.Role{name: "Guest", description: "Guest of the system"})
+Accounts.create_role(%{
+  name: "user",
+  label: "User",
+  description: "User of the system"
+})
+Accounts.create_role(%{
+  name: "guest",
+  label: "Guest",
+  description: "Guest of the system"
+})

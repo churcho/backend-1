@@ -1,16 +1,18 @@
 defmodule Core.Repo.Migrations.CreateZone do
+  @moduledoc false
   use Ecto.Migration
 
   def change do
-    create table(:zones) do
+    create table(:zones, primary_key: false) do
+      add :uuid, :uuid, primary_key: true
       add :name, :string
-      add :description, :string
-      add :state, :map
-      add :location_id, references(:locations, on_delete: :nothing)
+      add :description, :text
+      add :location_uuid, :uuid
       add :slug, :string
+      add :rooms, {:array, :binary_id}
       timestamps()
     end
-    create index(:zones, [:location_id])
+    create index(:zones, [:location_uuid])
     create unique_index(:zones, [:slug])
   end
 end

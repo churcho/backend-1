@@ -1,13 +1,10 @@
 defmodule CoreWeb.UserSocket do
   use Phoenix.Socket
 
-  alias Core.{GuardianSerializer}
-
+  alias Core.Auth.GuardianSerializer
   # Channels
   channel "events:*", CoreWeb.EventChannel
   channel "users:*", CoreWeb.UserChannel
-  channel "services:*", CoreWeb.ServiceChannel
-  channel "entity_messages:*", CoreWeb.EntityMessageChannel
 
   # Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -29,5 +26,5 @@ defmodule CoreWeb.UserSocket do
 
   def connect(_params, _socket), do: :error
 
-  def id(socket), do: "users_socket:#{socket.assigns.current_user.id}"
+  def id(socket), do: "users_socket:#{socket.assigns.current_user.uuid}"
 end
