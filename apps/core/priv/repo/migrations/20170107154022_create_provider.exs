@@ -11,8 +11,11 @@ defmodule Core.Repo.Migrations.CreateProvider do
       add(:enabled, :boolean, default: true)
       add(:auth_method, :string)
       add(:max_services, :integer)
+      add(:service_name, :string)
       add(:allows_import, :boolean, default: false)
       add(:version, :string)
+      add(:required_fields, {:array, :map})
+      add(:commands, {:array, :map})
       add(:keywords, {:array, :string})
       add(:logo_path, :string)
       add(:icon_path, :string)
@@ -23,5 +26,6 @@ defmodule Core.Repo.Migrations.CreateProvider do
 
     create(unique_index(:providers, [:slug]))
     create(unique_index(:providers, [:name]))
+    create(unique_index(:providers, [:service_name]))
   end
 end

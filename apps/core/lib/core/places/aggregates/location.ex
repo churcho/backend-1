@@ -35,7 +35,10 @@ defmodule Core.Places.Aggregates.Location do
     LocationAddressCityChanged,
     LocationAddressCountryChanged,
     LocationAddressStateChanged,
-    LocationAddressZipChanged
+    LocationAddressZipChanged,
+    LocationLatitudeChanged,
+    LocationLongitudeChanged
+
   }
 
   @doc """
@@ -51,7 +54,9 @@ defmodule Core.Places.Aggregates.Location do
       address_city: create.address_city,
       address_country: create.address_country,
       address_state: create.address_state,
-      address_zip: create.address_zip
+      address_zip: create.address_zip,
+      latitude: create.latitude,
+      longitude: create.longitude
     }
   end
 
@@ -67,7 +72,9 @@ defmodule Core.Places.Aggregates.Location do
       &address_city_changed/2,
       &address_country_changed/2,
       &address_state_changed/2,
-      &address_zip_changed/2
+      &address_zip_changed/2,
+      &latitude_changed/2,
+      &longitude_changed/2
       ], [], fn (change, events) ->
       case change.(location, update) do
         nil -> events
@@ -136,6 +143,14 @@ defmodule Core.Places.Aggregates.Location do
 
   def apply(%Location{} = location, %LocationAddressZipChanged{address_zip: address_zip}) do
     %Location{location | address_zip: address_zip}
+  end
+
+  def apply(%Location{} = location, %LocationLatitudeChanged{latitude: latitude}) do
+    %Location{location | latitude: latitude}
+  end
+
+  def apply(%Location{} = location, %LocationLongitudeChanged{longitude: longitude}) do
+    %Location{location | longitude: longitude}
   end
 
   # private helpers
@@ -209,6 +224,24 @@ defmodule Core.Places.Aggregates.Location do
     %LocationAddressZipChanged{
       location_uuid: location_uuid,
       address_zip: address_zip,
+    }
+  end
+
+  defp latitude_changed(%Location{}, %UpdateLocation{latitude: ""}), do: nil
+  defp latitude_changed(%Location{latitude: latitude}, %UpdateLocation{latitude: latitude}), do: nil
+  defp latitude_changed(%Location{uuid: location_uuid}, %UpdateLocation{latitude: latitude}) do
+    %LocationLatitudeChanged{
+      location_uuid: location_uuid,
+      latitude: latitude,
+    }
+  end
+
+  defp longitude_changed(%Location{}, %UpdateLocation{longitude: ""}), do: nil
+  defp longitude_changed(%Location{longitude: longitude}, %UpdateLocation{longitude: longitude}), do: nil
+  defp longitude_changed(%Location{uuid: location_uuid}, %UpdateLocation{longitude: longitude}) do
+    %LocationLongitudeChanged{
+      location_uuid: location_uuid,
+      longitude: longitude,
     }
   end
 end

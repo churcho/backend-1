@@ -54,6 +54,7 @@ defmodule Core.Places do
     create_location =
       attrs
       |> CreateLocation.new()
+      |> CreateLocation.assign_coords()
       |> CreateLocation.assign_uuid(uuid)
 
     with :ok <- Router.dispatch(create_location, consistency: :strong) do
@@ -70,7 +71,9 @@ defmodule Core.Places do
     update_location =
       attrs
       |> UpdateLocation.new()
+      |> UpdateLocation.assign_coords()
       |> UpdateLocation.assign_location(location)
+
 
       with :ok <- Router.dispatch(update_location, consistency: :strong) do
         get(Location, location_uuid)

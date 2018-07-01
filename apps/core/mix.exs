@@ -53,7 +53,7 @@ defmodule Core.Mixfile do
      {:postgrex, "~> 0.13.0"},
      {:ecto, "~> 2.2.8"},
      {:poison, "~> 3.1"},
-     {:httpoison, "~> 1.0"},
+     {:httpoison, "~> 1.1.0"},
      {:exconstructor, "~> 1.1"},
      {:uuid, "~> 1.1.8"},
      {:slugger, "~> 0.2"},
