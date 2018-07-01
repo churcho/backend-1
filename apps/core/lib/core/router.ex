@@ -43,7 +43,8 @@ defmodule Core.Router do
   }
 
   alias Core.Services.Commands.{
-    RegisterProvider
+    RegisterProvider,
+    UpdateProvider
   }
 
   alias Core.Support.Middleware.{Uniqueness, Validate}
@@ -92,5 +93,6 @@ defmodule Core.Router do
 
   dispatch [
     RegisterProvider,
+    UpdateProvider,
   ], to: Provider
 end

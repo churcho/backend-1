@@ -15,6 +15,8 @@ defmodule Core.Places.Projectors.Location do
     LocationAddressCountryChanged,
     LocationAddressStateChanged,
     LocationAddressZipChanged,
+    LocationLatitudeChanged,
+    LocationLongitudeChanged
 
   }
   alias Core.Places.Projections.Location
@@ -31,6 +33,8 @@ defmodule Core.Places.Projectors.Location do
       address_country: created.address_country,
       address_state: created.address_state,
       address_zip: created.address_zip,
+      longitude: created.longitude,
+      latitude: created.latitude
     })
   end
 
@@ -78,6 +82,18 @@ defmodule Core.Places.Projectors.Location do
     location_uuid: location_uuid, address_zip: address_zip}
   do
     update_location(multi, location_uuid, address_zip: address_zip)
+  end
+
+  project %LocationLongitudeChanged{
+    location_uuid: location_uuid, longitude: longitude}
+  do
+    update_location(multi, location_uuid, longitude: longitude)
+  end
+
+  project %LocationLatitudeChanged{
+    location_uuid: location_uuid, latitude: latitude}
+  do
+    update_location(multi, location_uuid, latitude: latitude)
   end
 
   project %LocationDeleted{location_uuid: location_uuid} do

@@ -14,8 +14,8 @@ defmodule Core.Places.Commands.CreateLocation do
       address_zip: "",
       slug: "",
       description: "",
-      latitude: "",
-      longitude: "",
+      latitude: nil,
+      longitude: nil,
       location_type: ""
     ]
 
@@ -23,6 +23,7 @@ defmodule Core.Places.Commands.CreateLocation do
     use Vex.Struct
 
     alias Core.Places.Commands.CreateLocation
+    alias Core.Places.Geocoder
 
     validates :location_uuid, uuid: true
 
@@ -31,5 +32,15 @@ defmodule Core.Places.Commands.CreateLocation do
     """
     def assign_uuid(%CreateLocation{} = create_location, uuid) do
       %CreateLocation{create_location | location_uuid: uuid}
+    end
+
+    def assign_coords(%CreateLocation{} = create_location) do
+      IO.puts "Geocoding"
+      address = Geocoder.compose_address(create_location)
+      coords = Geocoder.get_coords_from_address(address)
+
+      if coords do
+        %CreateLocation{create_location | latitude: coords.lat, longitude: coords.lng}
+      end
     end
   end
