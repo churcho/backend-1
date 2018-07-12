@@ -19,6 +19,7 @@ defmodule Core.Application do
       supervisor(Core.Places.Supervisor, []),
       supervisor(Core.Services.Supervisor, []),
       worker(Core.Support.Unique, []),
+      worker(Core.Scheduler, []),
     ]
 
     opts = [strategy: :one_for_one, name: Core.Supervisor]

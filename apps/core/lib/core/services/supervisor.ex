@@ -11,6 +11,8 @@ defmodule Core.Services.Supervisor do
   def init(_arg) do
     Supervisor.init([
       Services.Projectors.Provider,
+      Services.Projectors.Connection,
+      Services.Projectors.Entity
     ], strategy: :one_for_one)
   end
 

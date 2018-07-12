@@ -20,6 +20,18 @@ defmodule Core.Places.Geocoder do
     loc.geometry.location
   end
 
+  def get_timezone_from_coords(coords) do
+    api_key = Application.get_env(:core, :google_geo_api_key)
+    url = "https://maps.googleapis.com/maps/api/timezone/json?location="
+    {:ok, result} = Geocoder.get("#{url}#{coords.lat},#{coords.lng}&timestamp=1530707584&key=#{api_key}")
+
+    final =
+      result.body
+      |> Poison.decode!(keys: :atoms)
+
+    final
+  end
+
 
   def compose_address(location) do
     if location.address_one && location.address_city && location.address_state &&

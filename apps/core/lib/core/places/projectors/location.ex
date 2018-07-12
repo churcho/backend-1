@@ -16,8 +16,15 @@ defmodule Core.Places.Projectors.Location do
     LocationAddressStateChanged,
     LocationAddressZipChanged,
     LocationLatitudeChanged,
-    LocationLongitudeChanged
-
+    LocationLongitudeChanged,
+    LocationTimezoneIdChanged,
+    LocationDstOffsetChanged,
+    LocationRawTimeOffsetChanged,
+    LocationSunriseChanged,
+    LocationSunsetChanged,
+    LocationDayLengthChanged,
+    LocationSolarNoonChanged,
+    LocationWeatherUpdated
   }
   alias Core.Places.Projections.Location
   alias Ecto.Multi
@@ -34,7 +41,14 @@ defmodule Core.Places.Projectors.Location do
       address_state: created.address_state,
       address_zip: created.address_zip,
       longitude: created.longitude,
-      latitude: created.latitude
+      latitude: created.latitude,
+      timezone_id: created.timezone_id,
+      dst_offset: created.dst_offset,
+      raw_time_offset: created.raw_time_offset,
+      sunrise: created.sunrise,
+      sunset: created.sunset,
+      day_length: created.day_length,
+      solar_noon: created.solar_noon
     })
   end
 
@@ -96,8 +110,95 @@ defmodule Core.Places.Projectors.Location do
     update_location(multi, location_uuid, latitude: latitude)
   end
 
+  project %LocationTimezoneIdChanged{
+    location_uuid: location_uuid, timezone_id: timezone_id}
+  do
+    update_location(multi, location_uuid, timezone_id: timezone_id)
+  end
+
+  project %LocationDstOffsetChanged{
+    location_uuid: location_uuid, dst_offset: dst_offset}
+  do
+    update_location(multi, location_uuid, dst_offset: dst_offset)
+  end
+
+  project %LocationRawTimeOffsetChanged{
+    location_uuid: location_uuid, raw_time_offset: raw_time_offset}
+  do
+    update_location(multi, location_uuid, raw_time_offset: raw_time_offset)
+  end
+
+  project %LocationSunriseChanged{
+    location_uuid: location_uuid, sunrise: sunrise}
+  do
+    update_location(multi, location_uuid, sunrise: sunrise)
+  end
+
+  project %LocationSunsetChanged{
+    location_uuid: location_uuid, sunset: sunset}
+  do
+    update_location(multi, location_uuid, sunset: sunset)
+  end
+
+  project %LocationDayLengthChanged{
+    location_uuid: location_uuid, day_length: day_length}
+  do
+    update_location(multi, location_uuid, day_length: day_length)
+  end
+
+  project %LocationSolarNoonChanged{
+    location_uuid: location_uuid, solar_noon: solar_noon}
+  do
+    update_location(multi, location_uuid, solar_noon: solar_noon)
+  end
+
   project %LocationDeleted{location_uuid: location_uuid} do
     Multi.delete_all(multi, :location, location_query(location_uuid))
+  end
+
+  project %LocationWeatherUpdated{
+    location_uuid: location_uuid,
+    weather_apparent_temperature: weather_apparent_temperature,
+    weather_cloud_cover: weather_cloud_cover,
+    weather_dew_point: weather_dew_point,
+    weather_humidity: weather_humidity,
+    weather_icon: weather_icon,
+    weather_nearest_storm_bearing: weather_nearest_storm_bearing,
+    weather_nearest_storm_distance: weather_nearest_storm_distance,
+    weather_ozone: weather_ozone,
+    weather_percipitation_intensity: weather_percipitation_intensity,
+    weather_percipitation_propability: weather_percipitation_propability,
+    weather_pressure: weather_pressure,
+    weather_summary: weather_summary,
+    weather_temperature: weather_temperature,
+    weather_uv_index: weather_uv_index,
+    weather_visibility: weather_visibility,
+    weather_wind_bearing: weather_wind_bearing,
+    weather_wind_gust: weather_wind_gust,
+    weather_wind_speed: weather_wind_speed
+  } do
+    update_location(
+      multi,
+      location_uuid,
+      weather_apparent_temperature: weather_apparent_temperature,
+      weather_cloud_cover: weather_cloud_cover,
+      weather_dew_point: weather_dew_point,
+      weather_humidity: weather_humidity,
+      weather_icon: weather_icon,
+      weather_nearest_storm_bearing: weather_nearest_storm_bearing,
+      weather_nearest_storm_distance: weather_nearest_storm_distance,
+      weather_ozone: weather_ozone,
+      weather_percipitation_intensity: weather_percipitation_intensity,
+      weather_percipitation_propability: weather_percipitation_propability,
+      weather_pressure: weather_pressure,
+      weather_summary: weather_summary,
+      weather_temperature: weather_temperature,
+      weather_uv_index: weather_uv_index,
+      weather_visibility: weather_visibility,
+      weather_wind_bearing: weather_wind_bearing,
+      weather_wind_gust: weather_wind_gust,
+      weather_wind_speed: weather_wind_speed
+    )
   end
 
   defp update_location(multi, location_uuid, changes) do

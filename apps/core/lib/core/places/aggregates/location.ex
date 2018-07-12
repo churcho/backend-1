@@ -13,16 +13,42 @@ defmodule Core.Places.Aggregates.Location do
     description: nil,
     latitude: nil,
     longitude: nil,
+    timezone_id: nil,
+    dst_offset: nil,
+    raw_time_offset: nil,
+    sunrise: nil,
+    sunset: nil,
+    day_length: nil,
+    solar_noon: nil,
     location_type: nil,
     zones: nil,
     deleted?: false,
+    weather_apparent_temperature: nil,
+    weather_cloud_cover: nil,
+    weather_dew_point: nil,
+    weather_humidity: nil,
+    weather_icon: nil,
+    weather_nearest_storm_bearing: nil,
+    weather_nearest_storm_distance: nil,
+    weather_ozone: nil,
+    weather_percipitation_intensity: nil,
+    weather_percipitation_propability: nil,
+    weather_pressure: nil,
+    weather_summary: "",
+    weather_temperature: nil,
+    weather_uv_index: nil,
+    weather_visibility: nil,
+    weather_wind_bearing: nil,
+    weather_wind_gust: nil,
+    weather_wind_speed: nil
   ]
 
   alias Core.Places.Aggregates.Location
   alias Core.Places.Commands.{
     CreateLocation,
     UpdateLocation,
-    DeleteLocation
+    DeleteLocation,
+    UpdateLocationWeather
   }
 
   alias Core.Places.Events.{
@@ -37,8 +63,15 @@ defmodule Core.Places.Aggregates.Location do
     LocationAddressStateChanged,
     LocationAddressZipChanged,
     LocationLatitudeChanged,
-    LocationLongitudeChanged
-
+    LocationLongitudeChanged,
+    LocationTimezoneIdChanged,
+    LocationDstOffsetChanged,
+    LocationRawTimeOffsetChanged,
+    LocationSunriseChanged,
+    LocationSunsetChanged,
+    LocationDayLengthChanged,
+    LocationSolarNoonChanged,
+    LocationWeatherUpdated
   }
 
   @doc """
@@ -56,9 +89,67 @@ defmodule Core.Places.Aggregates.Location do
       address_state: create.address_state,
       address_zip: create.address_zip,
       latitude: create.latitude,
-      longitude: create.longitude
+      longitude: create.longitude,
+      timezone_id: create.timezone_id,
+      dst_offset: create.dst_offset,
+      raw_time_offset: create.raw_time_offset,
+      sunrise: create.sunrise,
+      sunset: create.sunset,
+      day_length: create.day_length,
+      solar_noon: create.solar_noon
     }
   end
+
+  @doc """
+  Update Location Weather
+  """
+  def execute(
+    %Location{uuid: location_uuid},
+    %UpdateLocationWeather{
+      location_uuid: location_uuid,
+      weather_apparent_temperature: weather_apparent_temperature,
+      weather_cloud_cover: weather_cloud_cover,
+      weather_dew_point: weather_dew_point,
+      weather_humidity: weather_humidity,
+      weather_icon: weather_icon,
+      weather_nearest_storm_bearing: weather_nearest_storm_bearing,
+      weather_nearest_storm_distance: weather_nearest_storm_distance,
+      weather_ozone: weather_ozone,
+      weather_percipitation_intensity: weather_percipitation_intensity,
+      weather_percipitation_propability: weather_percipitation_propability,
+      weather_pressure: weather_pressure,
+      weather_summary: weather_summary,
+      weather_temperature: weather_temperature,
+      weather_uv_index: weather_uv_index,
+      weather_visibility: weather_visibility,
+      weather_wind_bearing: weather_wind_bearing,
+      weather_wind_gust: weather_wind_gust,
+      weather_wind_speed: weather_wind_speed
+    })
+  do
+    %LocationWeatherUpdated{
+      location_uuid: location_uuid,
+      weather_apparent_temperature: weather_apparent_temperature,
+      weather_cloud_cover: weather_cloud_cover,
+      weather_dew_point: weather_dew_point,
+      weather_humidity: weather_humidity,
+      weather_icon: weather_icon,
+      weather_nearest_storm_bearing: weather_nearest_storm_bearing,
+      weather_nearest_storm_distance: weather_nearest_storm_distance,
+      weather_ozone: weather_ozone,
+      weather_percipitation_intensity: weather_percipitation_intensity,
+      weather_percipitation_propability: weather_percipitation_propability,
+      weather_pressure: weather_pressure,
+      weather_summary: weather_summary,
+      weather_temperature: weather_temperature,
+      weather_uv_index: weather_uv_index,
+      weather_visibility: weather_visibility,
+      weather_wind_bearing: weather_wind_bearing,
+      weather_wind_gust: weather_wind_gust,
+      weather_wind_speed: weather_wind_speed
+    }
+  end
+
 
   @doc """
   Update a location's name, description
@@ -74,7 +165,14 @@ defmodule Core.Places.Aggregates.Location do
       &address_state_changed/2,
       &address_zip_changed/2,
       &latitude_changed/2,
-      &longitude_changed/2
+      &longitude_changed/2,
+      &timezone_id_changed/2,
+      &dst_offset_changed/2,
+      &raw_time_offset_changed/2,
+      &sunrise_changed/2,
+      &sunset_changed/2,
+      &day_length_changed/2,
+      &solar_noon_changed/2
       ], [], fn (change, events) ->
       case change.(location, update) do
         nil -> events
@@ -106,6 +204,44 @@ defmodule Core.Places.Aggregates.Location do
       uuid: created.location_uuid,
       name: created.name,
       description: created.description,
+      address_one: created.address_one,
+      address_two: created.address_two,
+      address_city: created.address_city,
+      address_country: created.address_country,
+      address_state: created.address_state,
+      address_zip: created.address_zip,
+      latitude: created.latitude,
+      longitude: created.longitude,
+      timezone_id: created.timezone_id,
+      dst_offset: created.dst_offset,
+      raw_time_offset: created.raw_time_offset,
+      sunrise: created.sunrise,
+      sunset: created.sunset,
+      day_length: created.day_length,
+      solar_noon: created.solar_noon
+    }
+  end
+
+  def apply(%Location{} = location, %LocationWeatherUpdated{} = updated) do
+    %Location{location |
+      weather_apparent_temperature: updated.weather_apparent_temperature,
+      weather_cloud_cover: updated.weather_cloud_cover,
+      weather_dew_point: updated.weather_dew_point,
+      weather_humidity: updated.weather_humidity,
+      weather_icon: updated.weather_icon,
+      weather_nearest_storm_bearing: updated.weather_nearest_storm_bearing,
+      weather_nearest_storm_distance: updated.weather_nearest_storm_distance,
+      weather_ozone: updated.weather_ozone,
+      weather_percipitation_intensity: updated.weather_percipitation_intensity,
+      weather_percipitation_propability: updated.weather_percipitation_propability,
+      weather_pressure: updated.weather_pressure,
+      weather_summary: updated.weather_summary,
+      weather_temperature: updated.weather_temperature,
+      weather_uv_index: updated.weather_uv_index,
+      weather_visibility: updated.weather_visibility,
+      weather_wind_bearing: updated.weather_wind_bearing,
+      weather_wind_gust: updated.weather_wind_gust,
+      weather_wind_speed: updated.weather_wind_speed
     }
   end
 
@@ -151,6 +287,34 @@ defmodule Core.Places.Aggregates.Location do
 
   def apply(%Location{} = location, %LocationLongitudeChanged{longitude: longitude}) do
     %Location{location | longitude: longitude}
+  end
+
+  def apply(%Location{} = location, %LocationTimezoneIdChanged{timezone_id: timezone_id}) do
+    %Location{location | timezone_id: timezone_id}
+  end
+
+  def apply(%Location{} = location, %LocationDstOffsetChanged{dst_offset: dst_offset}) do
+    %Location{location | dst_offset: dst_offset}
+  end
+
+  def apply(%Location{} = location, %LocationRawTimeOffsetChanged{raw_time_offset: raw_time_offset}) do
+    %Location{location | raw_time_offset: raw_time_offset}
+  end
+
+  def apply(%Location{} = location, %LocationSunriseChanged{sunrise: sunrise}) do
+    %Location{location | sunrise: sunrise}
+  end
+
+  def apply(%Location{} = location, %LocationSunsetChanged{sunset: sunset}) do
+    %Location{location | sunset: sunset}
+  end
+
+  def apply(%Location{} = location, %LocationDayLengthChanged{day_length: day_length}) do
+    %Location{location | day_length: day_length}
+  end
+
+  def apply(%Location{} = location, %LocationSolarNoonChanged{solar_noon: solar_noon}) do
+    %Location{location | solar_noon: solar_noon}
   end
 
   # private helpers
@@ -244,4 +408,68 @@ defmodule Core.Places.Aggregates.Location do
       longitude: longitude,
     }
   end
+
+  defp timezone_id_changed(%Location{}, %UpdateLocation{timezone_id: ""}), do: nil
+  defp timezone_id_changed(%Location{timezone_id: timezone_id}, %UpdateLocation{timezone_id: timezone_id}), do: nil
+  defp timezone_id_changed(%Location{uuid: location_uuid}, %UpdateLocation{timezone_id: timezone_id}) do
+    %LocationTimezoneIdChanged{
+      location_uuid: location_uuid,
+      timezone_id: timezone_id,
+    }
+  end
+
+  defp dst_offset_changed(%Location{}, %UpdateLocation{dst_offset: ""}), do: nil
+  defp dst_offset_changed(%Location{dst_offset: dst_offset}, %UpdateLocation{dst_offset: dst_offset}), do: nil
+  defp dst_offset_changed(%Location{uuid: location_uuid}, %UpdateLocation{dst_offset: dst_offset}) do
+    %LocationDstOffsetChanged{
+      location_uuid: location_uuid,
+      dst_offset: dst_offset,
+    }
+  end
+
+  defp raw_time_offset_changed(%Location{}, %UpdateLocation{raw_time_offset: ""}), do: nil
+  defp raw_time_offset_changed(%Location{raw_time_offset: raw_time_offset}, %UpdateLocation{raw_time_offset: raw_time_offset}), do: nil
+  defp raw_time_offset_changed(%Location{uuid: location_uuid}, %UpdateLocation{raw_time_offset: raw_time_offset}) do
+    %LocationRawTimeOffsetChanged{
+      location_uuid: location_uuid,
+      raw_time_offset: raw_time_offset,
+    }
+  end
+
+  defp sunrise_changed(%Location{}, %UpdateLocation{sunrise: ""}), do: nil
+  defp sunrise_changed(%Location{sunrise: sunrise}, %UpdateLocation{sunrise: sunrise}), do: nil
+  defp sunrise_changed(%Location{uuid: location_uuid}, %UpdateLocation{sunrise: sunrise}) do
+    %LocationSunriseChanged{
+      location_uuid: location_uuid,
+      sunrise: sunrise,
+    }
+  end
+
+  defp sunset_changed(%Location{}, %UpdateLocation{sunset: ""}), do: nil
+  defp sunset_changed(%Location{sunset: sunset}, %UpdateLocation{sunset: sunset}), do: nil
+  defp sunset_changed(%Location{uuid: location_uuid}, %UpdateLocation{sunset: sunset}) do
+    %LocationSunsetChanged{
+      location_uuid: location_uuid,
+      sunset: sunset,
+    }
+  end
+
+  defp day_length_changed(%Location{}, %UpdateLocation{day_length: ""}), do: nil
+  defp day_length_changed(%Location{day_length: day_length}, %UpdateLocation{day_length: day_length}), do: nil
+  defp day_length_changed(%Location{uuid: location_uuid}, %UpdateLocation{day_length: day_length}) do
+    %LocationDayLengthChanged{
+      location_uuid: location_uuid,
+      day_length: day_length,
+    }
+  end
+
+  defp solar_noon_changed(%Location{}, %UpdateLocation{solar_noon: ""}), do: nil
+  defp solar_noon_changed(%Location{solar_noon: solar_noon}, %UpdateLocation{solar_noon: solar_noon}), do: nil
+  defp solar_noon_changed(%Location{uuid: location_uuid}, %UpdateLocation{solar_noon: solar_noon}) do
+    %LocationSolarNoonChanged{
+      location_uuid: location_uuid,
+      solar_noon: solar_noon,
+    }
+  end
+
 end

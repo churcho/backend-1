@@ -29,7 +29,8 @@ defmodule Core.Mixfile do
        :logger,
        :ex_machina,
        :eventstore,
-       :runtime_tools
+       :runtime_tools,
+       :astro
       ]
     ]
   end
@@ -59,7 +60,9 @@ defmodule Core.Mixfile do
      {:slugger, "~> 0.2"},
      {:ex_machina, "~> 2.2"},
      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
-     {:vex, "~> 0.6"}
+     {:quantum, "~> 2.2"},
+     {:astro, git: "https://github.com/aussiegeek/astro.git"},
+     {:vex, "~> 0.8"}
     ]
 
   end

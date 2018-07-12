@@ -9,20 +9,30 @@ defmodule Core.Services do
   }
 
   alias Core.Services.Projections.{
-    Provider
+    Provider,
+    Connection,
+    Entity
   }
 
   alias Core.Services.Commands.{
     RegisterProvider,
-    UpdateProvider
+    UpdateProvider,
+    CreateConnection,
+    DeleteConnection,
+    CreateEntity
   }
 
   alias Core.Services.Queries.{
     ListProviders,
-    ProviderByServiceName
+    ProviderByServiceName,
+    ListConnections,
+    ConnectionByProviderUuid,
+    ListEntities,
+    EntityByRemoteId,
+    EntityByConnectionUuid
   }
 
-  # Providers
+  ### PROVIDERS
 
   @doc """
   List All Providers
@@ -80,6 +90,114 @@ defmodule Core.Services do
       else
         reply -> reply
       end
+  end
+
+
+  ### CONNECTED SERVICES
+
+  @doc """
+  List All Connections
+  """
+  def list_connections do
+    ListConnections.new() |> Repo.all
+  end
+
+  @doc """
+  Get a Connection by UUID
+  """
+  def connection_by_uuid(uuid) do
+    Repo.get(Connection, uuid)
+  end
+
+  @doc """
+  Get an array of connections by provider uuid
+  """
+  def connection_by_provider_uuid(provider_uuid) do
+    provider_uuid
+    |> ConnectionByProviderUuid.new()
+    |> Repo.one()
+  end
+
+  @doc """
+  Connect a Service
+  """
+  def create_connection(attrs \\ %{}) do
+    uuid = UUID.uuid4()
+
+    create_connection =
+      attrs
+      |> CreateConnection.new()
+      |> CreateConnection.assign_uuid(uuid)
+
+    with :ok <- Router.dispatch(create_connection, consistency: :strong) do
+      get(Connection, uuid)
+    else
+      reply -> reply
+    end
+  end
+
+
+  @doc """
+  Delete a Location. Returns `:ok` on success
+  """
+  def delete_connection(%Connection{} = connection) do
+    delete_connection =
+      %DeleteConnection{}
+      |> DeleteConnection.assign_connection(connection)
+
+    Router.dispatch(delete_connection, consistency: :strong)
+  end
+
+  ### ENTITIES
+
+  @doc """
+  List All Entities
+  """
+  def list_entities do
+    ListEntities.new() |> Repo.all
+  end
+
+  @doc """
+  Entity by UUID
+  """
+  def entity_by_uuid(uuid) do
+    Repo.get(Entity, uuid)
+  end
+
+  @doc """
+  Entities by connection UUID
+  """
+  def entities_by_connection_uuid(uuid) do
+    uuid
+    |> EntityByConnectionUuid.new()
+    |> Repo.all()
+  end
+
+  @doc """
+  Entitiy by remote ID
+  """
+  def entity_by_remote_id(remote_id) when is_binary(remote_id) do
+    remote_id
+    |> EntityByRemoteId.new()
+    |> Repo.one()
+  end
+
+ @doc """
+  Connect a Service
+  """
+  def create_entity(attrs \\ %{}) do
+    uuid = UUID.uuid4()
+
+    create_entity =
+      attrs
+      |> CreateEntity.new()
+      |> CreateEntity.assign_uuid(uuid)
+
+    with :ok <- Router.dispatch(create_entity, consistency: :strong) do
+      get(Entity, uuid)
+    else
+      reply -> reply
+    end
   end
 
   # private functions

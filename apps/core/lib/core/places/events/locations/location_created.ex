@@ -14,6 +14,13 @@ defmodule Core.Places.Events.LocationCreated do
     :description,
     :latitude,
     :longitude,
+    :timezone_id,
+    :dst_offset,
+    :raw_time_offset,
+    :sunrise,
+    :sunset,
+    :day_length,
+    :solar_noon,
     :location_type,
     :zones
   ]

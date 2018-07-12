@@ -16,7 +16,14 @@ defmodule Core.Places.Commands.CreateLocation do
       description: "",
       latitude: nil,
       longitude: nil,
-      location_type: ""
+      location_type: "",
+      timezone_id: "",
+      dst_offset: nil,
+      raw_time_offset: nil,
+      sunrise: nil,
+      sunset: nil,
+      day_length: nil,
+      solar_noon: nil
     ]
 
     use ExConstructor
@@ -40,7 +47,17 @@ defmodule Core.Places.Commands.CreateLocation do
       coords = Geocoder.get_coords_from_address(address)
 
       if coords do
-        %CreateLocation{create_location | latitude: coords.lat, longitude: coords.lng}
+        tz_info = Geocoder.get_timezone_from_coords(coords)
+        times = Astro.get_times(coords.lat, coords.lng)
+        %CreateLocation{create_location |
+          latitude: coords.lat,
+          longitude: coords.lng,
+          dst_offset: tz_info.dstOffset,
+          timezone_id: tz_info.timeZoneId,
+          raw_time_offset: tz_info.rawOffset,
+          sunrise: DateTime.to_unix(times.sunrise),
+          sunset: DateTime.to_unix(times.sunset)
+        }
       end
     end
   end

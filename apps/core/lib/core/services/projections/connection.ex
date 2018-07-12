@@ -3,7 +3,6 @@ defmodule Core.Services.Projections.Connection do
   use Ecto.Schema
 
   @primary_key {:uuid, :binary_id, autogenerate: false}
-
   schema "connections" do
     field(:name, :string)
     field(:description, :string)
@@ -15,9 +14,8 @@ defmodule Core.Services.Projections.Connection do
     field(:access_token, :binary)
     field(:api_key, :string)
     field(:enabled, :boolean)
-    field(:imported_at, :utc_datetime)
     field(:authorized, :boolean)
-
+    field(:provider_uuid, :binary_id)
     timestamps()
   end
 

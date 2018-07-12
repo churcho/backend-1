@@ -27,6 +27,13 @@ defmodule CoreWeb.Router do
         resources("/rooms", RoomController, except: [:new, :edit])
       end
 
+      get("/ability", AbilityController, :index)
+
+      scope "/services" do
+        resources("/providers", ProviderController, except: [:new, :edit])
+        resources("/connections", ConnectionController, except: [:new, :edit])
+      end
+
       scope "/accounts" do
         resources("/roles", RoleController, except: [:new, :edit])
       end

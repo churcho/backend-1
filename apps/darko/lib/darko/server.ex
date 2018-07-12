@@ -4,7 +4,7 @@ defmodule Darko.Server do
   """
   require Logger
   use GenServer
-  alias Core.{Services, Repo}
+  alias Core.{Services, Places}
   alias Darko.{Server, Scheduler, Poller}
 
   @doc """
@@ -14,8 +14,8 @@ defmodule Darko.Server do
     GenServer.start_link(
       __MODULE__,
       %{
-        services: %{},
-        stations: %{}
+        service: %{},
+        locations: %{}
       },
       name: __MODULE__
     )
@@ -60,71 +60,57 @@ defmodule Darko.Server do
   @doc """
   Loads authorized serivces into state
   """
-  def load_services(loaded_services) do
-    GenServer.cast(__MODULE__, {:load_services, loaded_services})
+  def load_service(loaded_service) do
+    GenServer.cast(__MODULE__, {:load_service, loaded_service})
   end
 
   @doc """
   Fetches the services from state
   """
-  def fetch_services do
-    GenServer.call(__MODULE__, :fetch_services)
+  def fetch_service do
+    GenServer.call(__MODULE__, :fetch_service)
   end
 
   @doc """
   Loads authorized stations into state
   """
-  def load_stations(loaded_stations) do
-    GenServer.cast(__MODULE__, {:load_stations, loaded_stations})
+  def load_locations(loaded_locations) do
+    GenServer.cast(__MODULE__, {:load_locations, loaded_locations})
   end
 
   @doc """
   Fetches the station from state
   """
-  def fetch_stations do
-    GenServer.call(__MODULE__, :fetch_stations)
+  def fetch_locations do
+    GenServer.call(__MODULE__, :fetch_locations)
   end
 
   @doc """
   Build the state
   """
   def build_state do
-    services = find_enabled_services()
-
-    if services do
-      for service <- services do
-        target =
-          service
-          |> Repo.preload(:entities)
-
-        load_target =
-          target.name
-          |> String.downcase()
-          |> String.to_atom()
-
-        new_service_map = %{load_target => target}
-
-        Server.load_services(new_service_map)
-        Server.load_stations(target.entities)
-      end
+    service = find_enabled_service()
+    if service do
+        Server.load_service(service)
+        Server.load_locations(Places.list_locations)
     end
   end
 
   def clear_state do
-    Server.load_services(%{})
-    Server.load_stations(%{})
+    Server.load_service(%{})
+    Server.load_locations(%{})
   end
 
-  def find_enabled_services do
-    providers = Services.provider_by_service_name("Darko")
-    %{}
+  def find_enabled_service do
+    provider = Services.provider_by_service_name("Darko")
+    Services.connection_by_provider_uuid(provider.uuid)
   end
 
   def poll do
-    stations = Server.fetch_stations()
-
-    for entity <- stations do
-      Poller.poll(entity)
+    locations = Server.fetch_locations()
+    service = Server.fetch_service()
+    for location <- locations do
+      Poller.poll(service, location)
     end
   end
 
@@ -134,20 +120,20 @@ defmodule Darko.Server do
     {:stop, :normal, status}
   end
 
-  def handle_call(:fetch_services, _from, state) do
-    {:reply, state.services, state}
+  def handle_call(:fetch_service, _from, state) do
+    {:reply, state.service, state}
   end
 
-  def handle_call(:fetch_stations, _from, state) do
-    {:reply, state.stations, state}
+  def handle_call(:fetch_locations, _from, state) do
+    {:reply, state.locations, state}
   end
 
-  def handle_cast({:load_services, loaded_services}, state) do
-    service_target = Map.merge(state.services, loaded_services)
-    {:noreply, %{state | services: service_target}}
+  def handle_cast({:load_service, loaded_service}, state) do
+    service_target = Map.merge(state.service, loaded_service)
+    {:noreply, %{state | service: service_target}}
   end
 
-  def handle_cast({:load_stations, loaded_stations}, state) do
-    {:noreply, %{state | stations: loaded_stations}}
+  def handle_cast({:load_locations, loaded_locations}, state) do
+    {:noreply, %{state | locations: loaded_locations}}
   end
 end

@@ -23,7 +23,7 @@ defmodule Darko do
       max_services: 1,
       version: "0.0.2",
       required_fields: [
-        %{key: "api_key", name: "api_key", label: "API Key", placeholder: "API_KEY"},
+        %{key: "api_key", name: "api_key", label: "API Key", placeholder: "API Key"},
         %{key: "name", name: "name", label: "Name", placeholder: "Name"}
       ],
       commands: [

@@ -28,4 +28,4 @@ config :vex,
   ]
 
 import_config "#{Mix.env}.exs"
-import_config "#{Mix.env}.secret.exs"
+import_config "dev.secret.exs"

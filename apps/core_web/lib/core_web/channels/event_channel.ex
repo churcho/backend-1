@@ -13,8 +13,8 @@ defmodule CoreWeb.EventChannel do
     {:ok, socket}
   end
 
-  def broadcast_change(event) do
-    Endpoint.broadcast("events:all", "change", event)
+  def broadcast_change(topic, event) do
+    Endpoint.broadcast("events:all", topic, event)
     Logger.info fn ->
        "Broadcasting event to events:all"
     end

@@ -17,7 +17,9 @@ defmodule Core.Router do
   }
 
   alias Core.Services.Aggregates.{
-    Provider
+    Provider,
+    Connection,
+    Entity
   }
 
   alias Core.Accounts.Commands.{
@@ -34,6 +36,7 @@ defmodule Core.Router do
     CreateLocation,
     DeleteLocation,
     UpdateLocation,
+    UpdateLocationWeather,
     CreateZone,
     DeleteZone,
     UpdateZone,
@@ -44,7 +47,10 @@ defmodule Core.Router do
 
   alias Core.Services.Commands.{
     RegisterProvider,
-    UpdateProvider
+    UpdateProvider,
+    CreateConnection,
+    DeleteConnection,
+    CreateEntity
   }
 
   alias Core.Support.Middleware.{Uniqueness, Validate}
@@ -59,6 +65,8 @@ defmodule Core.Router do
   identify Zone, by: :zone_uuid, prefix: "zone-"
   identify Room, by: :room_uuid, prefix: "room-"
   identify Provider, by: :provider_uuid, prefix: "provider-"
+  identify Connection, by: :connection_uuid, prefix: "connection-"
+  identify Entity, by: :entity_uuid, prefix: "entity-"
 
   dispatch [
     RegisterUser,
@@ -77,6 +85,7 @@ defmodule Core.Router do
     CreateLocation,
     DeleteLocation,
     UpdateLocation,
+    UpdateLocationWeather,
   ], to: Location
 
   dispatch [
@@ -95,4 +104,13 @@ defmodule Core.Router do
     RegisterProvider,
     UpdateProvider,
   ], to: Provider
+
+  dispatch [
+    CreateConnection,
+    DeleteConnection
+  ], to: Connection
+
+  dispatch [
+    CreateEntity,
+  ], to: Entity
 end

@@ -19,6 +19,7 @@ defmodule Core.Places do
     DeleteZone,
     DeleteRoom,
     UpdateLocation,
+    UpdateLocationWeather,
     UpdateZone,
     UpdateRoom
 
@@ -80,6 +81,35 @@ defmodule Core.Places do
       else
         reply -> reply
       end
+  end
+
+
+  @doc """
+  Updates weather at a given location
+  """
+  def update_location_weather(%Location{uuid: location_uuid} = location, attrs \\ %{}) do
+    update_location_weather =
+      attrs
+      |> UpdateLocationWeather.new()
+      |> UpdateLocationWeather.assign_location(location)
+
+
+      with :ok <- Router.dispatch(update_location_weather, consistency: :strong) do
+        get(Location, location_uuid)
+      else
+        reply -> reply
+      end
+  end
+
+
+  @doc """
+  Update sunrise and sunset on a location
+  """
+
+  def update_sunrise_and_sunset() do
+    for location <- list_locations() do
+      update_location(location, location)
+    end
   end
 
   @doc """
