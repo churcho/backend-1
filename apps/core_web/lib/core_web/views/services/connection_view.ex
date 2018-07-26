@@ -17,12 +17,12 @@ defmodule CoreWeb.ConnectionView do
   def render("connection.json", %{connection: connection}) do
     %{
       links: %{
-        self: "/api/v1/services/connections/#{connection.uuid}"
+        self: "/api/v1/services/connections/#{connection.id}"
       },
-      uuid: connection.uuid,
+      id: connection.id,
       name: connection.name,
       description: connection.description,
-      provider_uuid: connection.provider_uuid,
+      provider_id: connection.provider_id,
       api_key: connection.api_key
     }
 end

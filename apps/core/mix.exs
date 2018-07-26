@@ -28,9 +28,9 @@ defmodule Core.Mixfile do
      extra_applications: [
        :logger,
        :ex_machina,
-       :eventstore,
        :runtime_tools,
-       :astro
+       :astro,
+       :uuid
       ]
     ]
   end
@@ -44,13 +44,11 @@ defmodule Core.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+     {:event_bus, "~> 1.3.7"},
      {:timex, "~> 3.2.1"},
      {:timex_ecto, "~> 3.2.1"},
      {:bcrypt_elixir, "~> 1.0"},
      {:comeonin, "~> 4.0"},
-     {:commanded, "~> 0.16"},
-     {:commanded_ecto_projections, "~> 0.6"},
-     {:commanded_eventstore_adapter, "0.4.0"},
      {:postgrex, "~> 0.13.0"},
      {:ecto, "~> 2.2.8"},
      {:poison, "~> 3.1"},

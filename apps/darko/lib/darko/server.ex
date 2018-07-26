@@ -102,8 +102,9 @@ defmodule Darko.Server do
   end
 
   def find_enabled_service do
-    provider = Services.provider_by_service_name("Darko")
-    Services.connection_by_provider_uuid(provider.uuid)
+    provider =
+    Services.provider_by_service_name("Darko")
+    List.first(provider.connections)
   end
 
   def poll do

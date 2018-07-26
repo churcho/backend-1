@@ -8,24 +8,19 @@ use Mix.Config
 # General application configuration
 config :core, ecto_repos: [Core.Repo]
 
-config :commanded,
-event_store_adapter: Commanded.EventStore.Adapters.EventStore
-
-config :eventstore, column_data_type: "jsonb"
-config :eventstore, EventStore.Storage,
-  serializer: EventStore.JsonbSerializer,
-  types: EventStore.PostgresTypes
-
-config :commanded_ecto_projections,
-repo: Core.Repo
 
 config :vex,
   sources: [
-    Core.Accounts.Validators,
-    Core.People.Validators,
-    Core.Support.Validators,
     Vex.Validators
   ]
+config :event_bus,
+  topics: [
+    :place_location,
+    :place_zone,
+    :place_room
+  ], # list of atoms
+  ttl: 30_000_000, # integer
+  time_unit: :micro_seconds# atom
 
 import_config "#{Mix.env}.exs"
 import_config "dev.secret.exs"

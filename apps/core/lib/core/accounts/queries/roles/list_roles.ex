@@ -4,7 +4,7 @@ defmodule Core.Accounts.Queries.ListRoles do
   """
   import Ecto.Query
 
-  alias Core.Accounts.Projections.Role
+  alias Core.Accounts.Role
 
   def new do
     from r in Role,

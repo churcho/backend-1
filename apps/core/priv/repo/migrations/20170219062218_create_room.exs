@@ -4,15 +4,15 @@ defmodule Core.Repo.Migrations.CreateRoom do
 
   def change do
     create table(:rooms, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add :id, :uuid, primary_key: true
       add :name, :string
       add :description, :text
-      add :zone_uuid, :uuid
       add :slug, :string
 
+      add :zone_id, references(:zones, on_delete: :nothing, type: :uuid)
       timestamps()
     end
-    create index(:rooms, [:zone_uuid])
+    create index(:rooms, [:zone_id])
     create unique_index(:rooms, [:slug, :name])
   end
 end

@@ -3,20 +3,20 @@ defmodule CoreWeb.LocationController do
   use CoreWeb, :controller
 
   alias Core.Places
-  alias Core.Places.Projections.Location
+  alias Core.Places.Location
 
   def index(conn, _params) do
     locations = Places.list_locations()
     render(conn, "index.json", locations: locations)
   end
 
-  def show(conn, %{"id" => uuid}) do
-    location = Places.location_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    location = Places.get_location!(id)
     render(conn, "show.json", location: location)
   end
 
-  def delete(conn, %{"id" => uuid}) do
-    location = Places.location_by_uuid(uuid)
+  def delete(conn, %{"id" => id}) do
+    location = Places.get_location!(id)
 
     with :ok <- Places.delete_location(location) do
       send_resp(conn, :no_content, "")
@@ -33,10 +33,8 @@ defmodule CoreWeb.LocationController do
     end
   end
 
-  def update(conn, %{"id" => location_uuid, "location" => location_params}) do
-
-    location = Places.location_by_uuid(location_uuid)
-
+  def update(conn, %{"id" => location_id, "location" => location_params}) do
+    location = Places.get_location!(location_id)
     with {:ok, %Location{} = location} <-
       Places.update_location(location, location_params)
     do

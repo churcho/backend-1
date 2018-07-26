@@ -16,8 +16,8 @@ defmodule CoreWeb.RoleController do
     end
   end
 
-  def show(conn, %{"id" => uuid}) do
-    role = Accounts.role_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    role = Accounts.get_role!(id)
     render(conn, "show.json", role: role)
   end
 end

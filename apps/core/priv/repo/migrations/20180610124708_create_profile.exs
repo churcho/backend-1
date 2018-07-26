@@ -4,12 +4,12 @@ defmodule Core.Repo.Migrations.CreateProfile do
 
   def change do
     create table(:profiles, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add :id, :uuid, primary_key: true
       add :username, :string
       add :first_name, :string
       add :last_name, :string
-      add :user_uuid, :uuid
 
+      add :user_id, references(:users, on_delete: :nothing, type: :uuid)
       timestamps()
     end
 

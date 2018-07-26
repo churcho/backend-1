@@ -3,15 +3,15 @@ defmodule CoreWeb.ConnectionController do
   use CoreWeb, :controller
 
   alias Core.Services
-  alias Core.Services.Projections.Connection
+  alias Core.DB.Connection
 
   def index(conn, _params) do
     connections = Services.list_connections()
     render(conn, "index.json", connections: connections)
   end
 
-  def show(conn, %{"id" => uuid}) do
-    connection = Services.connection_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    connection = Services.get_connection!(id)
     render(conn, "show.json", connection: connection)
   end
 
@@ -25,8 +25,16 @@ defmodule CoreWeb.ConnectionController do
     end
   end
 
-  def delete(conn, %{"id" => uuid}) do
-    connection = Services.connection_by_uuid(uuid)
+  def update(conn, %{"id" => id, "connection" => connection_params}) do
+    connection = Services.get_connection!(id)
+
+    with {:ok, %Connection{} = connection} <- Services.update_connection(connection, connection_params) do
+      render(conn, "show.json", connection: connection)
+    end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    connection = Services.get_connection!(id)
 
     with :ok <- Services.delete_connection(connection) do
       send_resp(conn, :no_content, "")

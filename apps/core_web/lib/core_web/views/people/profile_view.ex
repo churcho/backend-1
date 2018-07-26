@@ -17,10 +17,10 @@ defmodule CoreWeb.ProfileView do
   def render("profile.json", %{profile: profile}) do
     %{
       links: %{
-        self:  "/api/v1/people/profiles/#{profile.uuid}"
+        self:  "/api/v1/people/profiles/#{profile.id}"
       },
-      uuid: profile.uuid,
-      user_uuid: profile.user_uuid,
+      id: profile.id,
+      user_id: profile.user_id,
       username: profile.username
     }
 

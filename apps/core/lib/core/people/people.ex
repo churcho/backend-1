@@ -3,21 +3,14 @@ defmodule Core.People do
   The People context.
   """
 
-  alias Core.{
-    Repo,
-    Router
-  }
-
-  alias Core.People.Commands.{
-    CreateProfile
-  }
+  alias Core.{Repo}
 
   alias Core.People.Queries.{
     ListProfiles,
     ProfileByUsername
   }
 
-  alias Core.People.Projections.Profile
+  alias Core.People.Profile
 
   @doc """
   List All Users
@@ -27,11 +20,20 @@ defmodule Core.People do
   end
 
   @doc """
-  Get a single profile by its UUID
+  Gets a single profile.
+
+  Raises `Ecto.NoResultsError` if the Profile does not exist.
+
+  ## Examples
+
+      iex> get_profile!(123)
+      %Profile{}
+
+      iex> get_profile!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def profile_by_uuid(uuid) when is_binary(uuid) do
-    Repo.get(Profile, uuid)
-  end
+  def get_profile!(id), do: Repo.get!(Profile, id)
 
   @doc """
   Get an existing user by their username, or return `nil` if not registered
@@ -47,23 +49,10 @@ defmodule Core.People do
   Create an profile.
   An profile shares the same uuid as the user, but with a different prefix.
   """
-  def create_profile(%{user_uuid: uuid} = attrs) do
-    create_profile =
-      attrs
-      |> CreateProfile.new()
-      |> CreateProfile.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(create_profile, consistency: :strong) do
-      get(Profile, uuid)
-    else
-      reply -> reply
-    end
+  def create_profile(%{} = attrs) do
+    %Profile{}
+    |> Profile.changeset(attrs)
+    |> Repo.insert()
   end
 
-  defp get(schema, uuid) do
-    case Repo.get(schema, uuid) do
-      nil -> {:error, :not_found}
-      projection -> {:ok, projection}
-    end
-  end
 end

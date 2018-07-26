@@ -2,27 +2,13 @@ defmodule Core.Places do
   @moduledoc """
   Boundary for the Places system
   """
-  alias Core.Places.Projections.{
+  alias Core.Places.{
     Location,
     Zone,
     Room
   }
    alias Core.{
-    Repo,
-    Router
-  }
-  alias Core.Places.Commands.{
-    CreateLocation,
-    CreateZone,
-    CreateRoom,
-    DeleteLocation,
-    DeleteZone,
-    DeleteRoom,
-    UpdateLocation,
-    UpdateLocationWeather,
-    UpdateZone,
-    UpdateRoom
-
+    Repo
   }
   alias Core.Places.Queries.{
     ListLocations,
@@ -40,66 +26,40 @@ defmodule Core.Places do
   end
 
   @doc """
-  Get a location by UUID
+  Gets a single location.
+
+  Raises `Ecto.NoResultsError` if the Location does not exist.
+
+  ## Examples
+
+      iex> get_location!(123)
+      %User{}
+
+      iex> get_location!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def location_by_uuid(uuid) do
-    Repo.get(Location, uuid)
-  end
+  def get_location!(id), do: Repo.get!(Location, id)
+
 
   @doc """
   Create a new Location.
   """
   def create_location(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    create_location =
-      attrs
-      |> CreateLocation.new()
-      |> CreateLocation.assign_coords()
-      |> CreateLocation.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(create_location, consistency: :strong) do
-      get(Location, uuid)
-    else
-      reply -> reply
-    end
+    %Location{}
+    |> Location.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
   Updates a given location
   """
-  def update_location(%Location{uuid: location_uuid} = location, attrs \\ %{}) do
-    update_location =
-      attrs
-      |> UpdateLocation.new()
-      |> UpdateLocation.assign_coords()
-      |> UpdateLocation.assign_location(location)
-
-
-      with :ok <- Router.dispatch(update_location, consistency: :strong) do
-        get(Location, location_uuid)
-      else
-        reply -> reply
-      end
+  def update_location(%Location{} = location, attrs \\ %{}) do
+    location
+    |> Location.changeset(attrs)
+    |> Repo.update()
   end
 
-
-  @doc """
-  Updates weather at a given location
-  """
-  def update_location_weather(%Location{uuid: location_uuid} = location, attrs \\ %{}) do
-    update_location_weather =
-      attrs
-      |> UpdateLocationWeather.new()
-      |> UpdateLocationWeather.assign_location(location)
-
-
-      with :ok <- Router.dispatch(update_location_weather, consistency: :strong) do
-        get(Location, location_uuid)
-      else
-        reply -> reply
-      end
-  end
 
 
   @doc """
@@ -116,11 +76,7 @@ defmodule Core.Places do
   Delete a Location. Returns `:ok` on success
   """
   def delete_location(%Location{} = location) do
-    delete_location =
-      %DeleteLocation{}
-      |> DeleteLocation.assign_location(location)
-
-    Router.dispatch(delete_location, consistency: :strong)
+    Repo.delete(location)
   end
 
   # Zones
@@ -133,55 +89,44 @@ defmodule Core.Places do
   end
 
   @doc """
-  Get a zone by UUID
+  Gets a single zone.
+
+  Raises `Ecto.NoResultsError` if the Zone does not exist.
+
+  ## Examples
+
+      iex> get_zone!(123)
+      %Zone{}
+
+      iex> get_zone!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def zone_by_uuid(uuid) do
-    Repo.get(Zone, uuid)
-  end
+  def get_zone!(id), do: Repo.get!(Zone, id)
 
   @doc """
   Create a new Zone.
   """
   def create_zone(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    create_zone =
-      attrs
-      |> CreateZone.new()
-      |> CreateZone.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(create_zone, consistency: :strong) do
-      get(Zone, uuid)
-    else
-      reply -> reply
-    end
+    %Zone{}
+    |> Zone.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
   Updates a given location
   """
-  def update_zone(%Zone{uuid: zone_uuid} = zone, attrs \\ %{}) do
-    update_zone =
-      attrs
-      |> UpdateZone.new()
-      |> UpdateZone.assign_zone(zone)
-
-    with :ok <- Router.dispatch(update_zone, consistency: :strong) do
-      get(Zone, zone_uuid)
-    else
-      reply -> reply
-    end
+  def update_zone(%Zone{} = zone, attrs \\ %{}) do
+    zone
+    |> Zone.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
   Delete a Zone. Returns `:ok` on success
   """
   def delete_zone(%Zone{} = zone) do
-    delete_zone =
-      %DeleteZone{}
-      |> DeleteZone.assign_zone(zone)
-
-    Router.dispatch(delete_zone, consistency: :strong)
+    Repo.delete(zone)
   end
 
   # Rooms
@@ -194,61 +139,43 @@ defmodule Core.Places do
   end
 
   @doc """
-  Get a room by UUID
+  Gets a single room.
+
+  Raises `Ecto.NoResultsError` if the Room does not exist.
+
+  ## Examples
+
+      iex> get_room!(123)
+      %Room{}
+
+      iex> get_room!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def room_by_uuid(uuid) do
-    Repo.get(Room, uuid)
-  end
+  def get_room!(id), do: Repo.get!(Room, id)
 
   @doc """
   Create a new room.
   """
   def create_room(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    create_room =
-      attrs
-      |> CreateRoom.new()
-      |> CreateRoom.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(create_room, consistency: :strong) do
-      get(Room, uuid)
-    else
-      reply -> reply
-    end
+    %Room{}
+    |> Room.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
   Updates a given room
   """
-  def update_room(%Room{uuid: room_uuid} = room, attrs \\ %{}) do
-    update_room =
-      attrs
-      |> UpdateRoom.new()
-      |> UpdateRoom.assign_room(room)
-
-    with :ok <- Router.dispatch(update_room, consistency: :strong) do
-      get(Room, room_uuid)
-    else
-      reply -> reply
-    end
+  def update_room(%Room{} = room, attrs \\ %{}) do
+    room
+    |> Room.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
   Delete a Room. Returns `:ok` on success
   """
   def delete_room(%Room{} = room) do
-    delete_room =
-      %DeleteRoom{}
-      |> DeleteRoom.assign_room(room)
-
-    Router.dispatch(delete_room, consistency: :strong)
-  end
-
-  defp get(schema, uuid) do
-    case Repo.get(schema, uuid) do
-      nil -> {:error, :not_found}
-      projection -> {:ok, projection}
-    end
+    Repo.delete(room)
   end
 end

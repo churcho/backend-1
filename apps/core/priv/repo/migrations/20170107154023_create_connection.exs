@@ -4,7 +4,7 @@ defmodule Core.Repo.Migrations.CreateConnection do
 
   def change do
     create table(:connections, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add(:id, :uuid, primary_key: true)
       add(:name, :string)
       add(:description, :text)
       add(:client_id, :string)
@@ -15,12 +15,13 @@ defmodule Core.Repo.Migrations.CreateConnection do
       add(:authorized, :boolean, default: false)
       add(:host, :string)
       add(:port, :string)
-      add(:provider_uuid, :uuid)
       add(:slug, :string)
+
+      add :provider_id, references(:providers, on_delete: :nothing, type: :uuid)
       timestamps()
     end
 
-    create(index(:connections, [:provider_uuid]))
+    create(index(:connections, [:provider_id]))
     create(unique_index(:connections, [:slug, :name]))
   end
 end

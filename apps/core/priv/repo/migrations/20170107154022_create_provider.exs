@@ -4,7 +4,7 @@ defmodule Core.Repo.Migrations.CreateProvider do
 
   def change do
     create table(:providers, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add(:id, :uuid, primary_key: true)
       add(:name, :string)
       add(:description, :text)
       add(:url, :string)

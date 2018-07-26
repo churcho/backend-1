@@ -17,12 +17,12 @@ defmodule CoreWeb.ZoneView do
   def render("zone.json", %{zone: zone}) do
     %{
       links: %{
-        self: "/api/v1/places/zones/#{zone.uuid}"
+        self: "/api/v1/places/zones/#{zone.id}"
       },
-      uuid: zone.uuid,
+      id: zone.id,
       name: zone.name,
       description: zone.description,
-      location_uuid: zone.location_uuid
+      location_id: zone.location_id
     }
   end
 end

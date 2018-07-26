@@ -14,12 +14,7 @@ defmodule Core.Application do
 
     children = [
       supervisor(Core.Repo, []),
-      supervisor(Core.Accounts.Supervisor, []),
-      supervisor(Core.People.Supervisor, []),
-      supervisor(Core.Places.Supervisor, []),
-      supervisor(Core.Services.Supervisor, []),
-      worker(Core.Support.Unique, []),
-      worker(Core.Scheduler, []),
+      worker(Core.EventManager.Handler, [])
     ]
 
     opts = [strategy: :one_for_one, name: Core.Supervisor]

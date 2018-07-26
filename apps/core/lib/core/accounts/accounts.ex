@@ -3,89 +3,86 @@ defmodule Core.Accounts do
   Accounts Manager Context Boundary
   """
 
-  alias Core.Accounts.Commands.{
-    RegisterUser,
-    UpdateUser,
-    CreateRole
-  }
-  alias Core.Accounts.Projections.{
+  alias Core.Accounts.{
     User,
     Role
   }
+
   alias Core.Accounts.Queries.{
     UserByUsername,
     UserByEmail,
-    RoleByName,
-    ListRoles,
-    ListUsers
+    RoleByName
   }
-  alias Core.{Repo, Router}
+  alias Core.Repo
+
+  import Ecto.Query, warn: false
 
   @doc """
   List All Users
   """
   def list_users do
-    ListUsers.new() |> Repo.all()
+    Repo.all(User)
   end
 
   @doc """
-  Register a new user.
+  Gets a single user.
+
+  Raises `Ecto.NoResultsError` if the User does not exist.
+
+  ## Examples
+
+      iex> get_user!(123)
+      %User{}
+
+      iex> get_user!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_user!(id), do: Repo.get!(User, id)
+
+  @doc """
+  Registers a user.
+
+  ## Examples
+
+      iex> register_user(%{field: value})
+      {:ok, %User{}}
+
+      iex> create_user(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
   """
   def register_user(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    register_user =
-      attrs
-      |> RegisterUser.new()
-      |> RegisterUser.assign_uuid(uuid)
-      |> RegisterUser.downcase_username()
-      |> RegisterUser.downcase_email()
-      |> RegisterUser.hash_password()
-      |> RegisterUser.grant_role()
-
-    with :ok <- Router.dispatch(register_user, consistency: :strong) do
-      get(User, uuid)
-    else
-      reply -> reply
-    end
+    %User{}
+    |> User.changeset(attrs)
+    |> User.generate_encrypted_password()
+    |> User.grant_role()
+    |> Repo.insert()
   end
 
   @doc """
-  Create a new Role.
+  Updates a user.
+
+  ## Examples
+
+      iex> update_user(user, %{field: new_value})
+      {:ok, %User{}}
+
+      iex> update_user(user, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
   """
-  def create_role(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    create_role =
-      attrs
-      |> CreateRole.new()
-      |> CreateRole.assign_uuid(uuid)
-      |> CreateRole.downcase_name()
-
-    with :ok <- Router.dispatch(create_role, consistency: :strong) do
-      get(Role, uuid)
-    else
-      reply -> reply
-    end
+  def update_user(%User{} = user, attrs) do
+    user
+    |> User.changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """
-  Update the email, username, and/or password of a user.
+  Delete an Account. Returns `:ok` on success
   """
-  def update_user(%User{uuid: user_uuid} = user, attrs \\ %{}) do
-    update_user =
-      attrs
-      |> UpdateUser.new()
-      |> UpdateUser.assign_user(user)
-      |> UpdateUser.downcase_username()
-      |> UpdateUser.downcase_email()
-      |> UpdateUser.hash_password()
-
-    with :ok <- Router.dispatch(update_user, consistency: :strong) do
-      get(User, user_uuid)
-    else
-      reply -> reply
-    end
+  def delete_user(%User{} = user) do
+    Repo.delete(user)
   end
 
   @doc """
@@ -108,14 +105,40 @@ defmodule Core.Accounts do
     |> Repo.one()
   end
 
+  # Roles
+
   @doc """
-  Get a single user by their UUID
+  List All Roles
   """
-  def user_by_uuid(uuid) when is_binary(uuid) do
-    Repo.get(User, uuid)
+  def list_roles do
+    Repo.all(Role)
   end
 
-  # Roles
+  @doc """
+  Gets a single role
+
+  Raises `Ecto.NoResultsError` if the Role does not exist.
+
+  ## Examples
+
+      iex> get_role!(123)
+      %User{}
+
+      iex> get_role!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_role!(id), do: Repo.get!(Role, id)
+
+  @doc """
+  Create a new Role.
+  """
+  def create_role(attrs \\ %{}) do
+    %Role{}
+    |> Role.changeset(attrs)
+    |> Repo.insert()
+  end
+
 
   @doc """
   Get an existing role its name, or return `nil` if not registered
@@ -128,24 +151,15 @@ defmodule Core.Accounts do
   end
 
   @doc """
-  Get a single role by its UUID
-  """
-  def role_by_uuid(uuid) when is_binary(uuid) do
-    Repo.get(Role, uuid)
-  end
+  Returns an `%Ecto.Changeset{}` for tracking user changes.
 
-  @doc """
-  List All Roles
-  """
-  def list_roles do
-    ListRoles.new() |> Repo.all()
-  end
+  ## Examples
 
-  # Private Functions
-  defp get(schema, uuid) do
-    case Repo.get(schema, uuid) do
-      nil -> {:error, :not_found}
-      projection -> {:ok, projection}
-    end
+      iex> change_user(user)
+      %Ecto.Changeset{source: %User{}}
+
+  """
+  def change_user(%User{} = user) do
+    User.changeset(user, %{})
   end
 end

@@ -4,7 +4,7 @@ defmodule Core.Repo.Migrations.CreateLocation do
 
   def change do
     create table(:locations, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add :id, :uuid, primary_key: true
       add(:name, :string)
       add(:address_one, :string)
       add(:address_two, :string)
@@ -16,12 +16,16 @@ defmodule Core.Repo.Migrations.CreateLocation do
       add(:longitude, :float)
       add(:slug, :string)
       add(:description, :string)
-      add(:location_type_uuid, :uuid)
-      add(:zones, {:array, :binary_id})
+      add :timezone_id, :string
+      add :dst_offset, :integer
+      add :raw_time_offset, :integer
+      add :sunrise, :integer
+      add :sunset, :integer
+      add :day_length, :integer
+      add :solar_noon, :integer
       timestamps()
     end
 
     create(unique_index(:locations, [:slug]))
-    create(index(:locations, [:location_type_uuid]))
   end
 end

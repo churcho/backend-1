@@ -19,11 +19,11 @@ defmodule CoreWeb.UserView do
   def render("user.json", %{user: user}) do
     %{
       links: %{
-        self: "/api/v1/users/#{user.uuid}"
+        self: "/api/v1/users/#{user.id}"
       },
-      uuid: user.uuid,
+      id: user.id,
       email: user.email,
-      role: user.role_uuid
+      role: user.role_id
     }
   end
 end

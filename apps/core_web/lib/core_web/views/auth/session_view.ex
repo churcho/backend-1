@@ -6,7 +6,7 @@ defmodule CoreWeb.SessionView do
       jwt: jwt,
       user:  %{
          type: "user",
-         uuid: user.uuid,
+         id: user.id,
          email: user.email
        }
     }

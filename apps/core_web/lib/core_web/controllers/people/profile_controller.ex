@@ -16,8 +16,8 @@ defmodule CoreWeb.ProfileController do
     end
   end
 
-  def show(conn, %{"id" => uuid}) do
-    profile = People.profile_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    profile = People.get_profile!(id)
     render(conn, "show.json", profile: profile)
   end
 end

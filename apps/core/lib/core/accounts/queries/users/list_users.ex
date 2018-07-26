@@ -4,10 +4,10 @@ defmodule Core.Accounts.Queries.ListUsers do
   """
   import Ecto.Query
 
-  alias Core.Accounts.Projections.User
+  alias Core.Accounts.User
 
   def new do
     from u in User,
-    order_by: u.uuid
+    order_by: u.id
   end
 end

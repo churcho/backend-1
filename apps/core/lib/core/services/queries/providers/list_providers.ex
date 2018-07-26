@@ -2,7 +2,7 @@ defmodule Core.Services.Queries.ListProviders do
   @moduledoc false
   import Ecto.Query
 
-  alias Core.Services.Projections.Provider
+  alias Core.DB.Provider
 
   def new do
     from p in Provider,

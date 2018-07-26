@@ -4,15 +4,15 @@ defmodule Core.Repo.Migrations.CreateZone do
 
   def change do
     create table(:zones, primary_key: false) do
-      add :uuid, :uuid, primary_key: true
+      add :id, :uuid, primary_key: true
       add :name, :string
       add :description, :text
-      add :location_uuid, :uuid
       add :slug, :string
-      add :rooms, {:array, :binary_id}
+
+      add :location_id, references(:locations, on_delete: :nothing, type: :uuid)
       timestamps()
     end
-    create index(:zones, [:location_uuid])
+    create index(:zones, [:location_id])
     create unique_index(:zones, [:slug])
   end
 end

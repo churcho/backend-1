@@ -2,7 +2,7 @@ defmodule Core.Accounts.Queries.RoleByName do
   @moduledoc false
   import Ecto.Query
 
-  alias Core.Accounts.Projections.Role
+  alias Core.Accounts.Role
 
   def new(name) do
     from r in Role,

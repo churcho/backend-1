@@ -17,12 +17,12 @@ defmodule CoreWeb.RoomView do
   def render("room.json", %{room: room}) do
     %{
       links: %{
-        self: "/api/v1/places/rooms/#{room.uuid}"
+        self: "/api/v1/places/rooms/#{room.id}"
       },
-      uuid: room.uuid,
+      id: room.id,
       name: room.name,
       description: room.description,
-      zone_uuid: room.zone_uuid
+      zone_id: room.zone_id
     }
   end
 end

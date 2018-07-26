@@ -26,5 +26,5 @@ defmodule CoreWeb.UserSocket do
 
   def connect(_params, _socket), do: :error
 
-  def id(socket), do: "users_socket:#{socket.assigns.current_user.uuid}"
+  def id(socket), do: "users_socket:#{socket.assigns.current_user.id}"
 end

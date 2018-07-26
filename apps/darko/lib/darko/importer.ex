@@ -3,17 +3,16 @@ defmodule Darko.Importer do
   Importer Module
   """
   alias Core.{
-    Places,
-    Services
+    Places
   }
   def update(connection) do
     locations = Places.list_locations
 
     for location <- locations do
-      station_id = "darko-#{location.uuid}"
+      station_id = "darko-#{location.id}"
       target =  %{
         name: "Weather Station for #{location.name}",
-        connection_uuid: connection.uuid,
+        connection_id: connection.id,
         remote_id: station_id
       }
 
@@ -22,6 +21,6 @@ defmodule Darko.Importer do
   end
 
   def import_entity(target) do
-     Services.create_entity(target)
+    IO.inspect target
   end
 end

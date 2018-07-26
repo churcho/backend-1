@@ -7,7 +7,7 @@ defmodule Core.Auth do
   alias Comeonin.Bcrypt
 
   alias Core.Accounts
-  alias Core.Accounts.Projections.User
+  alias Core.Accounts.User
 
   def authenticate(email, password) do
     with {:ok, user} <- user_by_email(email) do

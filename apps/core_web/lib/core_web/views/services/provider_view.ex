@@ -17,9 +17,9 @@ defmodule CoreWeb.ProviderView do
   def render("provider.json", %{provider: provider}) do
     %{
       links: %{
-        self: "/api/v1/services/providers/#{provider.uuid}"
+        self: "/api/v1/services/providers/#{provider.id}"
       },
-      uuid: provider.uuid,
+      id: provider.id,
       name: provider.name,
       description: provider.description,
       required_fields: provider.required_fields,

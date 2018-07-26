@@ -2,7 +2,7 @@ defmodule Core.Places.Queries.ListRooms do
   @moduledoc false
   import Ecto.Query
 
-  alias Core.Places.Projections.Room
+  alias Core.Places.Room
 
   def new do
     from r in Room,

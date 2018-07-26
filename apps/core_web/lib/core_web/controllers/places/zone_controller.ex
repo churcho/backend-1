@@ -3,20 +3,20 @@ defmodule CoreWeb.ZoneController do
   use CoreWeb, :controller
 
   alias Core.Places
-  alias Core.Places.Projections.Zone
+  alias Core.Places.Zone
 
   def index(conn, _params) do
     zones = Places.list_zones()
     render(conn, "index.json", zones: zones)
   end
 
-  def show(conn, %{"id" => uuid}) do
-    zone = Places.zone_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    zone = Places.get_zone!(id)
     render(conn, "show.json", zone: zone)
   end
 
-  def delete(conn, %{"id" => uuid}) do
-    zone = Places.zone_by_uuid(uuid)
+  def delete(conn, %{"id" => id}) do
+    zone = Places.get_zone!(id)
 
     with :ok <- Places.delete_zone(zone) do
       send_resp(conn, :no_content, "")
@@ -33,9 +33,9 @@ defmodule CoreWeb.ZoneController do
     end
   end
 
-  def update(conn, %{"id" => zone_uuid, "zone" => zone_params}) do
+  def update(conn, %{"id" => zone_id, "zone" => zone_params}) do
 
-    zone = Places.zone_by_uuid(zone_uuid)
+    zone = Places.get_zone!(zone_id)
 
     with {:ok, %Zone{} = zone} <-
       Places.update_zone(zone, zone_params)

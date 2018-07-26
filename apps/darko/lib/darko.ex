@@ -8,7 +8,7 @@ defmodule Darko do
 
   require Logger
   alias Core.Services
-  alias Core.Services.Projections.Provider
+  alias Core.DB.Provider
 
   @doc """
   Basic Registration Information

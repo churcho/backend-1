@@ -4,32 +4,20 @@ defmodule Core.Services do
   """
 
   alias Core.{
-    Repo,
-    Router
+    Repo
   }
 
-  alias Core.Services.Projections.{
+  alias Core.DB.{
     Provider,
     Connection,
-    Entity
-  }
-
-  alias Core.Services.Commands.{
-    RegisterProvider,
-    UpdateProvider,
-    CreateConnection,
-    DeleteConnection,
-    CreateEntity
+    Component
   }
 
   alias Core.Services.Queries.{
     ListProviders,
     ProviderByServiceName,
     ListConnections,
-    ConnectionByProviderUuid,
-    ListEntities,
-    EntityByRemoteId,
-    EntityByConnectionUuid
+    ConnectionByProviderId
   }
 
   ### PROVIDERS
@@ -38,58 +26,61 @@ defmodule Core.Services do
   List All Providers
   """
   def list_providers do
-    ListProviders.new() |> Repo.all
+    ListProviders.new()
+    |> Repo.all
+    |> Repo.preload([:connections])
   end
 
   @doc """
-  Get a Provider by UUID
+  Gets a single provider.
+
+  Raises `Ecto.NoResultsError` if the Provider does not exist.
+
+  ## Examples
+
+      iex> get_provider!(123)
+      %Provider{}
+
+      iex> get_provider!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def provider_by_uuid(uuid) do
-    Repo.get(Provider, uuid)
-  end
+  def get_provider!(id), do: Repo.get!(Provider, id) |> Repo.preload([:connections])
 
   @doc """
   Get a provider by Service Name
   """
-  def provider_by_service_name(service_name) when is_binary(service_name) do
+  def provider_by_service_name(service_name) do
     service_name
     |> ProviderByServiceName.new()
     |> Repo.one()
+    |> Repo.preload([:connections])
   end
 
   @doc """
   Register a Provider
   """
   def register_provider(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    register_provider =
-      attrs
-      |> RegisterProvider.new()
-      |> RegisterProvider.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(register_provider, consistency: :strong) do
-      get(Provider, uuid)
-    else
-      reply -> reply
-    end
+    %Provider{}
+    |> Provider.changeset(attrs)
+    |> Repo.insert()
   end
+
 
   @doc """
   Updates a given Provider
   """
-  def update_provider(%Provider{uuid: provider_uuid} = provider, attrs \\ %{}) do
-    update_provider =
-      attrs
-      |> UpdateProvider.new()
-      |> UpdateProvider.assign_provider(provider)
+  def update_provider(%Provider{} = provider, attrs \\ %{}) do
+    provider
+    |> Provider.changeset(attrs)
+    |> Repo.update()
+  end
 
-
-      with :ok <- Router.dispatch(update_provider, consistency: :strong) do
-        get(Provider, provider_uuid)
-      else
-        reply -> reply
-      end
+  @doc """
+  Delete a Location. Returns `:ok` on success
+  """
+  def delete_provider(%Provider{} = provider) do
+    Repo.delete(provider)
   end
 
 
@@ -99,41 +90,57 @@ defmodule Core.Services do
   List All Connections
   """
   def list_connections do
-    ListConnections.new() |> Repo.all
+    ListConnections.new()
+    |> Repo.all
+    |> Repo.preload([:provider])
   end
 
   @doc """
-  Get a Connection by UUID
+  Gets a single connection.
+
+  Raises `Ecto.NoResultsError` if the Connection does not exist.
+
+  ## Examples
+
+      iex> get_connection!(123)
+      %Connection{}
+
+      iex> get_connection!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def connection_by_uuid(uuid) do
-    Repo.get(Connection, uuid)
+  def get_connection!(id) do
+    Repo.get!(Connection, id)
+    |> Repo.preload([:provider])
   end
+
 
   @doc """
   Get an array of connections by provider uuid
   """
-  def connection_by_provider_uuid(provider_uuid) do
-    provider_uuid
-    |> ConnectionByProviderUuid.new()
+  def connection_by_provider_id(provider_id) do
+    provider_id
+    |> ConnectionByProviderId.new()
     |> Repo.one()
+    |> Repo.preload([:provider])
   end
 
   @doc """
   Connect a Service
   """
   def create_connection(attrs \\ %{}) do
-    uuid = UUID.uuid4()
+    %Connection{}
+    |> Connection.changeset(attrs)
+    |> Repo.insert()
+  end
 
-    create_connection =
-      attrs
-      |> CreateConnection.new()
-      |> CreateConnection.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(create_connection, consistency: :strong) do
-      get(Connection, uuid)
-    else
-      reply -> reply
-    end
+  @doc """
+  Update a connection
+  """
+  def update_connection(%Connection{} = connection, attrs \\ %{}) do
+    connection
+    |> Connection.changeset(attrs)
+    |> Repo.update()
   end
 
 
@@ -141,71 +148,54 @@ defmodule Core.Services do
   Delete a Location. Returns `:ok` on success
   """
   def delete_connection(%Connection{} = connection) do
-    delete_connection =
-      %DeleteConnection{}
-      |> DeleteConnection.assign_connection(connection)
-
-    Router.dispatch(delete_connection, consistency: :strong)
+    Repo.delete(connection)
   end
 
   ### ENTITIES
 
+
+
+  ### COMPONENTS
   @doc """
   List All Entities
   """
-  def list_entities do
-    ListEntities.new() |> Repo.all
+  def list_components do
+    Component
+    |> Repo.all |> Repo.preload([:entity])
   end
 
   @doc """
-  Entity by UUID
+  Gets a single component.
+
+  Raises `Ecto.NoResultsError` if the Entity does not exist.
+
+  ## Examples
+
+      iex> get_component!(123)
+      %Entity{}
+
+      iex> get_component!(456)
+      ** (Ecto.NoResultsError)
+
   """
-  def entity_by_uuid(uuid) do
-    Repo.get(Entity, uuid)
+  def get_component!(id), do: Repo.get!(Component, id) |> Repo.preload([:abilities, :component_value])
+
+  @doc """
+  Create a Component
+  """
+  def create_component(attrs \\ %{}) do
+    %Component{}
+    |> Component.changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
-  Entities by connection UUID
+  Update a Component
   """
-  def entities_by_connection_uuid(uuid) do
-    uuid
-    |> EntityByConnectionUuid.new()
-    |> Repo.all()
+  def update_component(%Component{} = component, attrs \\ %{}) do
+    component
+    |> Component.changeset(attrs)
+    |> Repo.update()
   end
 
-  @doc """
-  Entitiy by remote ID
-  """
-  def entity_by_remote_id(remote_id) when is_binary(remote_id) do
-    remote_id
-    |> EntityByRemoteId.new()
-    |> Repo.one()
-  end
-
- @doc """
-  Connect a Service
-  """
-  def create_entity(attrs \\ %{}) do
-    uuid = UUID.uuid4()
-
-    create_entity =
-      attrs
-      |> CreateEntity.new()
-      |> CreateEntity.assign_uuid(uuid)
-
-    with :ok <- Router.dispatch(create_entity, consistency: :strong) do
-      get(Entity, uuid)
-    else
-      reply -> reply
-    end
-  end
-
-  # private functions
-
-  defp get(schema, uuid) do
-    case Repo.get(schema, uuid) do
-      nil -> {:error, :not_found}
-      projection -> {:ok, projection}
-    end
-  end
 end

@@ -1,7 +1,6 @@
 defmodule Darko.Poller do
   require Logger
   alias Darko.Client
-  alias Core.Places
   @moduledoc """
   Polling the darksky service to update your virutal weather stations.
   """
@@ -56,7 +55,6 @@ defmodule Darko.Poller do
 
 
     if server_state != net_state do
-      Places.update_location_weather(location, net_state)
       Darko.Server.clear_state()
       Darko.Server.build_state()
     end

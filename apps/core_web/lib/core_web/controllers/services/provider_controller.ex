@@ -3,21 +3,21 @@ defmodule CoreWeb.ProviderController do
   use CoreWeb, :controller
 
   alias Core.Services
-  alias Core.Services.Projections.Provider
+  alias Core.DB.Provider
 
   def index(conn, _params) do
     providers = Services.list_providers()
     render(conn, "index.json", providers: providers)
   end
 
-  def show(conn, %{"id" => uuid}) do
-    provider = Services.provider_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    provider = Services.get_provider!(id)
     render(conn, "show.json", provider: provider)
   end
 
   def create(conn, %{"provider" => provider_params}) do
     with {:ok, %Provider{} = provider} <-
-      Services.create_provider(provider_params)
+      Services.register_provider(provider_params)
     do
       conn
       |> put_status(:created)
@@ -25,9 +25,9 @@ defmodule CoreWeb.ProviderController do
     end
   end
 
-  def update(conn, %{"id" => provider_uuid, "provider" => provider_params}) do
+  def update(conn, %{"id" => provider_id, "provider" => provider_params}) do
 
-    provider = Services.provider_by_uuid(provider_uuid)
+    provider = Services.get_provider!(provider_id)
 
     with {:ok, %Provider{} = provider} <-
       Services.update_provider(provider, provider_params)

@@ -3,20 +3,20 @@ defmodule CoreWeb.RoomController do
   use CoreWeb, :controller
 
   alias Core.Places
-  alias Core.Places.Projections.Room
+  alias Core.Places.Room
 
   def index(conn, _params) do
     rooms = Places.list_rooms()
     render(conn, "index.json", rooms: rooms)
   end
 
-  def show(conn, %{"id" => uuid}) do
-    room = Places.room_by_uuid(uuid)
+  def show(conn, %{"id" => id}) do
+    room = Places.get_room!(id)
     render(conn, "show.json", room: room)
   end
 
-  def delete(conn, %{"id" => uuid}) do
-    room = Places.room_by_uuid(uuid)
+  def delete(conn, %{"id" => id}) do
+    room = Places.get_room!(id)
 
     with :ok <- Places.delete_room(room) do
       send_resp(conn, :no_content, "")
@@ -33,9 +33,9 @@ defmodule CoreWeb.RoomController do
     end
   end
 
-  def update(conn, %{"id" => room_uuid, "room" => room_params}) do
+  def update(conn, %{"id" => room_id, "room" => room_params}) do
 
-    room = Places.room_by_uuid(room_uuid)
+    room = Places.get_room!(room_id)
 
     with {:ok, %Room{} = room} <-
       Places.update_room(room, room_params)

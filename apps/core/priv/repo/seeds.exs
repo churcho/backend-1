@@ -11,6 +11,11 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Core.Accounts
+alias Core.EntityManager
+alias Core.EntityManager.{
+  AttributeTemplates,
+  CommandTemplates
+}
 
 Accounts.create_role(%{
   name: "admin",
@@ -27,3 +32,11 @@ Accounts.create_role(%{
   label: "Guest",
   description: "Guest of the system"
 })
+
+Enum.each(AttributeTemplates.return_list, fn(x) ->
+  EntityManager.create_attribute(x)
+end)
+
+Enum.each(CommandTemplates.return_list, fn(x) ->
+  EntityManager.create_command(x)
+end)

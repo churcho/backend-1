@@ -1,21 +1,13 @@
 defmodule Core.Places.Workflows.ScheduleSunriseSunsetUpdate do
   @moduledoc false
-  use Commanded.Event.Handler,
-    name: "People.Workflows.ScheduleSunriseSunsetUpdate",
-    consistency: :strong
-
-  alias Core.Places.Events.{
-    LocationCreated,
-    LocationWeatherUpdated
-  }
   import Crontab.CronExpression
 
-  def handle(%LocationCreated{location_uuid: location_uuid}, _metadata) do
+  def handle_schedule() do
     schedule()
     :ok
   end
 
-  def handle(%LocationWeatherUpdated{} = event, _metadata) do
+  def handle_broadcast(event) do
     CoreWeb.EventChannel.broadcast_change("location_weather_updated", event)
     :ok
   end
@@ -30,6 +22,4 @@ defmodule Core.Places.Workflows.ScheduleSunriseSunsetUpdate do
       |> Core.Scheduler.add_job()
     end
   end
-
-
 end
