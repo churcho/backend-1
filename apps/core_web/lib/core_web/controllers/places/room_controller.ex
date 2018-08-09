@@ -3,7 +3,7 @@ defmodule CoreWeb.RoomController do
   use CoreWeb, :controller
 
   alias Core.Places
-  alias Core.Places.Room
+  alias Core.DB.Room
 
   def index(conn, _params) do
     rooms = Places.list_rooms()

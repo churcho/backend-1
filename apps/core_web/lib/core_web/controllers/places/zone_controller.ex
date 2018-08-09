@@ -3,7 +3,7 @@ defmodule CoreWeb.ZoneController do
   use CoreWeb, :controller
 
   alias Core.Places
-  alias Core.Places.Zone
+  alias Core.DB.Zone
 
   def index(conn, _params) do
     zones = Places.list_zones()

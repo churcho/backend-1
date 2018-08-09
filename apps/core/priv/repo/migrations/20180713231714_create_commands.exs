@@ -8,13 +8,10 @@ defmodule Core.Repo.Migrations.CreateCommands do
       add :title, :string
       add :action, :string
       add :action_arguments, :map
-      add :event, :string
-      add :event_success_message, :string
-      add :event_error_message, :string
+      add :action_events, :map
       timestamps()
     end
     create unique_index(:commands, [:title])
     create unique_index(:commands, [:action])
-    create unique_index(:commands, [:event])
   end
 end

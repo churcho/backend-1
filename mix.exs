@@ -24,7 +24,8 @@ defmodule Core.Umbrella.Mixfile do
   # and cannot be accessed from applications inside the apps folder
   defp deps do
     [
-      {:credo, git: "https://github.com/rrrene/credo"}
+      {:credo, git: "https://github.com/rrrene/credo"},
+      {:dialyxir, "~> 1.0.0-rc.3", only: [:dev], runtime: false}
     ]
   end
 end

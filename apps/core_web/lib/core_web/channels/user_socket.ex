@@ -5,7 +5,9 @@ defmodule CoreWeb.UserSocket do
   # Channels
   channel "events:*", CoreWeb.EventChannel
   channel "users:*", CoreWeb.UserChannel
-
+  channel "locations:*", CoreWeb.PlacesLocationsChannel
+  channel "zones:*", CoreWeb.PlacesZonesChannel
+  channel "rooms:*", CoreWeb.PlacesRoomsChannel
   # Transports
   transport :websocket, Phoenix.Transports.WebSocket
   transport :longpoll, Phoenix.Transports.LongPoll

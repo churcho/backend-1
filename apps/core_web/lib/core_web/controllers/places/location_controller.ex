@@ -3,7 +3,7 @@ defmodule CoreWeb.LocationController do
   use CoreWeb, :controller
 
   alias Core.Places
-  alias Core.Places.Location
+  alias Core.DB.Location
 
   def index(conn, _params) do
     locations = Places.list_locations()

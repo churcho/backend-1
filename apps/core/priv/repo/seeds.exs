@@ -11,10 +11,10 @@
 # and so on) as they will fail if something goes wrong.
 
 alias Core.Accounts
-alias Core.EntityManager
-alias Core.EntityManager.{
-  AttributeTemplates,
-  CommandTemplates
+alias Core.Registry
+alias Core.Registry.Templates.{
+  AttributeTemplate,
+  CommandTemplate
 }
 
 Accounts.create_role(%{
@@ -33,10 +33,10 @@ Accounts.create_role(%{
   description: "Guest of the system"
 })
 
-Enum.each(AttributeTemplates.return_list, fn(x) ->
-  EntityManager.create_attribute(x)
+Enum.each(AttributeTemplate.return_list, fn(x) ->
+  Registry.create_attribute(x)
 end)
 
-Enum.each(CommandTemplates.return_list, fn(x) ->
-  EntityManager.create_command(x)
+Enum.each(CommandTemplate.return_list, fn(x) ->
+  Registry.create_command(x)
 end)

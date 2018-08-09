@@ -2,7 +2,7 @@ defmodule CoreWeb.RegistrationController  do
   use CoreWeb, :controller
 
   alias Core.Accounts
-  alias Core.Accounts.User
+  alias Core.DB.User
 
   action_fallback CoreWeb.FallbackController
 

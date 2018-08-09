@@ -9,8 +9,7 @@ defmodule Core.Services do
 
   alias Core.DB.{
     Provider,
-    Connection,
-    Component
+    Connection
   }
 
   alias Core.Services.Queries.{
@@ -150,52 +149,4 @@ defmodule Core.Services do
   def delete_connection(%Connection{} = connection) do
     Repo.delete(connection)
   end
-
-  ### ENTITIES
-
-
-
-  ### COMPONENTS
-  @doc """
-  List All Entities
-  """
-  def list_components do
-    Component
-    |> Repo.all |> Repo.preload([:entity])
-  end
-
-  @doc """
-  Gets a single component.
-
-  Raises `Ecto.NoResultsError` if the Entity does not exist.
-
-  ## Examples
-
-      iex> get_component!(123)
-      %Entity{}
-
-      iex> get_component!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_component!(id), do: Repo.get!(Component, id) |> Repo.preload([:abilities, :component_value])
-
-  @doc """
-  Create a Component
-  """
-  def create_component(attrs \\ %{}) do
-    %Component{}
-    |> Component.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Update a Component
-  """
-  def update_component(%Component{} = component, attrs \\ %{}) do
-    component
-    |> Component.changeset(attrs)
-    |> Repo.update()
-  end
-
 end

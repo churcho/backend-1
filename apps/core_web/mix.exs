@@ -10,7 +10,7 @@ defmodule CoreWeb.Mixfile do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.6.5",
+      elixir: "~> 1.7.2",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -38,20 +38,14 @@ defmodule CoreWeb.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "1.3.2", override: true},
-      {:phoenix_pubsub, "~> 1.0"},
+      {:phoenix, "1.3.3", override: true},
+      {:phoenix_pubsub, "~> 1.0.2"},
       {:phoenix_ecto, "~> 3.3.0"},
-      {:phoenix_html, "~> 2.10"},
       {:phoenix_live_reload, "~> 1.0", only: :dev},
-      {:absinthe, "~> 1.4.0"},
-      {:absinthe_plug, "~> 1.4.0"},
-      {:absinthe_ecto, "~> 0.1.3"},
-      {:dataloader, "~> 1.0.0"},
       {:gettext, "~> 0.11"},
-      {:core, in_umbrella: true},
       {:guardian, "~> 0.14.5"},
-      {:cors_plug, "~> 1.2.1"},
-      {:json_ld, "~> 0.2"},
+      {:cors_plug, "~> 1.5.2"},
+      {:core, in_umbrella: true},
       {:cowboy, "~> 1.0"}
     ]
   end

@@ -14,7 +14,10 @@ defmodule Core.Application do
 
     children = [
       supervisor(Core.Repo, []),
-      worker(Core.EventManager.Handler, [])
+      worker(Core.Bus.Handler, []),
+      worker(Core.Places.LocationHandler, []),
+      worker(Core.Places.ZoneHandler, []),
+      worker(Core.Places.RoomHandler, [])
     ]
 
     opts = [strategy: :one_for_one, name: Core.Supervisor]

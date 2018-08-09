@@ -1,7 +1,5 @@
 defmodule Core.Mixfile do
-  @moduledoc """
-  false
-  """
+  @moduledoc false
   use Mix.Project
 
   def project do
@@ -12,7 +10,7 @@ defmodule Core.Mixfile do
       config_path: "../../config/config.exs",
       deps_path: "../../deps",
       lockfile: "../../mix.lock",
-      elixir: "~> 1.6.5",
+      elixir: "~> 1.7.2",
       elixirc_paths: elixirc_paths(Mix.env),
       start_permanent: Mix.env == :prod,
       aliases: aliases(),
@@ -44,12 +42,12 @@ defmodule Core.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-     {:event_bus, "~> 1.3.7"},
+     {:event_bus, git: "https://github.com/otobus/event_bus.git"},
      {:timex, "~> 3.2.1"},
      {:timex_ecto, "~> 3.2.1"},
      {:bcrypt_elixir, "~> 1.0"},
      {:comeonin, "~> 4.0"},
-     {:postgrex, "~> 0.13.0"},
+     {:postgrex, "~> 0.13.5"},
      {:ecto, "~> 2.2.8"},
      {:poison, "~> 3.1"},
      {:httpoison, "~> 1.1.0"},
@@ -59,6 +57,7 @@ defmodule Core.Mixfile do
      {:ex_machina, "~> 2.2"},
      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
      {:quantum, "~> 2.2"},
+     {:crontab, "~> 1.1.3"},
      {:astro, git: "https://github.com/aussiegeek/astro.git"},
      {:vex, "~> 0.8"}
     ]
@@ -76,6 +75,6 @@ defmodule Core.Mixfile do
      "event_store.reset": ["event_store.drop", "event_store.create", "event_store.init"],
      "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
      "ecto.reset": ["ecto.drop", "ecto.setup"],
-     "test": ["ecto.create --quiet", "ecto.migrate", "test"]]
+     test: ["ecto.create --quiet", "ecto.migrate", "test"]]
   end
 end

@@ -2,7 +2,7 @@ defmodule Core.Places do
   @moduledoc """
   Boundary for the Places system
   """
-  alias Core.Places.{
+  alias Core.DB.{
     Location,
     Zone,
     Room
@@ -15,6 +15,8 @@ defmodule Core.Places do
     ListZones,
     ListRooms
   }
+
+  alias Core.Bus.MiddleWare
 
   #locations
 
@@ -46,18 +48,30 @@ defmodule Core.Places do
   Create a new Location.
   """
   def create_location(attrs \\ %{}) do
+    {:ok, location} =
     %Location{}
     |> Location.changeset(attrs)
     |> Repo.insert()
+
+    location
+    |> broadcast_event(:places_location_created, "SYSTEM")
+
+    {:ok, location}
   end
 
   @doc """
   Updates a given location
   """
   def update_location(%Location{} = location, attrs \\ %{}) do
+    {:ok, location} =
     location
     |> Location.changeset(attrs)
     |> Repo.update()
+
+    location
+    |> broadcast_event(:places_location_updated, "SYSTEM")
+
+    {:ok, location}
   end
 
 
@@ -68,7 +82,7 @@ defmodule Core.Places do
 
   def update_sunrise_and_sunset() do
     for location <- list_locations() do
-      update_location(location, location)
+      update_location(location, Map.from_struct(location))
     end
   end
 
@@ -77,6 +91,8 @@ defmodule Core.Places do
   """
   def delete_location(%Location{} = location) do
     Repo.delete(location)
+    location
+    |> broadcast_event(:places_location_deleted, "SYSTEM")
   end
 
   # Zones
@@ -85,7 +101,9 @@ defmodule Core.Places do
   List all zones
   """
   def list_zones do
-    ListZones.new() |> Repo.all()
+    ListZones.new()
+    |> Repo.all()
+    |> Repo.preload([:location])
   end
 
   @doc """
@@ -102,24 +120,41 @@ defmodule Core.Places do
       ** (Ecto.NoResultsError)
 
   """
-  def get_zone!(id), do: Repo.get!(Zone, id)
+  def get_zone!(id) do
+    Repo.get!(Zone, id)
+    |> Repo.preload([:location])
+  end
 
   @doc """
   Create a new Zone.
   """
   def create_zone(attrs \\ %{}) do
+    {:ok, zone} =
     %Zone{}
     |> Zone.changeset(attrs)
     |> Repo.insert()
+
+    zone
+    |> Repo.preload([:location])
+    |> broadcast_event(:places_zone_created, "SYSTEM")
+
+    {:ok, zone}
   end
 
   @doc """
   Updates a given location
   """
   def update_zone(%Zone{} = zone, attrs \\ %{}) do
+    {:ok, zone} =
     zone
     |> Zone.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.update()
+
+    zone
+    |> Repo.preload([:location])
+    |> broadcast_event(:places_zone_updated, "SYSTEM")
+
+    {:ok, zone}
   end
 
   @doc """
@@ -127,6 +162,9 @@ defmodule Core.Places do
   """
   def delete_zone(%Zone{} = zone) do
     Repo.delete(zone)
+    zone
+    |> Repo.preload([:location])
+    |> broadcast_event(:places_zone_deleted, "SYSTEM")
   end
 
   # Rooms
@@ -135,7 +173,9 @@ defmodule Core.Places do
   List all rooms
   """
   def list_rooms do
-    ListRooms.new() |> Repo.all()
+    ListRooms.new()
+    |> Repo.all()
+    |> Repo.preload([:zone])
   end
 
   @doc """
@@ -152,24 +192,42 @@ defmodule Core.Places do
       ** (Ecto.NoResultsError)
 
   """
-  def get_room!(id), do: Repo.get!(Room, id)
+  def get_room!(id) do
+    Repo.get!(Room, id)
+    |> Repo.preload([:zone])
+  end
+
 
   @doc """
   Create a new room.
   """
   def create_room(attrs \\ %{}) do
+    {:ok, room} =
     %Room{}
     |> Room.changeset(attrs)
     |> Repo.insert()
+
+    room
+    |> Repo.preload([zone: [:location]])
+    |> broadcast_event(:places_room_created, "SYSTEM")
+
+    {:ok, room}
   end
 
   @doc """
   Updates a given room
   """
   def update_room(%Room{} = room, attrs \\ %{}) do
+    {:ok, room} =
     room
     |> Room.changeset(attrs)
-    |> Repo.insert()
+    |> Repo.update()
+
+    room
+    |> Repo.preload([zone: [:location]])
+    |> broadcast_event(:places_room_updated, "SYSTEM")
+
+    {:ok, room}
   end
 
   @doc """
@@ -177,5 +235,25 @@ defmodule Core.Places do
   """
   def delete_room(%Room{} = room) do
     Repo.delete(room)
+
+    room
+    |> Repo.preload([zone: [:location]])
+    |> broadcast_event(:places_room_deleted, "SYSTEM")
+  end
+
+
+  ### Private Stuff
+
+
+  defp broadcast_event(data, topic, source) do
+    event = %{
+      topic: topic,
+      data: data,
+      source: source
+    }
+
+
+    MiddleWare.create(event)
+    |> MiddleWare.send()
   end
 end

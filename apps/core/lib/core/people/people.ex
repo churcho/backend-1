@@ -10,7 +10,7 @@ defmodule Core.People do
     ProfileByUsername
   }
 
-  alias Core.People.Profile
+  alias Core.DB.Profile
 
   @doc """
   List All Users

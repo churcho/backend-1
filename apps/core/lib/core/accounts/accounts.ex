@@ -3,7 +3,7 @@ defmodule Core.Accounts do
   Accounts Manager Context Boundary
   """
 
-  alias Core.Accounts.{
+  alias Core.DB.{
     User,
     Role
   }

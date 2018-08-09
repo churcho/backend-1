@@ -5,7 +5,7 @@ defmodule Core.DB.Connection do
 
   alias Core.DB.{
     Provider,
-    Entity
+    Thing
   }
   schema "connections" do
     field(:name, :string)
@@ -20,7 +20,7 @@ defmodule Core.DB.Connection do
     field(:enabled, :boolean)
     field(:authorized, :boolean)
 
-    many_to_many :entities, Entity, join_through: "connection_entities"
+    many_to_many :things, Thing, join_through: "connection_things"
     belongs_to(:provider, Provider)
     timestamps()
   end

@@ -8,9 +8,7 @@ defmodule Core.Repo.Migrations.CreateComponents do
       add :name, :string
       add :label, :string
       add :state, :map
-      add :entity_id, references(:entities, on_delete: :nothing, type: :uuid)
       timestamps()
     end
-    create index(:components, [:entity_id])
   end
 end
