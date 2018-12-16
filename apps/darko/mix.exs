@@ -40,8 +40,8 @@ defmodule Darko.Mixfile do
   defp deps do
     [
       {:core, in_umbrella: true},
-      {:poison, "~> 3.1"},
-      {:httpoison, "~> 1.0"},
+      {:poison, "~> 3.0"},
+      {:httpoison, "~> 1.4"},
       {:oauth2, "~> 0.7"}
     ]
   end

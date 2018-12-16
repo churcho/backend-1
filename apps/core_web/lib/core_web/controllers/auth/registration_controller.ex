@@ -3,19 +3,13 @@ defmodule CoreWeb.RegistrationController  do
 
   alias Core.Accounts
   alias Core.DB.User
-
-  action_fallback CoreWeb.FallbackController
-
-  plug :scrub_params, "user" when action in [:create]
+  alias CoreWeb.Guardian
 
   def create(conn, %{"user" => user_params}) do
-    with {:ok, %User{} = user} <- Accounts.register_user(user_params) do
-      {:ok, jwt, _full_claims} =
-      user |> Guardian.encode_and_sign(:token)
+    with {:ok, %User{} = user} <- Accounts.register_user(user_params),
+    {:ok, token, _claims} <- Guardian.encode_and_sign(user) do
 
-      conn
-      |> put_status(:created)
-      |> render(CoreWeb.SessionView, "show.json", jwt: jwt, user: user)
+    conn |> render(CoreWeb.SessionView, "show.json", jwt: token, user: user)
     end
   end
 end

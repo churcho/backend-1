@@ -16,4 +16,10 @@ defmodule CoreWeb.FallbackController do
     conn
     |> put_status(:not_found)
   end
+
+  def call(conn, {:error, :unauthorized}) do
+    conn
+    |> put_status(:unauthorized)
+    |> json(%{error: "Login error"})
+  end
 end

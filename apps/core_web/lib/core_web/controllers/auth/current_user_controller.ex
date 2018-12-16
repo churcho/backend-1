@@ -3,16 +3,12 @@ defmodule CoreWeb.CurrentUserController do
   Current User Controller
   """
   use CoreWeb, :controller
-  plug Guardian.Plug.EnsureAuthenticated, handler: CoreWeb.SessionController
 
-  alias Guardian.Plug
 
-  def show(conn, _) do
 
-    user =
-    conn
-    |> Plug.current_resource()
-
+  def show(conn, _params) do
+    user =  Guardian.Plug.current_resource(conn)
+    IO.inspect user
     conn
     |> put_status(:ok)
     |> render("show.json", user: user)

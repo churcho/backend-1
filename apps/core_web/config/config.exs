@@ -25,12 +25,9 @@ config :logger, :console,
 config :core_web, :generators, context_app: :core
 
 # Configures guardian
-config :guardian, Guardian,
+config :core_web, CoreWeb.Guardian,
   issuer: "Lorp",
-  ttl: {3, :days},
-  verify_issuer: true,
-  secret_key: "K5U15rCwqam0hz3EYovOp133hij04IVoFtsbKTgfxwdfBL91zBb8mH2WqzgMtpXC",
-  serializer: Core.Auth.GuardianSerializer
+  secret_key: "K5U15rCwqam0hz3EYovOp133hij04IVoFtsbKTgfxwdfBL91zBb8mH2WqzgMtpXC"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

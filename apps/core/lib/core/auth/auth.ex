@@ -17,6 +17,7 @@ defmodule Core.Auth do
    end
   end
 
+  @spec hash_password(binary()) :: any()
   def hash_password(password), do: Bcrypt.hashpwsalt(password)
   def validate_password(password, hash), do: Bcrypt.checkpw(password, hash)
 

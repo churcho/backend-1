@@ -4,32 +4,29 @@ defmodule CoreWeb.SessionController do
   """
   use CoreWeb, :controller
   alias CoreWeb.Session
-  alias Guardian.Plug
+  alias CoreWeb.Guardian.Plug
 
+  action_fallback CoreWeb.FallbackController
   plug :scrub_params, "session" when action in [:create]
 
   def create(conn, %{"session" => session_params}) do
     case Session.authenticate(session_params) do
       {:ok, user} ->
-        {:ok, jwt, _full_claims} = user |> Guardian.encode_and_sign(:token)
+        {:ok, jwt, _full_claims} = user |> CoreWeb.Guardian.encode_and_sign
 
         conn
         |> put_status(:created)
         |> render("show.json", jwt: jwt, user: user)
 
-      :error ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render("error.json")
+        _ ->
+          {:error, :unauthorized}
     end
   end
 
   def delete(conn, _) do
-    {:ok, claims} = Plug.claims(conn)
-
     conn
     |> Plug.current_token
-    |> Guardian.revoke!(claims)
+    |> CoreWeb.Guardian.revoke
 
     conn
     |> render("delete.json")

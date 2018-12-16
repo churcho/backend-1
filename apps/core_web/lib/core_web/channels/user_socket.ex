@@ -9,11 +9,9 @@ defmodule CoreWeb.UserSocket do
   channel "zones:*", CoreWeb.PlacesZonesChannel
   channel "rooms:*", CoreWeb.PlacesRoomsChannel
   # Transports
-  transport :websocket, Phoenix.Transports.WebSocket
-  transport :longpoll, Phoenix.Transports.LongPoll
 
   def connect(%{"token" => token}, socket) do
-    case Guardian.decode_and_verify(token) do
+    case CoreWeb.Guardian.decode_and_verify(token) do
       {:ok, claims} ->
         case GuardianSerializer.from_token(claims["sub"]) do
           {:ok, user} ->
