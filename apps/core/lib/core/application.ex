@@ -18,7 +18,10 @@ defmodule Core.Application do
       worker(Core.Places.LocationHandler, []),
       worker(Core.Places.ZoneHandler, []),
       worker(Core.Places.RoomHandler, []),
-      worker(Core.Services.ProviderHandler, [])
+      worker(Core.Services.ProviderHandler, []),
+      worker(Core.Scheduler, []),
+      worker(Core.Scheduler.Server, [])
+
     ]
 
     opts = [strategy: :one_for_one, name: Core.Supervisor]

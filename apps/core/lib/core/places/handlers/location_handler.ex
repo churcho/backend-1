@@ -23,7 +23,6 @@ defmodule Core.Places.LocationHandler do
   Initialize the Server
   """
   def init(state) do
-    IO.puts "PLACE STUFF"
     EventBus.subscribe({__MODULE__, [
       "places_location_created",
       "places_location_updated",
@@ -60,16 +59,34 @@ defmodule Core.Places.LocationHandler do
 
   defp location_created(event) do
     IO.puts "LOCATION_CREATED"
+    job = %{
+      name: String.to_atom("schedule_sunrise_for_#{event.data.id}"),
+      cron_string: "*/1 * * * *",
+      time_zone: event.data.timezone_id,
+      command_string: 'Core.Places.update_sunrise_and_sunset("#{event.data.id}")'
+    }
+    Core.Scheduler.schedule(job)
+    Core.Scheduler.create_or_update_job(job)
     PlacesLocationsChannel.broadcast_change("LOCATION_CREATED", event.data)
   end
 
   defp location_updated(event) do
     IO.puts "LOCATION_UPDATED"
+    job = %{
+      name: String.to_atom("schedule_sunrise_for_#{event.data.id}"),
+      cron_string: "*/1 * * * *",
+      time_zone: event.data.timezone_id,
+      command_string: 'Core.Places.update_sunrise_and_sunset("#{event.data.id}")'
+    }
+    Core.Scheduler.delete_job(String.to_atom("schedule_sunrise_for_#{event.data.id}"))
+    Core.Scheduler.schedule(job)
+    Core.Scheduler.create_or_update_job(job)
     PlacesLocationsChannel.broadcast_change("LOCATION_UPDATED", event.data)
   end
 
   defp location_deleted(event) do
     IO.puts "LOCATION_DELETED"
+    Core.Scheduler.delete_job(String.to_atom("schedule_sunrise_for_#{event.data.id}"))
     PlacesLocationsChannel.broadcast_change("LOCATION_DELETED", event.data)
   end
 

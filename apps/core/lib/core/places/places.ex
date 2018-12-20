@@ -80,10 +80,9 @@ defmodule Core.Places do
   Update sunrise and sunset on a location
   """
 
-  def update_sunrise_and_sunset() do
-    for location <- list_locations() do
-      update_location(location, Map.from_struct(location))
-    end
+  def update_sunrise_and_sunset(location_id) do
+    location = get_location!(location_id)
+    update_location(location, Map.from_struct(location))
   end
 
   @doc """

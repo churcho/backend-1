@@ -2,10 +2,10 @@ defmodule Core.DB.Job do
   @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
+  alias Core.Types.AtomType
 
-
-  schema "job" do
-    field :name, :string
+  schema "jobs" do
+    field :name, AtomType
     field :cron_string, :string
     field :target_type, :string
     field :target_uuid, :binary_id

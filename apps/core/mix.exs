@@ -56,7 +56,7 @@ defmodule Core.Mixfile do
      {:slugger, "~> 0.2"},
      {:ex_machina, "~> 2.2"},
      {:mix_test_watch, "~> 0.5", only: :dev, runtime: false},
-     {:quantum, "~> 2.2"},
+     {:quantum, "~> 2.3.3"},
      {:crontab, "~> 1.1.3"},
      {:astro, git: "https://github.com/aussiegeek/astro.git"},
      {:vex, "~> 0.8"}

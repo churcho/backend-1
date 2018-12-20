@@ -2,7 +2,6 @@ defmodule Core.Auth.GuardianSerializer do
   @moduledoc """
   Guardian Helper
   """
-  @behaviour Guardian.Serializer
 
   alias Core.Accounts
   alias Core.DB.User
